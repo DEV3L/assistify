@@ -39,10 +39,34 @@ hatch env create
 hatch shell
 ```
 
-1. Run the main script:
+## Running the Application
+
+To start the application locally, you can use the following command:
 
 ```bash
-python run_chat.py
+hatch run start-app
+```
+
+Alternatively, you can run the application using `uvicorn` directly:
+
+```bash
+uvicorn src.app.api:api --host 0.0.0.0 --port 8000
+```
+
+## Docker Usage
+
+To build and run the application using Docker, follow these steps:
+
+1. Build the Docker image:
+
+```bash
+docker build -t fast-chat-api .
+```
+
+2. Run the Docker container:
+
+```bash
+docker run -p 8000:8000 fast-chat-api
 ```
 
 ## Testing
@@ -66,3 +90,17 @@ pytest --cov --cov-report lcov
 
 Command + Shift + P => Coverage Gutters: Watch
 ```
+
+## Continuous Integration
+
+This project uses GitHub Actions for continuous integration. The configuration can be found in the `.github/workflows` directory.
+
+The CI pipeline includes steps for:
+
+- Checking out the code
+- Setting up Python
+- Installing dependencies
+- Running unit tests
+- Deploying to Fly.io
+
+For more details, refer to the [continuous-integration.yml](.github/workflows/continuous-integration.yml) and [fly-deploy.yml](.github/workflows/fly-deploy.yml) files.

@@ -5,4 +5,4 @@ api = FastAPI()
 
 @api.get("/")
 def read_root():
-    return {"message": "Hello World"}
+    return {"message": "Hello Fly.io World"}
