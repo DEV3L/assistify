@@ -1,17 +1,31 @@
-# See https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
-
-name: Fly Deploy
+name: Deploy to Fly.io
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
-    name: Deploy app
     runs-on: ubuntu-latest
-    concurrency: deploy-group    # optional: ensure only one action runs at a time
+    concurrency: deploy-group # optional: ensure only one action runs at a time
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install hatch
+          hatch env create
+
+      - name: Unit tests
+        run: |
+          hatch run test
+
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         env:
