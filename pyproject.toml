@@ -28,8 +28,8 @@ path = ".venv"
 dependencies = ["pyright", "pytest", "pytest-cov"]
 
 [tool.hatch.envs.default.scripts]
-dev = "python app.py"
-start-app = "uvicorn app:app --host 0.0.0.0 --port 8000"
+dev = "python server.py"
+start-app = "uvicorn src.app.api:api --host 0.0.0.0 --port 8000"
 test = "pytest --cache-clear --cov -m 'not integration'"
 test-integration = "pytest --cache-clear --cov"
 
