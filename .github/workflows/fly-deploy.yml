@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     concurrency: deploy-group # optional: ensure only one action runs at a time
 
+    defaults:
+      run:
+        working-directory: ./assistify-api
+
     steps:
       - uses: actions/checkout@v4
 

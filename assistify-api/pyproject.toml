@@ -3,10 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "fast-chat-api"
+name = "assistify-api"
 dynamic = ["version"]
 description = "A robust FastAPI application that integrates with OpenAI's API to facilitate seamless conversation capabilities through a RESTful interface."
-license = { file = "LICENSE" }
 readme = "README.md"
 authors = [{ name = "Justin Beall", email = "jus.beall@gmail.com" }]
 requires-python = ">=3.11"
@@ -30,8 +29,7 @@ dependencies = ["pyright", "pytest", "pytest-cov"]
 [tool.hatch.envs.default.scripts]
 dev = "python server.py"
 start-app = "uvicorn src.app.api:api --host 0.0.0.0 --port 8000"
-test = "pytest --cache-clear --cov -m 'not integration'"
-test-integration = "pytest --cache-clear --cov"
+test = "pytest --cache-clear --cov --cov-report lcov --cov-report term"
 
 [tool.hatch.envs.hatch-static-analysis]
 config-path = "ruff_defaults.toml"

@@ -5,9 +5,14 @@ on:
     branches: ["**"]
 
 jobs:
-  tests:
-    name: "Tests"
+  tests-api:
+    name: "Tests API"
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./assistify-api
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
