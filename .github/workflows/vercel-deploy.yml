@@ -26,7 +26,9 @@ jobs:
         run: yarn build
 
       - name: Run tests
-        run: yarn test:ci
+        run: |
+          yarn upgrade
+          yarn test:ci
 
       - name: Deploy to Vercel
         env:
