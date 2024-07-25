@@ -26,3 +26,25 @@ jobs:
       - name: Unit tests
         run: |
           hatch run test
+
+  tests-ui:
+    name: "Tests UI"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./assistify-ui
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build project
+        run: yarn build
+      - name: Run tests
+        run: |
+          yarn upgrade
+          yarn test:ci
