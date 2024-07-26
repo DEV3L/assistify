@@ -12,7 +12,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["@testing-library/jest-dom"],
+    "types": ["@testing-library/jest-dom", "next-auth"],
     "plugins": [
       {
         "name": "next"
