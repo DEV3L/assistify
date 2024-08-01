@@ -1,4 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { fetchRandomNumber } from "../services/service";
 
 const AssistifyLogo = () => (
   <svg
@@ -28,6 +30,15 @@ const AssistifyLogo = () => (
 
 const Login = () => {
   const { data: session } = useSession();
+  const [randomNumber, setRandomNumber] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getRandomNumber = async () => {
+      const number = await fetchRandomNumber();
+      setRandomNumber(number);
+    };
+    getRandomNumber();
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
@@ -40,6 +51,11 @@ const Login = () => {
           <p className="mt-2 text-sm text-gray-400">
             Your AI Assistant Interaction Hub
           </p>
+          {randomNumber !== null && (
+            <p className="mt-2 text-lg text-white">
+              Random Number: {randomNumber}
+            </p>
+          )}
         </div>
 
         {!session ? (
