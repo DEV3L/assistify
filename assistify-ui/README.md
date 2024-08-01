@@ -2,6 +2,8 @@
 
 Assistify is a web app that allows you to manage your tasks and projects.
 
+[Assistify UI](https://assistify-wine.vercel.app/)
+
 ## Prerequisites
 
 - Node.js (v18 or higher)
@@ -15,6 +17,10 @@ The following environment variables are required:
 - `GOOGLE_CLIENT_SECRET`: Your Google OAuth client secret
 - `NEXTAUTH_SECRET`: A secret used to encrypt session tokens
 - `NEXTAUTH_URL`: Redirect URL from auth provider
+
+The following NextJS environment variables are required:
+
+- `NEXT_PUBLIC_API_BASE_URL`: The base URL of the API
 
 Copy the `.env.default` file to `.env.local` and set the variables.
 

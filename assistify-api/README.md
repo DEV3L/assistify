@@ -1,14 +1,27 @@
 # Assistify-API
 
-## Setup
+[Assistify UI](https://assistify-api.fly.dev/)
 
-1. Copy the env.local file to a new file named .env and replace `OPENAI_API_KEY` with your actual OpenAI API key:
+## Prerequisites
+
+- Python (v3.12 or higher)
+
+## Installation/Setup
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/dev3l/assistify.git
+   cd assistify/assistify-api
+   ```
+
+2. Copy the `env.default` file to a new file named `.env` and replace `OPENAI_API_KEY` with your actual OpenAI API key:
 
 ```bash
 cp env.local .env
 ```
 
-2. Setup a virtual environment with dependencies and activate it:
+3. Setup a virtual environment with dependencies and activate it:
 
 ```bash
 brew install hatch

@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "A robust FastAPI application that integrates with OpenAI's API to facilitate seamless conversation capabilities through a RESTful interface."
 readme = "README.md"
 authors = [{ name = "Justin Beall", email = "jus.beall@gmail.com" }]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = ["fastapi", "loguru", "openai", "python-dotenv", "uvicorn"]
 
 [tool.hatch.version]

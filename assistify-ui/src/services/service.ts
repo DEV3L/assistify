@@ -1,7 +1,5 @@
-const SERVER_ROUTE = "http://localhost:8000"
-
 export const fetchRandomNumber = async (): Promise<string> => {
-    const response = await fetch(`${SERVER_ROUTE}/random-number`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/random-number`);
     const data = await response.json();
     return data.message;
   };

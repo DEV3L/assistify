@@ -1,5 +1,7 @@
 # Assistify
 
+[Assistify](https://assistify-wine.vercel.app/)
+
 > A web platform for engaging with specialized OpenAI Assistants across various fields.
 
 Assistify is a web-based application that connects users with specialized OpenAI Assistants, streamlining interactions in areas like programming, product management, and content creation. By providing a common platform for accessing diverse AI assistants, it offers personalized support across various professional domains. Integrating Google authentication for security and using a provider-supplied OpenAI API key simplifies access, enabling a broader user base to benefit from AI-enhanced productivity tools. With future plans for a subscription-based model, Assistify aims to evolve into a marketplace for AI assistants, fostering innovation and collaboration among its users.
@@ -85,18 +87,6 @@ Assistify’s revised business model, which eliminates the need for individual O
 
 ---
 
-## FastAPI Project Description
-
-FastChatAPI is a Python-based web application built with FastAPI, providing a RESTful interface for chat operations powered by OpenAI's language models. This application enables seamless conversations for various use cases such as customer support, content generation, and interactive educational tools.
-
-### Features
-
-- **RESTful Endpoints:** Intuitive API endpoints for chat initiation, message sending, and response retrieval.
-- **OpenAI Integration:** Leverages OpenAI’s API for generating conversational responses.
-- **Context Management:** Maintains conversation context across multiple interactions.
-- **Asynchronous Processing:** Efficient handling of multiple API requests using async programming.
-- **Robust Error Handling:** Comprehensive error handling and logging mechanisms.
-
 ## Setup
 
 1. Clone the repository:
@@ -106,13 +96,13 @@ git clone https://github.com/DEV3L/assistify
 cd assistify
 ```
 
-## API / Backend
+### API / Backend
 
-1. Navigate to the API directory and follow the README.md instructions.
+Navigate to the API directory and follow the [Assistify API README.md](assistify-api/README.md) instructions.
 
-```bash
-cd assistify-api
-```
+### UI / Front-End
+
+Navigate to the UI directory and follow the [Assistify UI README.md](assistify-ui/README.md) instructions.
 
 ## Continuous Integration
 
@@ -124,6 +114,11 @@ The CI pipeline includes steps for:
 - Setting up Python
 - Installing dependencies
 - Running unit tests
-- Deploying to Fly.io
+- Deploying the API to Fly.io
+- Deploying the UI to Vercel
 
-For more details, refer to the [continuous-integration.yml](.github/workflows/continuous-integration.yml) and [fly-deploy.yml](.github/workflows/fly-deploy.yml) files.
+For more details, refer to the:
+
+- [continuous-integration.yml](.github/workflows/continuous-integration.yml)
+- [fly-deploy.yml](.github/workflows/fly-deploy.yml)
+- [vercel-deploy.yml](.github/workflows/vercel-deploy.yml)
