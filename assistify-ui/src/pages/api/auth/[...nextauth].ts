@@ -14,5 +14,17 @@ export default NextAuth({
     async redirect({ url, baseUrl }) {
       return url.startsWith(baseUrl) ? url : baseUrl;
     },
+    async jwt({ token, account }) {
+      console.log("JWT callback", token, account);
+      if (account?.id_token) {
+        token.idToken = account.id_token;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      console.log("Session callback", session, token);
+      session.idToken = token.idToken;
+      return session;
+    },
   },
 });

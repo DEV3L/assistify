@@ -1,7 +1,9 @@
 import random
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from .auth.verify_token import verify_token
 
 api = FastAPI()
 
@@ -23,3 +25,8 @@ def read_root():
 def read_random_number():
     number = random.randint(1, 100)
     return {"message": f"Your random number is {number}"}
+
+
+@api.get("/protected")
+def protected_route(user_info: dict = Depends(verify_token)):
+    return {"message": f"Hello {user_info['name']}, your email is {user_info['email']}"}

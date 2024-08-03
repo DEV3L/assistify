@@ -1,6 +1,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { fetchRandomNumber } from "../services/service";
+import Protected from "@/components/Protected";
 
 const AssistifyLogo = () => (
   <svg
@@ -94,6 +95,7 @@ const Login = () => {
             >
               Sign out
             </button>
+            <Protected />
           </div>
         )}
       </div>

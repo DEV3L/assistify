@@ -9,7 +9,16 @@ description = "A robust FastAPI application that integrates with OpenAI's API to
 readme = "README.md"
 authors = [{ name = "Justin Beall", email = "jus.beall@gmail.com" }]
 requires-python = ">=3.12"
-dependencies = ["fastapi", "loguru", "openai", "python-dotenv", "uvicorn"]
+dependencies = [
+    "fastapi",
+    "loguru",
+    "google-auth",
+    "openai",
+    "python-dotenv",
+    "uvicorn",
+    "requests",
+    "authlib",
+]
 
 [tool.hatch.version]
 path = "setup.cfg"
@@ -24,7 +33,7 @@ packages = ["src"]
 [tool.hatch.envs.default]
 type = "virtual"
 path = ".venv"
-dependencies = ["pyright", "pytest", "pytest-cov"]
+dependencies = ["pyright", "pytest-cov", "pytest"]
 
 [tool.hatch.envs.default.scripts]
 dev = "python server.py"
