@@ -1,3 +1,4 @@
+import { AssistifyLogo } from "@/components/AssistifyLogo";
 import Protected from "@/components/Protected";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -10,7 +11,7 @@ const Dashboard = () => {
     return <div>Loading...</div>;
   }
 
-  if (status === "unauthenticated") {
+  if (status === "unauthenticated" || !session) {
     router.push("/login");
     return null;
   }
@@ -18,9 +19,19 @@ const Dashboard = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-xl shadow-2xl">
+        <div className="text-center">
+          <AssistifyLogo />
+          <h2 className="mt-6 text-3xl font-bold text-white">
+            Welcome to Assistify
+          </h2>
+          <p className="mt-2 text-sm text-gray-400">
+            Your AI Assistant Interaction Hub
+          </p>
+        </div>
+
         <div className="space-y-6">
           <p className="text-xl text-white text-center">
-            Welcome, {session?.user?.name}
+            Welcome, {session.user?.name}
           </p>
           <button
             onClick={() => signOut()}
@@ -28,8 +39,8 @@ const Dashboard = () => {
           >
             Sign out
           </button>
+          <Protected />
         </div>
-        <Protected />
       </div>
     </div>
   );
