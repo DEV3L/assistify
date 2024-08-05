@@ -1,15 +1,11 @@
 import { AssistifyLogo } from "@/components/AssistifyLogo";
 import { GoogleLogo } from "@/components/GoogleLogo";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { fetchRandomNumber } from "../services/service";
 
 const Login = () => {
-  const { data: session, status } = useSession();
   const [randomNumber, setRandomNumber] = useState<string | null>(null);
-
-  const router = useRouter();
 
   useEffect(() => {
     const getRandomNumber = async () => {
