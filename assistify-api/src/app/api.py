@@ -9,7 +9,7 @@ api = FastAPI()
 
 api.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://assistify-api.fly.dev", "https://assistify-wine.vercel.app"],
+    allow_origins=["http://localhost:3000", "https://assistify-api.fly.dev", "https://assistify-ui.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

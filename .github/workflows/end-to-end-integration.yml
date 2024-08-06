@@ -41,6 +41,7 @@ jobs:
           env: |
             VERCEL_ACCESS_TOKEN=$VERCEL_TOKEN
             VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID
+
       - name: Run end-to-end tests
         env:
           BASE_URL: ${{ steps.vercel_deploy.outputs.url }}
