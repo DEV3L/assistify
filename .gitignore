@@ -3,6 +3,11 @@ bin
 .DS_Store
 .ruff_cache
 
+# playwright
+
+test-results/
+playwright-report/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

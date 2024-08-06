@@ -1,4 +1,5 @@
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -14,5 +15,12 @@ export default function Home() {
     }
   }, [status, router]);
 
-  return <div>Loading...</div>;
+  return (
+    <>
+      <Head>
+        <title>Assistify</title>
+      </Head>
+      <div>Loading...</div>;
+    </>
+  );
 }

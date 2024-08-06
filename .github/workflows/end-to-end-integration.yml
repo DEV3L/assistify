@@ -1,0 +1,65 @@
+name: Deploy to Vercel
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      # Playwright Test Secrets
+      GOOGLE_TEST_NAME: ${{ secrets.GOOGLE_TEST_NAME }}
+      GOOGLE_TEST_EMAIL: ${{ secrets.GOOGLE_TEST_EMAIL }}
+      GOOGLE_TEST_PASSWORD: ${{ secrets.GOOGLE_TEST_PASSWORD }}
+      # Vercel Deployment Secrets
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    defaults:
+      run:
+        working-directory: ./assistify-ui
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build project
+        run: yarn build
+
+      - name: Run tests
+        run: |
+          yarn upgrade
+          yarn test:e2e
+
+      - name: Deploy to Vercel
+        run: |
+          vercel --prod --token $VERCEL_TOKEN --confirm --scope $VERCEL_ORG_ID --project $VERCEL_PROJECT_ID
+
+      - name: Get Vercel Deployment URL
+        id: get_url
+        run: echo "VERCEL_URL=$(vercel --token $VERCEL_TOKEN --scope $VERCEL_ORG_ID --project $VERCEL_PROJECT_ID --prod --confirm --output=json | jq -r '.url')" >> $GITHUB_ENV
+
+      - name: Run end-to-end tests
+        env:
+          BASE_URL: ${{ env.VERCEL_URL }}
+        run: yarn test:e2e
+
+      - name: Upload Playwright screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots
+          path: assistify-ui/test-results/
+
+      - name: Tear down Vercel environment
+        if: always()
+        run: |
+          vercel rm $VERCEL_PROJECT_ID --token $VERCEL_TOKEN --yes --scope $VERCEL_ORG_ID
