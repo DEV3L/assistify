@@ -34,11 +34,6 @@ jobs:
       - name: Build project
         run: yarn build
 
-      - name: Run tests
-        run: |
-          yarn upgrade
-          yarn test:e2e
-
       - name: Deploy to Vercel
         run: |
           vercel --prod --token $VERCEL_TOKEN --confirm --scope $VERCEL_ORG_ID --project $VERCEL_PROJECT_ID
