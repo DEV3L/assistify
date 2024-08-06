@@ -16,7 +16,7 @@ jobs:
       # Vercel Deployment Secrets
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ACCESS_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
     defaults:
       run:
         working-directory: ./assistify-ui
@@ -37,10 +37,6 @@ jobs:
       - name: Deploy to Vercel
         id: vercel_deploy
         uses: snaplet/vercel-action@v3
-        with:
-          env: |
-            VERCEL_ACCESS_TOKEN=$VERCEL_TOKEN
-            VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID
 
       - name: Run end-to-end tests
         env:

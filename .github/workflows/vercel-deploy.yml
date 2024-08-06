@@ -15,7 +15,7 @@ jobs:
       GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ACCESS_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
 
     defaults:
       run:
@@ -41,6 +41,6 @@ jobs:
 
       - name: Deploy to Vercel
         run: |
-          vercel pull --yes --environment=production --token=$VERCEL_TOKEN
-          vercel build --prod --token=$VERCEL_TOKEN
-          vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+          vercel pull --yes --environment=production --token=$VERCEL_ACCESS_TOKEN
+          vercel build --prod --token=$VERCEL_ACCESS_TOKEN
+          vercel deploy --prebuilt --prod --token=$VERCEL_ACCESS_TOKEN
