@@ -72,3 +72,18 @@ To run the linter:
 ```bash
 yarn lint
 ```
+
+## End to End Testing
+
+End to end testing is performed using Playwright. The following environment variables are required for running the tests:
+
+- `GOOGLE_TEST_NAME`: The name of the Google test user
+- `GOOGLE_TEST_EMAIL`: The email of the Google test user
+- `GOOGLE_TEST_PASSWORD`: The password of the Google test user
+- `BASE_URL`: The base URL of the application under test
+
+To run the end to end tests, use the following command:
+
+```bash
+yarn test:e2e
+```

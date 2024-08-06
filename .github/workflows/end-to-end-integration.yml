@@ -35,16 +35,15 @@ jobs:
         run: yarn build
 
       - name: Deploy to Vercel
-        run: |
-          vercel --prod --token $VERCEL_TOKEN --confirm --scope $VERCEL_ORG_ID --project $VERCEL_PROJECT_ID
-
-      - name: Get Vercel Deployment URL
-        id: get_url
-        run: echo "VERCEL_URL=$(vercel --token $VERCEL_TOKEN --scope $VERCEL_ORG_ID --project $VERCEL_PROJECT_ID --prod --confirm --output=json | jq -r '.url')" >> $GITHUB_ENV
-
+        id: vercel_deploy
+        uses: snaplet/vercel-action@v3
+        with:
+          env: |
+            VERCEL_ACCESS_TOKEN=$VERCEL_TOKEN
+            VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID
       - name: Run end-to-end tests
         env:
-          BASE_URL: ${{ env.VERCEL_URL }}
+          BASE_URL: ${{ steps.vercel_deploy.outputs.url }}
         run: yarn test:e2e
 
       - name: Upload Playwright screenshots
@@ -56,5 +55,6 @@ jobs:
 
       - name: Tear down Vercel environment
         if: always()
-        run: |
-          vercel rm $VERCEL_PROJECT_ID --token $VERCEL_TOKEN --yes --scope $VERCEL_ORG_ID
+        uses: snaplet/vercel-action@v3
+        with:
+          delete: true
