@@ -50,8 +50,8 @@ jobs:
           name: playwright-screenshots
           path: assistify-ui/test-results/
 
-      - name: Tear down Vercel environment
-        if: always()
-        uses: snaplet/vercel-action@v3
-        with:
-          delete: true
+      # - name: Tear down Vercel environment
+      #   if: always()
+      #   uses: snaplet/vercel-action@v3
+      #   with:
+      #     delete: true
