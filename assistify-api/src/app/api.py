@@ -3,10 +3,13 @@ import random
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.app.cors.custom_coors_middleware import CustomCORSMiddleware
+
 from .auth.verify_token import verify_token
 
 api = FastAPI()
 
+api.add_middleware(CustomCORSMiddleware)
 api.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "https://assistify-api.fly.dev", "https://assistify-ui.vercel.app"],
