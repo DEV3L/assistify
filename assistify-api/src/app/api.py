@@ -12,7 +12,7 @@ api = FastAPI()
 api.add_middleware(CustomCORSMiddleware)
 api.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://assistify-api.fly.dev"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

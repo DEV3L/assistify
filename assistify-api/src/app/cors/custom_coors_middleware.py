@@ -8,7 +8,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 class CustomCORSMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         origin = request.headers.get("origin")
-        if origin and re.match(r"https://assistify.*\.vercel\.app", origin):
+        if origin and re.match(r"https://assistify.*\.(vercel\.app|fly\.dev)", origin):
             response = await call_next(request)
             response.headers["Access-Control-Allow-Origin"] = origin
             response.headers["Access-Control-Allow-Credentials"] = "true"
