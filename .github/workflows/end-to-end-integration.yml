@@ -98,6 +98,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Install Playwright and Chromium
+        run: |
+          yarn add playwright
+          npx playwright install chromium
+
       - name: Run end-to-end tests
         run: yarn test:e2e
 
