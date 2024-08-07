@@ -69,6 +69,7 @@ jobs:
 
       - name: Deploy to Vercel
         run: |
+          vercel link --yes --project assistify-ui-ci --token=$VERCEL_ACCESS_TOKEN
           vercel pull --yes --environment=production --token=$VERCEL_ACCESS_TOKEN
           vercel build --prod --token=$VERCEL_ACCESS_TOKEN
           vercel deploy --prebuilt --prod --token=$VERCEL_ACCESS_TOKEN
