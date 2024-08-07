@@ -8,6 +8,7 @@ jobs:
   # Deploy to Fly
   deploy-to-fly:
     runs-on: ubuntu-latest
+    environment: CI
 
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -39,12 +40,12 @@ jobs:
   # Deploy to Vercel
   deploy-to-vercel:
     runs-on: ubuntu-latest
+    environment: CI
 
     env:
       # Vercel Deployment Secrets
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_CI_PROJECT_ID }}
-      VERCEL_ACCESS_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     defaults:
       run:
         working-directory: ./assistify-ui
@@ -70,18 +71,20 @@ jobs:
       - name: Deploy to Vercel
         run: |
           vercel link --yes --project assistify-ui-ci --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
-          vercel pull --yes --environment=production --token=$VERCEL_ACCESS_TOKEN
-          vercel build --prod --token=$VERCEL_ACCESS_TOKEN
-          vercel deploy --prebuilt --prod --token=$VERCEL_ACCESS_TOKEN
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
 
   # Run end-to-end tests
   run-e2e-tests:
     runs-on: ubuntu-latest
+    environment: CI
+
     needs: [deploy-to-fly, deploy-to-vercel]
 
     env:
       # Playwright Test Secrets
-      BASE_URL: ${{ secrets.VERCEL_CI_BASE_URL }}
+      BASE_URL: ${{ secrets.VERCEL_BASE_URL }}
       GOOGLE_TEST_NAME: ${{ secrets.GOOGLE_TEST_NAME }}
       GOOGLE_TEST_EMAIL: ${{ secrets.GOOGLE_TEST_EMAIL }}
       GOOGLE_TEST_PASSWORD: ${{ secrets.GOOGLE_TEST_PASSWORD }}
