@@ -46,3 +46,19 @@ def test_cors_disallowed_origin():
     assert "Access-Control-Allow-Credentials" not in response.headers
     assert "Access-Control-Allow-Methods" not in response.headers
     assert "Access-Control-Allow-Headers" not in response.headers
+
+
+def test_cors_preflight():
+    response = client.options(
+        "/protected",
+        headers={
+            "origin": "https://assistify-ui-ci.vercel.app",
+            "Access-Control-Request-Method": "GET",
+            "Access-Control-Request-Headers": "authorization",
+        },
+    )
+    assert response.status_code == 200
+    assert response.headers["Access-Control-Allow-Origin"] == "https://assistify-ui-ci.vercel.app"
+    assert response.headers["Access-Control-Allow-Credentials"] == "true"
+    assert response.headers["Access-Control-Allow-Methods"] == "GET, POST, OPTIONS"
+    assert response.headers["Access-Control-Allow-Headers"] == "authorization, content-type"
