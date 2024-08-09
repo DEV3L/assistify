@@ -1,3 +1,4 @@
+import AssistifyHead from "@/components/AssistifyHead";
 import { AssistifyLogo } from "@/components/AssistifyLogo";
 import Protected from "@/components/Protected";
 import { signOut, useSession } from "next-auth/react";
@@ -18,6 +19,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
+      <AssistifyHead />
       <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-xl shadow-2xl">
         <div className="text-center">
           <AssistifyLogo />

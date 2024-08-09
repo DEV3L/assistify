@@ -1,5 +1,5 @@
+import AssistifyHead from "@/components/AssistifyHead";
 import { useSession } from "next-auth/react";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -17,9 +17,7 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>Assistify</title>
-      </Head>
+      <AssistifyHead />
       <div>Loading...</div>;
     </>
   );
