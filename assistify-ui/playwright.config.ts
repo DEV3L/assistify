@@ -1,8 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
+import playwright from 'playwright';
+import { addExtra } from 'playwright-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
 dotenv.config();
 dotenv.config({ path: ".env.local", override: true });
+
+const extraPlaywright = addExtra(playwright as any);
+extraPlaywright.use(StealthPlugin());
 
 export default defineConfig({
   testDir: "./e2e",
@@ -21,6 +27,9 @@ export default defineConfig({
     trace: "on-first-retry",
     headless: process.env.CI ? true : false,
     screenshot: "only-on-failure",
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    viewport: { width: 1280, height: 720 },
+    permissions: ['geolocation'],
     launchOptions: {
       args: [
         "--disable-blink-features=AutomationControlled",
