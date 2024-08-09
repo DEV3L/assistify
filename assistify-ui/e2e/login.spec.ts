@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 test('homepage has title and links to intro page', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(/Assistify/);
-  
+
     // Click the "Sign in with Google" button
     const signInButton = page.locator('text=Sign in with Google');
     await signInButton.click();
@@ -20,13 +20,17 @@ test('homepage has title and links to intro page', async ({ page }) => {
     // Optional: Click the "Continue" button if it exists
     try {
       const continueButton = page.locator('text=Continue');
-      await continueButton.click();
+      if(await continueButton.isVisible()) {
+        await continueButton.click();
+      }
   } catch (e) {
       console.log('Continue button not found, skipping...');
   }
-  
+
     // Wait for the redirect and assert the welcome message
     const welcomeMessage = `Welcome, ${process.env.GOOGLE_TEST_NAME ?? ""}`
+    console.log(`"Welcome message: ${welcomeMessage}`);
+
     await page.waitForSelector(`text=${welcomeMessage}`);
     const welcomeElement = page.locator(`text=${welcomeMessage}`);
     await expect(welcomeElement).toBeVisible();
