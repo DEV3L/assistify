@@ -32,7 +32,7 @@ export default defineConfig({
     launchOptions: {
       args: ["--disable-blink-features=AutomationControlled"],
     },
-    storageState: isCI ? "ciSessionStorage.json" : undefined,
+    storageState: isCI ? "storageState.json" : undefined,
   },
   projects: [
     {
