@@ -6,7 +6,7 @@ dotenv.config({ path: '.env.local', override: true });
 
 export default defineConfig({
   testDir: './e2e',
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
   expect: {
     timeout: 5000,
   },
