@@ -108,7 +108,7 @@ jobs:
           npx playwright install chromium
 
       - name: Save CI session storage state
-        run: echo "${{ secrets.CI_STORAGE_STATE }}" > storageState.json
+        run: echo "${{ secrets.CI_STORAGE_STATE }}" | base64 --decode > storageState.json
 
       - name: Run end-to-end tests
         run: yarn test:e2e
