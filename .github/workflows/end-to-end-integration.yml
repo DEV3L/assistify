@@ -6,7 +6,7 @@ on:
 
 jobs:
   # Deploy to Fly
-  deploy-to-fly:
+  deploy-to-fly-ci:
     runs-on: ubuntu-latest
     environment: CI
 
@@ -38,7 +38,7 @@ jobs:
       - run: flyctl deploy --remote-only --app assistify-api-ci
 
   # Deploy to Vercel
-  deploy-to-vercel:
+  deploy-to-vercel-ci:
     runs-on: ubuntu-latest
     environment: CI
 
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: CI
 
-    needs: [deploy-to-fly, deploy-to-vercel]
+    needs: [deploy-to-fly-ci, deploy-to-vercel-ci]
 
     env:
       # Playwright Test Secrets
