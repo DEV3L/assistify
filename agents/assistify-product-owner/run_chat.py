@@ -6,8 +6,8 @@ from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_c
 from ai_assistant_manager.env_variables import ENV_VARIABLES
 from loguru import logger
 
+from assistify_product_owner.prompts.prompt import get_prompt
 from data_exporter import export_data
-from src.prompts.prompt import get_prompt
 
 SHOULD_DELETE_ASSISTANT = False
 

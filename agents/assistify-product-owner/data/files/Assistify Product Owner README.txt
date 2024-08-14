@@ -99,9 +99,3 @@ hatch run e2e
 ```bash
 hatch run test
 ```
-
-### Coverage Gutters:
-
-```bash
-Command + Shift + P => Coverage Gutters: Watch
-```
