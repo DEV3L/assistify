@@ -3,7 +3,7 @@ from ai_assistant_manager.assistants.assistant_service import (
 )
 from ai_assistant_manager.chats.chat import Chat
 from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
-from ai_assistant_manager.env_variables import ENV_VARIABLES
+from ai_assistant_manager.env_variables import ENV_VARIABLES, set_env_variables
 from loguru import logger
 
 from assistify_product_owner.prompts.prompt import get_prompt
@@ -56,6 +56,7 @@ def main():
 
 if __name__ == "__main__":
     try:
+        set_env_variables()
         main()
     except Exception as e:
         logger.info(f"Error: {e}")

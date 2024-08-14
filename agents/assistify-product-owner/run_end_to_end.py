@@ -14,7 +14,6 @@ from data_exporter import export_data
 
 
 def main():
-    set_env_variables()
     _clear_bin_directory(f"./{ENV_VARIABLES.bin_dir}")
     logger.info(f"Building {ENV_VARIABLES.assistant_name}")
 
