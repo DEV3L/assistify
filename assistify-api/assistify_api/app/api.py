@@ -2,7 +2,7 @@ import random
 
 from fastapi import Depends, FastAPI
 
-from src.app.cors.custom_cors_middleware import CustomCORSMiddleware
+from assistify_api.app.cors.custom_cors_middleware import CustomCORSMiddleware
 
 from .auth.verify_token import verify_token
 

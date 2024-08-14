@@ -13,7 +13,7 @@ def test_read_root():
     assert response.json() == {"message": "Hello Assistify"}
 
 
-@patch("src.app.auth.verify_token.id_token")
+@patch("assistify_api.app.auth.verify_token.id_token")
 def test_protected_route(mock_id_token):
     mock_user_info = {"name": "Test User", "email": "test@example.com", "iss": "accounts.google.com"}
     mock_id_token.verify_oauth2_token.return_value = mock_user_info
