@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "assistify-product-owner"
+dynamic = ["version"]
+description = "Product owner tech insights using AI for Assistify."
+license = { file = "LICENSE" }
+readme = "README.md"
+authors = [{ name = "Justin Beall", email = "jus.beall@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = [
+    "ai-assistant-manager==1.0.1",
+    "ai-code-summary",
+    "loguru",
+    "openai",
+    "python-dateutil",
+    "python-dotenv",
+]
+
+[tool.hatch.version]
+path = "setup.cfg"
+pattern = "version = (?P<version>\\S+)"
+
+[tool.hatch.build.targets.sdist]
+include = ["/assistify_product_owner"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["assistify_product_owner"]
+
+[tool.hatch.envs.default]
+type = "virtual"
+path = ".venv"
+dependencies = ["pyright", "pytest", "pytest-cov"]
+
+[tool.hatch.envs.default.scripts]
+chat = "python run_chat.py"
+youtube-chat = "python run_youtube_chat.py"
+build = "python run_build.py"
+summary = "python run_code_summary.py"
+test = "pytest --cache-clear --cov --cov-report lcov --cov-report term -m 'not integration'"
+test-integration = "pytest --cache-clear --cov"
+
+[tool.hatch.envs.hatch-static-analysis]
+config-path = "ruff_defaults.toml"
+
+[tool.ruff]
+extend = "ruff_defaults.toml"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "parents"
+
+[tool.pytest.ini_options]
+markers = "integration: an integration test that hits external uncontrolled systems"
