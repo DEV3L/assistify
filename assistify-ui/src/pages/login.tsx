@@ -56,17 +56,7 @@ const Login = () => {
             variant="contained"
             color="primary"
             startIcon={<GoogleLogo />}
-            sx={{
-              mt: 3,
-              bgcolor: "var(--btn-primary)",
-              "&:hover": {
-                bgcolor: "var(--btn-primary-hover)",
-              },
-              "&:focus": {
-                outline: "none",
-                boxShadow: "0 0 0 2px var(--btn-focus-ring)",
-              },
-            }}
+            sx={{ mt: 3 }}
           >
             Sign in with Google
           </Button>

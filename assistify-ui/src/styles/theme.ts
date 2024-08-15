@@ -41,6 +41,8 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          backgroundColor: "#007acc",
+          color: "#ffffff",
           "&:hover": {
             backgroundColor: "#005a9e", // Darker blue for hover state
           },

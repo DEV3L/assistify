@@ -19,16 +19,4 @@ body {
   color: var(--text-primary);
 }
 
-button {
-  background-color: var(--btn-primary);
-  color: var(--text-primary);
-}
-
-button:hover {
-  background-color: var(--btn-primary-hover);
-}
-
-button:focus {
-  outline: none;
-  ring: 2px solid var(--btn-focus-ring);
-}
+/* Button styles are now managed by the MUI theme */

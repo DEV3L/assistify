@@ -65,9 +65,9 @@ const Dashboard = () => {
           <ListItem button key={text}>
             <ListItemIcon>
               {index % 2 === 0 ? (
-                <HomeIcon sx={{ color: "#007acc" }} />
+                <HomeIcon color="primary" />
               ) : (
-                <SettingsIcon sx={{ color: "#007acc" }} />
+                <SettingsIcon color="primary" />
               )}
             </ListItemIcon>
             <ListItemText
@@ -87,7 +87,7 @@ const Dashboard = () => {
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "#1e1e1e",
+          backgroundColor: "secondary.main",
         }}
       >
         <Toolbar>
@@ -134,7 +134,7 @@ const Dashboard = () => {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              backgroundColor: "#1e1e1e",
+              backgroundColor: "secondary.main",
               transition: "width 0.3s",
             },
           }}
@@ -148,7 +148,7 @@ const Dashboard = () => {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              backgroundColor: "#1e1e1e",
+              backgroundColor: "secondary.main",
               transition: "width 0.3s",
             },
           }}
@@ -164,8 +164,8 @@ const Dashboard = () => {
           top: "50%",
           left: drawerExpanded ? maxDrawerWidth - 20 : minDrawerWidth - 20,
           transform: "translateY(-50%)",
-          backgroundColor: "#1e1e1e",
-          color: "#007acc",
+          backgroundColor: "secondary.main",
+          color: "primary.main",
           transition: "left 0.3s",
           zIndex: 1300, // Ensure the button is above the drawer
         }}
@@ -213,17 +213,7 @@ const Dashboard = () => {
                 fullWidth
                 variant="contained"
                 color="primary"
-                sx={{
-                  mt: 3,
-                  bgcolor: "var(--btn-primary)",
-                  "&:hover": {
-                    bgcolor: "var(--btn-primary-hover)",
-                  },
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "0 0 0 2px var(--btn-focus-ring)",
-                  },
-                }}
+                sx={{ mt: 3 }}
               >
                 Sign out
               </Button>
