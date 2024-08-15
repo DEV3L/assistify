@@ -49,6 +49,8 @@ const Dashboard = () => {
         handleDrawerExpandToggle={handleDrawerExpandToggle}
         minDrawerWidth={minDrawerWidth}
         maxDrawerWidth={maxDrawerWidth}
+        isMobile={window.innerWidth <= 600}
+        mobileOpen={mobileOpen}
       />
       <MainContent drawerWidth={drawerWidth} />
     </Box>

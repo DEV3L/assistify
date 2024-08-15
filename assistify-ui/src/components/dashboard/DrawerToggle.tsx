@@ -9,6 +9,8 @@ interface DrawerToggleProps {
   handleDrawerExpandToggle: () => void;
   minDrawerWidth: number;
   maxDrawerWidth: number;
+  isMobile: boolean;
+  mobileOpen: boolean;
 }
 
 const DrawerToggle = ({
@@ -16,7 +18,13 @@ const DrawerToggle = ({
   handleDrawerExpandToggle,
   minDrawerWidth,
   maxDrawerWidth,
+  isMobile,
+  mobileOpen,
 }: DrawerToggleProps) => {
+  if (isMobile && !mobileOpen) {
+    return null;
+  }
+
   return (
     <IconButton
       onClick={handleDrawerExpandToggle}
