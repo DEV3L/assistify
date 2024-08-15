@@ -1,4 +1,4 @@
-import { AssistifyLogo } from "@/components/AssistifyLogo";
+import { AssistifyLogo } from "@/components/common/AssistifyLogo";
 import Message from "@/components/Message";
 import Protected from "@/components/Protected";
 import {
