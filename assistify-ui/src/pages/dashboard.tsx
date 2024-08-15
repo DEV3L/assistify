@@ -2,6 +2,8 @@ import { AssistifyLogo } from "@/components/AssistifyLogo";
 import Message from "@/components/Message";
 import Protected from "@/components/Protected";
 import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
   Home as HomeIcon,
   Menu as MenuIcon,
   Settings as SettingsIcon,
@@ -26,11 +28,13 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-const drawerWidth = 60;
+const minDrawerWidth = 60;
+const maxDrawerWidth = 240;
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [drawerExpanded, setDrawerExpanded] = useState(false);
 
   const router = useRouter();
 
@@ -47,6 +51,12 @@ const Dashboard = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleDrawerExpandToggle = () => {
+    setDrawerExpanded(!drawerExpanded);
+  };
+
+  const drawerWidth = drawerExpanded ? maxDrawerWidth : minDrawerWidth;
+
   const drawer = (
     <div>
       <Toolbar />
@@ -62,7 +72,7 @@ const Dashboard = () => {
             </ListItemIcon>
             <ListItemText
               primary={text}
-              sx={{ display: { xs: "none", sm: "block" } }}
+              sx={{ display: drawerExpanded ? "block" : "none" }}
             />
           </ListItem>
         ))}
@@ -125,6 +135,7 @@ const Dashboard = () => {
               boxSizing: "border-box",
               width: drawerWidth,
               backgroundColor: "#1e1e1e",
+              transition: "width 0.3s",
             },
           }}
         >
@@ -138,6 +149,7 @@ const Dashboard = () => {
               boxSizing: "border-box",
               width: drawerWidth,
               backgroundColor: "#1e1e1e",
+              transition: "width 0.3s",
             },
           }}
           open
@@ -145,6 +157,21 @@ const Dashboard = () => {
           {drawer}
         </Drawer>
       </Box>
+      <IconButton
+        onClick={handleDrawerExpandToggle}
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: drawerExpanded ? maxDrawerWidth - 20 : minDrawerWidth - 20,
+          transform: "translateY(-50%)",
+          backgroundColor: "#1e1e1e",
+          color: "#007acc",
+          transition: "left 0.3s",
+          zIndex: 1300, // Ensure the button is above the drawer
+        }}
+      >
+        {drawerExpanded ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+      </IconButton>
       <Box
         component="main"
         sx={{
