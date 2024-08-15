@@ -1,7 +1,7 @@
 import AssistifyHead from "@/components/AssistifyHead";
 import { GoogleLogo } from "@/components/GoogleLogo";
 import Header from "@/components/common/Header";
-import StyledCard from "@/components/common/StyleCard";
+import StyledCard from "@/components/common/StyledCard";
 import { Box, Button, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";

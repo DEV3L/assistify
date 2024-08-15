@@ -4,6 +4,7 @@ export const AssistifyLogo = () => (
     viewBox="0 0 100 100"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    aria-label="assistify logo"
   >
     <circle cx="50" cy="50" r="45" fill="#4F46E5" />
     <path d="M30 50 L50 30 L70 50 L50 70 Z" fill="white" />
