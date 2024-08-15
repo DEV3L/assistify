@@ -9,6 +9,7 @@ const AssistifyHead = ({ title = "Assistify" }) => {
   return (
     <Head>
       <title>{title}</title>
+      <link rel="icon" href="/favicon.png" />
     </Head>
   );
 };

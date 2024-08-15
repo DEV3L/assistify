@@ -1,3 +1,4 @@
+import AssistifyHead from "@/components/common/AssistifyHead";
 import AppBar from "@/components/dashboard/AppBar";
 import Drawer from "@/components/dashboard/Drawer";
 import DrawerToggle from "@/components/dashboard/DrawerToggle";
@@ -34,6 +35,7 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
+      <AssistifyHead />
       <CssBaseline />
       <AppBar handleDrawerToggle={handleDrawerToggle} />
       <Drawer
