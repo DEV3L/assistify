@@ -25,6 +25,8 @@ test("homepage has title and links to intro page", async ({ page }) => {
   const emailElement = page.locator(`text=/${testUserEmail}/`);
   await expect(emailElement).toBeVisible();
 
+  await page.waitForSelector(`text=/Message:/`);
+
   const messageResponseElement = page.locator(`text=/Message:/`);
   await expect(messageResponseElement).toBeVisible();
 
