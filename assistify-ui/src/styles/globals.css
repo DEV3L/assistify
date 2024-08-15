@@ -4,13 +4,13 @@
 
 /* Design Palette */
 :root {
-  --bg-primary: #1a202c; /* bg-gray-900 */
-  --bg-secondary: #2d3748; /* bg-gray-800 */
-  --text-primary: #ffffff; /* text-white */
-  --text-secondary: #a0aec0; /* text-gray-400 */
-  --btn-primary: #e53e3e; /* bg-red-600 */
-  --btn-primary-hover: #c53030; /* hover:bg-red-700 */
-  --btn-focus-ring: #feb2b2; /* focus:ring-red-500 */
+  --bg-primary: #252526; /* Dark background color */
+  --bg-secondary: #1e1e1e; /* Slightly lighter background */
+  --text-primary: #d4d4d4; /* Light gray text */
+  --text-secondary: #808080; /* Dark gray text */
+  --btn-primary: #007acc; /* Blue button */
+  --btn-primary-hover: #005a9e; /* Darker blue button hover */
+  --btn-focus-ring: #007acc; /* Blue focus ring */
 }
 
 /* General Styles */

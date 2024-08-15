@@ -9,6 +9,9 @@ import {
 import {
   AppBar,
   Box,
+  Button,
+  Card,
+  CardContent,
   CssBaseline,
   Drawer,
   IconButton,
@@ -23,7 +26,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-const drawerWidth = 240;
+const drawerWidth = 60;
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
@@ -51,9 +54,16 @@ const Dashboard = () => {
         {["Home", "Settings"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
-              {index % 2 === 0 ? <HomeIcon /> : <SettingsIcon />}
+              {index % 2 === 0 ? (
+                <HomeIcon sx={{ color: "#007acc" }} />
+              ) : (
+                <SettingsIcon sx={{ color: "#007acc" }} />
+              )}
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText
+              primary={text}
+              sx={{ display: { xs: "none", sm: "block" } }}
+            />
           </ListItem>
         ))}
       </List>
@@ -65,7 +75,10 @@ const Dashboard = () => {
       <CssBaseline />
       <AppBar
         position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: "#1e1e1e",
+        }}
       >
         <Toolbar>
           <IconButton
@@ -111,6 +124,7 @@ const Dashboard = () => {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              backgroundColor: "#1e1e1e",
             },
           }}
         >
@@ -123,6 +137,7 @@ const Dashboard = () => {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              backgroundColor: "#1e1e1e",
             },
           }}
           open
@@ -139,29 +154,57 @@ const Dashboard = () => {
         }}
       >
         <Toolbar />
-        <div>
-          <AssistifyLogo />
-          <h2 className="mt-6 text-3xl font-bold text-white">
-            Welcome to Assistify
-          </h2>
-          <p className="mt-2 text-sm text-gray-400">
-            Your AI Assistant Interaction Hub
-          </p>
-        </div>
-
-        <div className="space-y-6">
-          <p className="text-xl text-white text-center">
-            Welcome, {session.user?.name}
-          </p>
-          <button
-            onClick={() => signOut()}
-            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            Sign out
-          </button>
-          <Protected />
-          <Message />
-        </div>
+        <Card
+          sx={{
+            maxWidth: 800,
+            margin: "auto",
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 3,
+            p: 4,
+          }}
+        >
+          <CardContent>
+            <Box textAlign="center">
+              <AssistifyLogo />
+              <Typography
+                variant="h4"
+                component="h2"
+                mt={2}
+                color="text.primary"
+              >
+                Welcome to Assistify
+              </Typography>
+              <Typography variant="body2" mt={1} color="text.secondary">
+                Your AI Assistant Interaction Hub
+              </Typography>
+              <Typography variant="h6" mt={2} color="text.primary">
+                Welcome, {session.user?.name}
+              </Typography>
+              <Button
+                onClick={() => signOut()}
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{
+                  mt: 3,
+                  bgcolor: "var(--btn-primary)",
+                  "&:hover": {
+                    bgcolor: "var(--btn-primary-hover)",
+                  },
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "0 0 0 2px var(--btn-focus-ring)",
+                  },
+                }}
+              >
+                Sign out
+              </Button>
+              <Protected />
+              <Message />
+            </Box>
+          </CardContent>
+        </Card>
       </Box>
     </Box>
   );
