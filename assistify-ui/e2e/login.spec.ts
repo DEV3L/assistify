@@ -4,7 +4,7 @@ import { loginToGoogle } from "./login.steps";
 const testUserName = process.env.GOOGLE_TEST_NAME ?? "";
 const testUserEmail = process.env.GOOGLE_TEST_EMAIL ?? "";
 
-test("homepage has title and links to intro page", async ({ page }) => {
+test("login and view dashboard", async ({ page }) => {
   await page.goto("/login");
   await expect(page).toHaveTitle(/Assistify/);
 

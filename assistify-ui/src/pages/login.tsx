@@ -39,7 +39,7 @@ const Login = () => {
           <Box textAlign="center">
             <AssistifyLogo />
             <Typography variant="h4" component="h2" mt={2} color="text.primary">
-              Welcome to Assistify - :)
+              Welcome to Assistify
             </Typography>
             <Typography variant="body2" mt={1} color="text.secondary">
               Your AI Assistant Interaction Hub
