@@ -3,9 +3,16 @@ import Message from "@/components/Message";
 import Protected from "@/components/Protected";
 import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const UserProfile = () => {
   const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push("/login");
+  };
 
   return (
     <Card
@@ -31,7 +38,7 @@ const UserProfile = () => {
             Welcome, {session?.user?.name}
           </Typography>
           <Button
-            onClick={() => signOut()}
+            onClick={handleSignOut}
             fullWidth
             variant="contained"
             color="primary"

@@ -2,9 +2,9 @@ import AppBar from "@/components/dashboard/AppBar";
 import Drawer from "@/components/dashboard/Drawer";
 import DrawerToggle from "@/components/dashboard/DrawerToggle";
 import MainContent from "@/components/dashboard/MainContent";
+import useAuthRedirect from "@/hooks/useAuthRedirect";
 import { Box, CssBaseline } from "@mui/material";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { useState } from "react";
 
 const minDrawerWidth = 60;
@@ -15,14 +15,11 @@ const Dashboard = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [drawerExpanded, setDrawerExpanded] = useState(false);
 
-  const router = useRouter();
+  // Use the custom hook to handle authentication redirection
+  useAuthRedirect("/dashboard");
+
   if (status === "loading") {
     return <div>Loading...</div>;
-  }
-
-  if (status === "unauthenticated" || !session) {
-    router.push("/login");
-    return null;
   }
 
   const handleDrawerToggle = () => {
