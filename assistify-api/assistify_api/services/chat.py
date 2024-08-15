@@ -1,7 +1,5 @@
 from ai_assistant_manager.chats.chat import Chat
 
-knowledge_bot_assistant_id = "asst_XWLIxFEE3nQUwqTGqOH9sUfY"
-
 
 class ChatService:
     """
@@ -32,4 +30,5 @@ class ChatService:
             The resulting chat completion.
         """
         self.chat.thread_id = thread_id if thread_id else self.chat.thread_id
+        self.chat.start()
         return self.chat.send_user_message(message=message)

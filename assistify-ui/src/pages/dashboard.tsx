@@ -1,4 +1,5 @@
 import { AssistifyLogo } from "@/components/AssistifyLogo";
+import Message from "@/components/Message";
 import Protected from "@/components/Protected";
 import {
   Home as HomeIcon,
@@ -159,6 +160,7 @@ const Dashboard = () => {
             Sign out
           </button>
           <Protected />
+          <Message />
         </div>
       </Box>
     </Box>

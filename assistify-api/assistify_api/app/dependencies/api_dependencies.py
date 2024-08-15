@@ -1,3 +1,4 @@
+from ai_assistant_manager.chats.chat import Chat
 from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
 
 from assistify_api.services.chat import ChatService
@@ -20,4 +21,5 @@ def get_chat_service() -> ChatService:
     Returns:
         An instance of ChatService.
     """
-    return ChatService(api_client=get_openai_client())
+    knowledge_bot_assistant_id = "asst_XWLIxFEE3nQUwqTGqOH9sUfY"
+    return ChatService(Chat(get_openai_client(), knowledge_bot_assistant_id))
