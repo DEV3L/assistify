@@ -1,7 +1,8 @@
 import AssistifyHead from "@/components/AssistifyHead";
-import { AssistifyLogo } from "@/components/AssistifyLogo";
 import { GoogleLogo } from "@/components/GoogleLogo";
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import Header from "@/components/common/Header";
+import StyledCard from "@/components/common/StyleCard";
+import { Box, Button, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { fetchRandomNumber } from "../services/service";
@@ -26,42 +27,27 @@ const Login = () => {
       bgcolor="background.default"
     >
       <AssistifyHead />
-      <Card
-        sx={{
-          maxWidth: 400,
-          p: 4,
-          bgcolor: "secondary.main",
-          borderRadius: 2,
-          boxShadow: 3,
-        }}
-      >
-        <CardContent>
-          <Box textAlign="center">
-            <AssistifyLogo />
-            <Typography variant="h4" component="h2" mt={2} color="text.primary">
-              Welcome to Assistify
-            </Typography>
-            <Typography variant="body2" mt={1} color="text.secondary">
-              Your AI Assistant Interaction Hub
-            </Typography>
-            {randomNumber !== null && (
-              <Typography variant="h6" mt={2} color="text.primary">
-                Random Number: {randomNumber}
-              </Typography>
-            )}
-          </Box>
-          <Button
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-            fullWidth
-            variant="contained"
-            color="primary"
-            startIcon={<GoogleLogo />}
-            sx={{ mt: 3 }}
-          >
-            Sign in with Google
-          </Button>
-        </CardContent>
-      </Card>
+      <StyledCard>
+        <Header
+          title="Welcome to Assistify"
+          subtitle="Your AI Assistant Interaction Hub"
+        />
+        {randomNumber !== null && (
+          <Typography variant="h6" mt={2} color="text.primary">
+            Random Number: {randomNumber}
+          </Typography>
+        )}
+        <Button
+          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          fullWidth
+          variant="contained"
+          color="primary"
+          startIcon={<GoogleLogo />}
+          sx={{ mt: 3 }}
+        >
+          Sign in with Google
+        </Button>
+      </StyledCard>
     </Box>
   );
 };
