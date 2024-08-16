@@ -112,6 +112,30 @@ Navigate to the API directory and follow the [Assistify API README.md](assistify
 
 Navigate to the UI directory and follow the [Assistify UI README.md](assistify-ui/README.md) instructions.
 
+### Docker
+
+#### Environment Variables
+
+The following environment variables are required:
+
+- `GOOGLE_CLIENT_ID`: Your Google OAuth client ID
+- `GOOGLE_CLIENT_SECRET`: Your Google OAuth client secret
+- `NEXTAUTH_SECRET`: A secret used to encrypt session tokens
+- `OPENAI_API_KEY`: The OpenAI API key
+
+Copy the `.env.default` file to `.env` and set the variables.
+
+#### Run the Stack
+
+```bash
+source .env
+docker-compose up
+```
+
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8000
+- MongoDB: localhost:27017
+
 ## Continuous Integration
 
 This project uses GitHub Actions for continuous integration. The configuration can be found in the `.github/workflows` directory.
