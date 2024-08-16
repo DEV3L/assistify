@@ -1,16 +1,18 @@
 # Assistify
 
-# PROD
-
-[Assistify UI](https://assistify-ui.vercel.app)
-[Assistify API](https://assistify-api.fly.dev/docs)
-
-# CI
-
-[Assistify UI CI](https://assistify-ui-ci.vercel.app)
-[Assistify API CI](https://assistify-api-ci.fly.dev/docs)
-
 > A web platform for engaging with specialized OpenAI Assistants across various fields.
+
+### PROD
+
+- [Assistify UI](https://assistify-ui.vercel.app)
+- [Assistify API](https://assistify-api.fly.dev/docs)
+
+### CI
+
+- [Assistify UI CI](https://assistify-ui-ci.vercel.app)
+- [Assistify API CI](https://assistify-api-ci.fly.dev/docs)
+
+---
 
 Assistify is a web-based application that connects users with specialized OpenAI Assistants, streamlining interactions in areas like programming, product management, and content creation. By providing a common platform for accessing diverse AI assistants, it offers personalized support across various professional domains. Integrating Google authentication for security and using a provider-supplied OpenAI API key simplifies access, enabling a broader user base to benefit from AI-enhanced productivity tools. With future plans for a subscription-based model, Assistify aims to evolve into a marketplace for AI assistants, fostering innovation and collaboration among its users.
 
