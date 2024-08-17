@@ -13,6 +13,7 @@ requires-python = ">=3.12"
 dependencies = [
     "ai-assistant-manager==1.0.1",
     "ai-code-summary==0.0.3",
+    "ai-trello-extract==0.0.7",
     "loguru",
     "openai",
     "python-dateutil",
@@ -38,6 +39,7 @@ dependencies = ["pyright", "pytest", "pytest-cov"]
 chat = "python run_chat.py"
 e2e = "python run_end_to_end.py"
 summary = "python run_code_summary.py"
+trello-extract = "python run_trello_extract.py"
 test = "pytest --cache-clear --cov --cov-report lcov --cov-report term -m 'not integration'"
 test-integration = "pytest --cache-clear --cov --cov-report lcov --cov-report term"
 

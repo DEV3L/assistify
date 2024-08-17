@@ -1,0 +1,12 @@
+08-17-2024
+
+# DOING
+This is a list of cards, work items, user stories, and tasks that are in the doing category.
+
+## Title: Add protected Chat endpoint
+
+### List Name: Doing
+
+### Description
+
+I want to be able to chat with a hardcoded bot and a thread over a endpoint.

@@ -3,7 +3,7 @@ from ai_assistant_manager.exporters.files.files_exporter import FilesExporter
 
 
 def export_data():
-    # DirectoryExporter("entries").export()
+    DirectoryExporter("Assistify Status Trello Board").export()
     FilesExporter("Assistify Product Definition.txt").export()
     FilesExporter("Assistify Product Owner README.txt").export()
     # code
