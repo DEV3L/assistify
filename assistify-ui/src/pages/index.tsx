@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <>
       <AssistifyHead />
-      <div>Loading...</div>;
+      <div>Loading...</div>
     </>
   );
 }
