@@ -70,7 +70,7 @@ jobs:
 
       - name: Run Code Extraction (Assistify GitHub Workflows)
         run: |
-          hatch run summary "../../.github"
+          hatch run summary "../../.github/workflows"
           mv tmp/workflows.md data/files/code/assistify-github-workflows.txt
 
       - name: Run Build Agent Assistify Product Owner
