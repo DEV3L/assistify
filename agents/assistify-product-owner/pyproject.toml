@@ -37,8 +37,9 @@ dependencies = ["pyright", "pytest", "pytest-cov"]
 
 [tool.hatch.envs.default.scripts]
 chat = "python run_chat.py"
-e2e = "python run_end_to_end.py"
-summary = "python run_code_summary.py"
+build = "python run_end_to_end.py"
+e2e = "python run_end_to_end.py --delete-assistant true"
+summary = "python run_code_summary.py {args}"
 trello-extract = "python run_trello_extract.py"
 test = "pytest --cache-clear --cov --cov-report lcov --cov-report term -m 'not integration'"
 test-integration = "pytest --cache-clear --cov --cov-report lcov --cov-report term"

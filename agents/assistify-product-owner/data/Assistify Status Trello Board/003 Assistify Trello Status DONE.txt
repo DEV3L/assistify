@@ -1,0 +1,241 @@
+08-17-2024
+
+# DONE
+This is a list of cards, work items, user stories, and tasks that are in the done category.
+
+## Title: Implement CI/CD Walking Skeleton
+
+### List Name: Done
+
+### Labels
+
+- automation-testing
+- assistify-api
+- assistify-ui
+- google-authentication
+
+### Description
+
+**Business Value**: Establishing a comprehensive CI/CD pipeline with unit and end-to-end tests ensures reliable and consistent deployments. It enhances the development process by catching errors early and validating all critical functionalities, leading to higher-quality software and streamlined workflow.
+
+**Problem**: The completion of the current CI/CD process is of utmost importance. It needs to validate all critical functionalities, especially those involving complex flows like Google authentication and protected endpoints. This urgency should be felt by the entire development team.
+
+**Description**: As a development team, our goal is clear-we want to implement a CI/CD walking skeleton. This skeleton will run all unit tests for the frontend and backend, deploy to CI instances, and run end-to-end tests, including Google authentication and protected endpoint validation. With this clarity, we can ensure robust and reliable deployments.
+
+The tasks involved include:
+
+1. Setting up the CI/CD pipeline to run all unit tests for the front end (assistify-ui) and back end (assistify-api).
+2. Deploying the applications to their respective CI instances (Vercel and fly-io ).
+3. Implementing end-to-end tests that include:
+   - Testing Google authentication.
+   - Validating the protected endpoint response.
+4. Managing browser state by:
+   - Saving the browser state from a logged-in experience.
+   - Encoding the state as a base64 GitHub Actions environment secret.
+   - Decoding the state into a file during the GitHub Action runtime to use in the end-to-end tests.
+
+**Acceptance Criteria**:
+_Given_ the CI/CD pipeline setup
+_When_ a new commit is pushed to the repository main branch
+_Then_ the pipeline should run all unit tests for the frontend and backend
+_And_ deploy to CI instances
+And execute end-to-end tests that include Google authentication
+And validation of the protected endpoint response
+
+## Title: Standardize on MUI Components and Update UI Layout
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Standardizing the UI with MUI components and themes ensures a consistent and professional appearance across the application. Creating a new landing experience with a structured layout improves usability and provides a cohesive look and feel, enhancing user experience.
+
+**Problem**: The current UI lacks consistency and requires a cohesive layout and theme to improve usability and visual appeal.
+
+**Description**: As a development and design team, we want to standardize our UI components with MUI and implement a new landing experience with a structured layout, so that our application has a consistent look and feel, and users can easily navigate and interact with it.
+
+The tasks involved include:
+
+1. Standardizing all UI components and themes using MUI to ensure consistency across the application.
+2. Creating a collapsible menu on the left side of the screen.
+3. Implementing a standard header that spans the entire top of the screen, with branding on the left and user information (including an image) on the right.
+4. Designing the main content area to be in the center, where the primary component work will be done.
+5. Ensuring that the layout serves as the shell for the entire system.
+
+**Acceptance Criteria**:
+_Given_ the use of MUI components and themes
+_When_ a user accesses the application
+_Then_ they should see a consistent UI with a collapsible left menu
+_And_ a standard header with branding on the left and user information on the right
+_And_ a main content area in the center
+
+- - -
+
+![image.png](https://trello.com/1/cards/66bca16ea028b1c6a0bf9fd5/attachments/66c1288d49253f31af87dc7e/download/image.png)
+
+![image.png](https://trello.com/1/cards/66bca16ea028b1c6a0bf9fd5/attachments/66c128756bdb59c10cbdeaa9/download/image.png)
+
+## Title: Display Protected Hello World Message on Authenticated Dashboard
+
+### List Name: Done
+
+### Labels
+
+- assistify-api
+- assistify-ui
+- google-authentication
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Providing a personalized greeting message enhances user experience by welcoming authenticated users and displaying tailored information, showcasing a secure integration that respects user privacy and data.
+
+**Problem**: Users need to see personalized information securely presented in the dashboard after authentication.
+
+**Description**: As an authenticated user, I want to see a personalized "Hello World" message on my dashboard, so that I can confirm that I am logged in and interacting with a secure, personalized part of the application.
+
+The tasks involved include:
+
+1. Creating a protected backend endpoint that accepts the Google bearer token.
+2. Returning a standard greeting message along with the user's name and email from the backend.
+3. Displaying the personalized greeting message on the frontend dashboard, visible only to authenticated users.
+
+**Acceptance Criteria**:
+
+_Given_ the user has successfully logged in with Google authentication
+And possesses a valid bearer token
+_When_ they access the dashboard
+_Then_ they should see a personalized "Hello World" message that includes their name and email address
+
+## Title: Integrate Google Authentication for Frontend Login
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- google-authentication
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Implementing Google authentication provides users a seamless and secure login experience. It enhances security by leveraging Google's robust authentication mechanisms and simplifies the login process by reducing the need for users to create and manage new credentials.
+
+**Problem**: Users need a secure and convenient way to log in to the frontend application without managing additional credentials.
+
+**Description**: The user's goal is to log in to the frontend application using Google authentication, ensuring secure access without the hassle of creating and managing a new account.
+
+The tasks involved include:
+
+1. Setting up a Google Auth client and obtaining the necessary credentials.
+2. Whitelisting the required domains for Google authentication.
+3. Adding a simple "Log in with Google" button for users who are not authenticated.
+4. Adding a "Log out" button for authenticated users.
+
+**Acceptance Criteria**:
+
+_Given_ the Google Auth client setup and credentials
+_And_ a user visits the application and is not authenticated
+_And_ they should see a "Log in with Google" button,
+_When_ the login is successful
+_Then_ the user should see a "Log out" button.
+
+## Title: Create a Hello World Next.js Application - assistify-ui
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Establishing a foundational frontend service with a Next.js application enables agile and efficient user interface development, testing, and deployment. Implementing a CI/CD pipeline ensures continuous integration and seamless deployment, enhancing reliability and productivity.
+
+**Problem**: Our need for a frontend service that automatically deploys with every update is a challenge we can confidently overcome. This will maintain a streamlined development workflow and ensure our UI is always up-to-date.
+
+**Description**: As a development team, we want to create a "Hello World" Next.js application for our frontend (assistify-ui) hosted on Vercel so that we can establish a robust and automated deployment process.
+
+The tasks involved include:
+
+1. Setting up a basic Next.js application that displays "Hello World".
+2. Configuring Vercel to host the application.
+3. Establishing a CI/CD pipeline to deploy the application on code changes automatically.
+
+**Acceptance Criteria**:
+
+_Given_ the Next.js application and Vercel configuration
+_When_ the code is pushed to the repository
+T_hen_ the CI/CD pipeline should automatically build and deploy the updated application to Vercel
+
+## Title: Create a Hello World Fast API Application - assistify-api
+
+### List Name: Done
+
+### Labels
+
+- assistify-api
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Establishing a foundational backend service with Fast API enables rapid and efficient development, testing, and deployment of future features. Implementing a CI/CD pipeline ensures continuous integration and seamless deployment, increasing reliability and productivity.
+
+**Problem**: We need a backend service to host our API and ensure it automatically deploys with every update to maintain a streamlined development workflow.
+
+**Description**: As a development team, we want to create a "Hello World" Fast API application for our backend (assistify-api) hosted on Fly-io, so that we can establish a robust and automated deployment process.
+
+The tasks involved include:
+
+1. Setting up a basic Fast API application that returns "Hello World".
+2. Creating a Fly-io  configuration for hosting the application.
+3. Establishing a CI/CD pipeline to deploy the application on code changes automatically.
+
+**Acceptance Criteria**:
+
+_Given_ the Fast API application and Fly-io  configuration
+_When_ the code is pushed to the repository
+_Then_ the CI/CD pipeline should automatically build and deploy the updated application to Fly-io
+
+## Title: Build a Virtual Product Owner
+
+### List Name: Done
+
+### Labels
+
+- assistify-product-owner
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: This feature will allow the team to streamline product management tasks by leveraging AI capabilities, enhancing productivity, and handling product management activities more efficiently.
+
+**Problem**: The current product management tasks are time-consuming and require significant manual effort. Integrating AI can automate many tasks, making the process more efficient.
+
+**Description**: As a product team, we aim to harness the power of AI to create a Virtual Product Owner. This AI-driven system will not only automate but also enhance our product management tasks, significantly boosting our efficiency. The work involves:
+
+1. Gathering necessary data, including the product statement, code file summaries, Trello extract, and the project README.
+2. Integrating existing AI Dev3loper libraries.
+3. Rigorously testing and verifying that the prompt and integration function as intended, ensuring that the Virtual Product Owner can understand the context and provide appropriate responses/tasks autonomously.
+
+**Acceptance Criteria**:
+
+_Given_ the gathered data and integrated AI libraries
+_When_ the system processes a product management request
+_Then_ the Virtual Product Owner should understand the context and autonomously provide appropriate responses/tasks.
+
+#### Comments
+
+Assistant Name: “Assistify - Product Owner”

@@ -1,13 +1,40 @@
 # assistify-ui
 
+## useAuthRedirect.ts
+
+### Summary
+
+This code defines a custom React hook named `useAuthRedirect`. It uses `next-auth` to check the user's authentication status. If the user is authenticated, it redirects them to a specified path (`redirectTo`). If the user is not authenticated or the status is unknown, it redirects them to the login page (`/login`). The hook utilizes `useRouter` from Next.js for navigation and `useEffect` to trigger the redirection based on the authentication status.
+
+```ts
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
+const useAuthRedirect = (redirectTo: string) => {
+  const { status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push(redirectTo);
+    } else if (!status || status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router, redirectTo]);
+};
+
+export default useAuthRedirect;
+
+```
 ## index.tsx
 
 ### Summary
 
-This code defines the `Home` component in a Next.js application. It uses session status to determine user authentication. Depending on the status, it automatically redirects authenticated users to the `/dashboard` page and unauthenticated users to the `/login` page. While waiting for the session status to be determined, it displays a loading message and includes the `AssistifyHead` component.
+This Next.js component checks the user's authentication status. If authenticated, it redirects to the dashboard; if unauthenticated, it redirects to the login page. While determining the status, it displays a loading message. Additionally, it includes a custom head component (`AssistifyHead`).
 
 ```tsx
-import AssistifyHead from "@/components/AssistifyHead";
+import AssistifyHead from "@/components/common/AssistifyHead";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -27,7 +54,7 @@ export default function Home() {
   return (
     <>
       <AssistifyHead />
-      <div>Loading...</div>;
+      <div>Loading...</div>
     </>
   );
 }
@@ -37,10 +64,7 @@ export default function Home() {
 
 ### Summary
 
-This code is a set of unit tests for the `AssistifyHead` React component. It uses the `@testing-library/react` library to:
-
-1. Check if `AssistifyHead` renders the default title "Assistify".
-2. Verify that `AssistifyHead` can render a custom title passed as a prop.
+The code is a set of tests for the `AssistifyHead` component using "@testing-library/react". It checks if the default title is "Assistify" and if a custom title is rendered correctly when passed as a prop.
 
 ```tsx
 import { render, waitFor } from "@testing-library/react";
@@ -64,17 +88,148 @@ describe("AssistifyHead", () => {
 });
 
 ```
+## UserProfile.tsx
+
+### Summary
+
+This code defines a React component called `UserProfile` which displays a user profile card. It uses various imported components and hooks, such as `AssistifyLogo`, `Message`, `Protected`, `useSession` from `next-auth/react`, and `useRouter` from `next/router`. The card contains welcome text, the user's name (from the session), and a sign out button. When the "Sign out" button is clicked, it triggers a sign out and redirects the user to the login page. The profile card is styled using Material-UI components such as `Card`, `CardContent`, `Box`, `Typography`, and `Button`.
+
+```tsx
+import { AssistifyLogo } from "@/components/common/AssistifyLogo";
+import Message from "@/components/Message";
+import Protected from "@/components/Protected";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+
+const UserProfile = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push("/login");
+  };
+
+  return (
+    <Card
+      sx={{
+        maxWidth: 800,
+        margin: "auto",
+        bgcolor: "background.paper",
+        borderRadius: 2,
+        boxShadow: 3,
+        p: 4,
+      }}
+    >
+      <CardContent>
+        <Box textAlign="center">
+          <AssistifyLogo />
+          <Typography variant="h4" component="h2" mt={2} color="text.primary">
+            Welcome to Assistify
+          </Typography>
+          <Typography variant="body2" mt={1} color="text.secondary">
+            Your AI Assistant Interaction Hub
+          </Typography>
+          <Typography variant="h6" mt={2} color="text.primary">
+            Welcome, {session?.user?.name}
+          </Typography>
+          <Button
+            onClick={handleSignOut}
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3 }}
+          >
+            Sign out
+          </Button>
+          <Protected />
+          <Message />
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default UserProfile;
+
+```
+## StyledCard.test.tsx
+
+### Summary
+
+The code is a test suite for the `StyledCard` component using `@testing-library/react`. It performs three tests:
+
+1. Checks if children render correctly within the `StyledCard`.
+2. Verifies that default styles (maxWidth, padding) are applied correctly to the `StyledCard`.
+3. Ensures custom styles (background color) are applied correctly when passed via the `sx` prop.
+
+```tsx
+import { render, screen } from "@testing-library/react";
+import StyledCard from "./StyledCard";
+
+/**
+ * Test suite for the StyledCard component
+ */
+describe("StyledCard", () => {
+  it("renders children correctly", () => {
+    render(
+      <StyledCard>
+        <div>Test Child</div>
+      </StyledCard>
+    );
+    expect(screen.getByText("Test Child")).toBeInTheDocument();
+  });
+
+  it("applies default styles correctly", () => {
+    render(
+      <StyledCard>
+        <div>Test Child</div>
+      </StyledCard>
+    );
+    const cardElement = screen.getByText("Test Child").closest(".MuiCard-root");
+    const styles = getComputedStyle(cardElement!);
+    expect(styles.maxWidth).toBe("400px");
+    expect(styles.padding).toBe("32px");
+  });
+
+  it("applies custom styles correctly", () => {
+    render(
+      <StyledCard sx={{ bgcolor: "primary.main" }}>
+        <div>Test Child</div>
+      </StyledCard>
+    );
+    const cardElement = screen.getByText("Test Child").closest(".MuiCard-root");
+    const styles = getComputedStyle(cardElement!);
+    expect(styles.backgroundColor).toBe("rgb(25, 118, 210)");
+  });
+});
+
+```
 ## login.tsx
 
 ### Summary
 
-This code defines a functional React component called `Login`. It includes imports for various components and functions, including `AssistifyHead`, `AssistifyLogo`, `GoogleLogo`, and Material-UI components. The `Login` component fetches a random number when it mounts using `fetchRandomNumber`, and displays it within a styled card. The card contains branding elements, a welcome message, and a button that initiates a Google Sign-In process via `next-auth`.
+This code defines a functional React component named `Login`. The component does the following:
+
+1. Imports necessary components and functions from external modules.
+2. Uses `useState` to manage the state of a random number.
+3. Uses `useEffect` to fetch a random number when the component mounts and updates the state with this number.
+4. Renders a login page with:
+    - A centered `Box` that takes the full viewport height.
+    - A head component (`AssistifyHead`).
+    - A styled card with a header.
+    - A `Typography` component displaying a fetched random number if available.
+    - A button that triggers Google sign-in using the `signIn` function from `next-auth/react`.
+
+Finally, the `Login` component is exported as the default export.
 
 ```tsx
-import AssistifyHead from "@/components/AssistifyHead";
-import { AssistifyLogo } from "@/components/AssistifyLogo";
-import { GoogleLogo } from "@/components/GoogleLogo";
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import AssistifyHead from "@/components/common/AssistifyHead";
+import { GoogleLogo } from "@/components/common/GoogleLogo";
+import Header from "@/components/common/Header";
+import StyledCard from "@/components/common/StyledCard";
+import { Box, Button, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { fetchRandomNumber } from "../services/service";
@@ -99,42 +254,27 @@ const Login = () => {
       bgcolor="background.default"
     >
       <AssistifyHead />
-      <Card
-        sx={{
-          maxWidth: 400,
-          p: 4,
-          bgcolor: "secondary.main",
-          borderRadius: 2,
-          boxShadow: 3,
-        }}
-      >
-        <CardContent>
-          <Box textAlign="center">
-            <AssistifyLogo />
-            <Typography variant="h4" component="h2" mt={2} color="text.primary">
-              Welcome to Assistify - :)
-            </Typography>
-            <Typography variant="body2" mt={1} color="text.secondary">
-              Your AI Assistant Interaction Hub
-            </Typography>
-            {randomNumber !== null && (
-              <Typography variant="h6" mt={2} color="text.primary">
-                Random Number: {randomNumber}
-              </Typography>
-            )}
-          </Box>
-          <Button
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-            fullWidth
-            variant="contained"
-            color="primary"
-            startIcon={<GoogleLogo />}
-            sx={{ mt: 3 }}
-          >
-            Sign in with Google
-          </Button>
-        </CardContent>
-      </Card>
+      <StyledCard>
+        <Header
+          title="Welcome to Assistify"
+          subtitle="Your AI Assistant Interaction Hub"
+        />
+        {randomNumber !== null && (
+          <Typography variant="h6" mt={2} color="text.primary">
+            Random Number: {randomNumber}
+          </Typography>
+        )}
+        <Button
+          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          fullWidth
+          variant="contained"
+          color="primary"
+          startIcon={<GoogleLogo />}
+          sx={{ mt: 3 }}
+        >
+          Sign in with Google
+        </Button>
+      </StyledCard>
     </Box>
   );
 };
@@ -146,182 +286,64 @@ export default Login;
 
 ### Summary
 
-This code defines a `Dashboard` component that creates a protected user interface for an application. Key parts include:
-
-1. **Imports**: Various components and utilities from Material-UI, Next.js authentication, and React hooks.
-2. **State Management**: Uses the `useState` hook to manage the mobile drawer's open state.
-3. **Session Handling**: Utilizes `useSession` to check the user's authentication status.
-4. **Navigation Protection**: Redirects unauthenticated users to the login page.
-5. **Responsive Drawer**: Implements a left-side navigation drawer that adjusts for mobile and desktop views.
-6. **Header**: Contains a toolbar with an app name, user image, and name, and a menu icon to toggle the drawer.
-7. **Main Content**: Includes a welcome message, a sign-out button, and the `Protected` component (content for authenticated users).
-
-The component structure ensures a responsive and secure user interface, personalized based on user session.
+This code defines a `Dashboard` component for a web application. It includes a series of UI components (`AppBar`, `Drawer`, `DrawerToggle`, `MainContent`) for creating a responsive dashboard layout. The component uses authentication session management (`useSession`) and redirects non-authenticated users to the "/dashboard" route (`useAuthRedirect`). It incorporates state management to handle the opening/closing and expanding/collapsing of the drawer. The `Dashboard` component returns a layout wrapped in a `Box` element with `AssistifyHead` and `CssBaseline` for basic styling and normalization.
 
 ```tsx
-import { AssistifyLogo } from "@/components/AssistifyLogo";
-import Protected from "@/components/Protected";
-import {
-  Home as HomeIcon,
-  Menu as MenuIcon,
-  Settings as SettingsIcon,
-} from "@mui/icons-material";
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import AssistifyHead from "@/components/common/AssistifyHead";
+import AppBar from "@/components/dashboard/AppBar";
+import Drawer from "@/components/dashboard/Drawer";
+import DrawerToggle from "@/components/dashboard/DrawerToggle";
+import MainContent from "@/components/dashboard/MainContent";
+import useAuthRedirect from "@/hooks/useAuthRedirect";
+import { Box, CssBaseline } from "@mui/material";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
-const drawerWidth = 240;
+const minDrawerWidth = 60;
+const maxDrawerWidth = 240;
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [drawerExpanded, setDrawerExpanded] = useState(false);
 
-  const router = useRouter();
+  // Use the custom hook to handle authentication redirection
+  useAuthRedirect("/dashboard");
 
   if (status === "loading") {
     return <div>Loading...</div>;
-  }
-
-  if (status === "unauthenticated" || !session) {
-    router.push("/login");
-    return null;
   }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const drawer = (
-    <div>
-      <Toolbar />
-      <List>
-        {["Home", "Settings"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <HomeIcon /> : <SettingsIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+  const handleDrawerExpandToggle = () => {
+    setDrawerExpanded(!drawerExpanded);
+  };
+
+  const drawerWidth = drawerExpanded ? maxDrawerWidth : minDrawerWidth;
 
   return (
     <Box sx={{ display: "flex" }}>
+      <AssistifyHead />
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Assistify
-          </Typography>
-          {session && (
-            <Box display="flex" alignItems="center">
-              <Typography variant="body1" mr={2}>
-                {session.user?.name}
-              </Typography>
-              <img
-                src={session.user?.image ?? ""}
-                alt="User Icon"
-                style={{ borderRadius: "50%", width: 40, height: 40 }}
-              />
-            </Box>
-          )}
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-        <div>
-          <AssistifyLogo />
-          <h2 className="mt-6 text-3xl font-bold text-white">
-            Welcome to Assistify
-          </h2>
-          <p className="mt-2 text-sm text-gray-400">
-            Your AI Assistant Interaction Hub
-          </p>
-        </div>
-
-        <div className="space-y-6">
-          <p className="text-xl text-white text-center">
-            Welcome, {session.user?.name}
-          </p>
-          <button
-            onClick={() => signOut()}
-            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            Sign out
-          </button>
-          <Protected />
-        </div>
-      </Box>
+      <AppBar handleDrawerToggle={handleDrawerToggle} />
+      <Drawer
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+        drawerWidth={drawerWidth}
+        drawerExpanded={drawerExpanded}
+      />
+      <DrawerToggle
+        drawerExpanded={drawerExpanded}
+        handleDrawerExpandToggle={handleDrawerExpandToggle}
+        minDrawerWidth={minDrawerWidth}
+        maxDrawerWidth={maxDrawerWidth}
+        isMobile={window.innerWidth <= 600}
+        mobileOpen={mobileOpen}
+      />
+      <MainContent drawerWidth={drawerWidth} />
     </Box>
   );
 };
@@ -329,15 +351,35 @@ const Dashboard = () => {
 export default Dashboard;
 
 ```
+## Dockerfile
+
+### Summary
+
+This Dockerfile sets up a lightweight Node.js environment using the Alpine Linux image. It copies the application code to the container, installs dependencies with `yarn`, builds the application, exposes port 3000 for the app to be accessible, and starts the application using `yarn start`.
+
+```
+FROM node:18-alpine
+
+WORKDIR /app
+COPY . /app
+
+RUN yarn install --frozen-lockfile
+RUN yarn build
+
+EXPOSE 3000
+
+CMD ["yarn", "start"]
+
+```
 ## GoogleLogo.tsx
 
 ### Summary
 
-The given code defines a React functional component named `GoogleLogo`. This component renders an SVG graphic representing the Google logo. The SVG contains four `path` elements, each defining a part of the logo's shape and filled with the current color. The SVG has fixed width, height, and some additional style classes for positioning.
+This code defines a React functional component named `GoogleLogo`. It returns an SVG that visually represents the Google logo using four path elements to draw different parts of the logo. The SVG has a width and height of 5 units each, a margin to the right of 2 units, and includes an `aria-label` for accessibility.
 
 ```tsx
 export const GoogleLogo = () => (
-  <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" aria-label="google logo">
     <path
       fill="currentColor"
       d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -362,15 +404,19 @@ export const GoogleLogo = () => (
 
 ### Summary
 
-This code defines an automated test using Playwright that:
+This code is a Playwright test script for verifying Google login functionality on a web application. It follows these steps:
 
-1. Navigates to a login page.
-2. Verifies the page title contains "Assistify".
-3. Clicks the "Sign in with Google" button.
-4. Performs the Google login process using a helper function.
-5. Waits for a welcome message containing a test user name and verifies it is visible.
-6. Verifies the test user’s email is present on the page.
+1. Imports necessary modules and the login function.
+2. Sets up test user credentials from environment variables.
+3. Defines a test:
+   - Navigates to the login page.
+   - Verifies the page title.
+   - Clicks the "Sign in with Google" button.
+   - Executes the Google login process.
+   - Asserts that the welcome message and user email are visible on the redirected dashboard page.
+   - Asserts the presence of a specific message on the page.
 
+The test is intended to ensure that logging in via Google works correctly and that user-specific elements are displayed afterward.
 
 ```ts
 import { expect, test } from "@playwright/test";
@@ -379,7 +425,7 @@ import { loginToGoogle } from "./login.steps";
 const testUserName = process.env.GOOGLE_TEST_NAME ?? "";
 const testUserEmail = process.env.GOOGLE_TEST_EMAIL ?? "";
 
-test("homepage has title and links to intro page", async ({ page }) => {
+test("login and view dashboard", async ({ page }) => {
   await page.goto("/login");
   await expect(page).toHaveTitle(/Assistify/);
 
@@ -400,15 +446,135 @@ test("homepage has title and links to intro page", async ({ page }) => {
   const emailElement = page.locator(`text=/${testUserEmail}/`);
   await expect(emailElement).toBeVisible();
 
+  await page.waitForSelector(`text=/Message:/`);
+
+  const messageResponseElement = page.locator(`text=/Message:/`);
+  await expect(messageResponseElement).toBeVisible();
+
   // await saveStorageState(page);
 });
+
+```
+## axiosInstance.ts
+
+### Summary
+
+This code creates a customized Axios instance with a base URL from environment variables. It includes an interceptor that attaches an authorization header with a Bearer token (`idToken`) from the current user's session (handled by `next-auth`). If obtaining the session fails, the request error is rejected. The configured Axios instance is then exported for use.
+
+```ts
+import axios from "axios";
+import { getSession } from "next-auth/react";
+
+const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+});
+
+axiosInstance.interceptors.request.use(
+  async (config) => {
+    const session = await getSession();
+    if (session?.idToken) {
+      config.headers.Authorization = `Bearer ${session.idToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;
+
+```
+## AppBar.tsx
+
+### Summary
+
+This code defines a custom `AppBar` component using Material-UI and Next.js authentication. The `AppBar` includes:
+- A fixed position menu bar.
+- A toggle button to open a drawer, which only appears on small screens.
+- The title "Assistify".
+- The user's name and profile picture if the user is authenticated.
+
+**Key components and functionalities:**
+1. Imports necessary Material-UI components and icons.
+2. Uses the `useSession` hook from `next-auth` to get session data.
+3. Defines an `AppBar` component that takes a `handleDrawerToggle` function prop.
+4. Renders an app bar with a menu icon button that calls `handleDrawerToggle` when clicked.
+5. Displays the user's name and image if a session exists.
+
+**Custom styles:**
+- Sets the app bar's position as fixed and changes its background color.
+- Adjusts the display of the menu icon based on screen size.
+- Styles user image to be circular and of specific size (40x40px).
+
+```tsx
+import MenuIcon from "@mui/icons-material/Menu";
+import {
+  Box,
+  IconButton,
+  AppBar as MuiAppBar,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { useSession } from "next-auth/react";
+
+interface AppBarProps {
+  handleDrawerToggle: () => void;
+}
+
+const AppBar = ({ handleDrawerToggle }: AppBarProps) => {
+  const { data: session } = useSession();
+
+  return (
+    <MuiAppBar
+      position="fixed"
+      sx={{
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+        backgroundColor: "secondary.main",
+      }}
+    >
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
+          sx={{ mr: 2, display: { sm: "none" } }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          Assistify
+        </Typography>
+        {session && (
+          <Box display="flex" alignItems="center">
+            <Typography variant="body1" mr={2}>
+              {session.user?.name}
+            </Typography>
+            <img
+              src={session.user?.image ?? ""}
+              alt="User Icon"
+              style={{ borderRadius: "50%", width: 40, height: 40 }}
+            />
+          </Box>
+        )}
+      </Toolbar>
+    </MuiAppBar>
+  );
+};
+
+export default AppBar;
 
 ```
 ## storageStateHelper.ts
 
 ### Summary
 
-This code defines a function `saveStorageState` that saves the storage state of a given Playwright page to a JSON file, converts the JSON content to a Base64 string, and then writes both the JSON and Base64 encoded storage state to separate files.
+This code defines an asynchronous function, `saveStorageState`, which saves the storage state of a given Playwright page. The function carries out the following steps:
+
+1. Saves the storage state to a JSON file named "storageState.json".
+2. Reads the content of this JSON file and converts it to a Base64 string.
+3. Writes the Base64 encoded string to a file named "storageState.base64".
 
 ```ts
 import { Buffer } from "buffer";
@@ -421,7 +587,7 @@ import { Page } from "playwright";
  * This function performs the following steps:
  * 1. Saves the storage state to a JSON file.
  * 2. Reads the JSON file and converts its content to a Base64 string.
- * 3. Writes both the JSON and Base64 encoded storage state to files.
+ * 3. Writes the Base64 encoded storage state to files.
  *
  * @param {Page} page - The Playwright page whose storage state is to be saved.
  * @returns {Promise<void>} - A promise that resolves when the storage state has been saved.
@@ -438,17 +604,123 @@ export const saveStorageState = async (page: Page): Promise<void> => {
   const storageStateJson = readFileSync("storageState.json", "utf-8");
   const storageStateBase64 = Buffer.from(storageStateJson).toString("base64");
 
-  // Write both the JSON and Base64 encoded storage state to files
-  writeFileSync("storageState.json", storageStateJson);
+  // Write the Base64 encoded storage state to files
   writeFileSync("storageState.base64", storageStateBase64);
 };
+
+```
+## Drawer.tsx
+
+### Summary
+
+This code defines a side navigation drawer component using Material-UI in React. It imports necessary icons and components, and defines a `Drawer` functional component with props for toggling visibility and adjusting the width of the drawer.
+
+Key points:
+- The drawer contains two items: "Home" with a home icon, and "Settings" with a settings icon.
+- Drawer items' text visibility depends on whether `drawerExpanded` is true or false.
+- There are two versions of the drawer:
+  1. A temporary drawer for mobile view, shown when `mobileOpen` is true.
+  2. A permanent drawer for larger screens.
+- Both variants share the same content and have customizable styles.
+
+```tsx
+import {
+  Home as HomeIcon,
+  Settings as SettingsIcon,
+} from "@mui/icons-material";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Drawer as MuiDrawer,
+  Toolbar,
+} from "@mui/material";
+
+interface DrawerProps {
+  mobileOpen: boolean;
+  handleDrawerToggle: () => void;
+  drawerWidth: number;
+  drawerExpanded: boolean;
+}
+
+const Drawer = ({
+  mobileOpen,
+  handleDrawerToggle,
+  drawerWidth,
+  drawerExpanded,
+}: DrawerProps) => {
+  const drawer = (
+    <div>
+      <Toolbar />
+      <List>
+        {["Home", "Settings"].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? (
+                <HomeIcon color="primary" />
+              ) : (
+                <SettingsIcon color="primary" />
+              )}
+            </ListItemIcon>
+            <ListItemText
+              primary={text}
+              sx={{ display: drawerExpanded ? "block" : "none" }}
+            />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
+
+  return (
+    <>
+      <MuiDrawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: drawerWidth,
+            backgroundColor: "secondary.main",
+            transition: "width 0.3s",
+          },
+        }}
+      >
+        {drawer}
+      </MuiDrawer>
+      <MuiDrawer
+        variant="permanent"
+        sx={{
+          display: { xs: "none", sm: "block" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: drawerWidth,
+            backgroundColor: "secondary.main",
+            transition: "width 0.3s",
+          },
+        }}
+        open
+      >
+        {drawer}
+      </MuiDrawer>
+    </>
+  );
+};
+
+export default Drawer;
 
 ```
 ## HelloWorld.tsx
 
 ### Summary
 
-This React code defines a functional component called `HelloWorld` that renders a `div` containing the text "Hello, World!". The component is then exported for use in other parts of the application.
+This React code defines a functional component named `HelloWorld` that returns a `div` containing the text "Hello, World!". The component is then exported for use in other parts of the application.
 
 ```tsx
 import React from "react";
@@ -464,7 +736,7 @@ export default HelloWorld;
 
 ### Summary
 
-This code defines a React component called `ProtectedComponent` that fetches and displays protected data for authenticated users. It uses hooks (`useEffect`, `useState`) to manage state and lifecycle, and a custom hook (`useFetchProtectedData`) to handle data fetching and authentication status. If the user is not authenticated, it prompts them to log in. If the data is still loading, it shows a loading message. Once data is successfully fetched, it displays the data in JSON format.
+This code defines a React functional component called `ProtectedComponent` that fetches and displays protected data if the user is authenticated. It uses the `useEffect` hook to trigger the data fetch when the component mounts and employs the `useState` hook to manage the fetched data state. If the user is not authenticated, it prompts them to log in. If the data is still loading, it shows a loading message. Once the data is fetched, it is displayed as a JSON string.
 
 ```tsx
 import { useEffect, useState } from "react";
@@ -504,7 +776,7 @@ export default ProtectedComponent;
 
 ### Summary
 
-The code is a test using the Testing Library to verify that the `HelloWorld` component renders the text "Hello, World!" on the screen. It checks that this text is present in the document after rendering the component.
+The code is a unit test using the React Testing Library. It imports necessary functions and components, renders the `HelloWorld` component, and checks if the text "Hello, World!" is present in the document.
 
 ```tsx
 import { render, screen } from "@testing-library/react";
@@ -520,7 +792,7 @@ test("renders Hello, World!", () => {
 
 ### Summary
 
-This code defines a Tailwind CSS configuration. It specifies the content sources (which files Tailwind should scan for class names), extends the default theme with new custom radial and conic gradient backgrounds, and includes an empty array for plugins. The configuration is exported for use in a project.
+This code configures Tailwind CSS for a project, specifying which files to scan for class names and extending the default theme with custom colors (e.g., primary, secondary, background, text, and button colors). The configuration does not include any plugins and is exported as the default configuration object.
 
 ```ts
 import type { Config } from "tailwindcss";
@@ -533,10 +805,22 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        primary: "#007acc",
+        secondary: "#1e1e1e",
+        background: {
+          default: "#252526",
+          paper: "#1e1e1e",
+        },
+        text: {
+          primary: "#d4d4d4",
+          secondary: "#808080",
+        },
+        button: {
+          primary: "#007acc",
+          "primary-hover": "#005a9e",
+          "focus-ring": "#007acc",
+        },
       },
     },
   },
@@ -549,7 +833,7 @@ export default config;
 
 ### Summary
 
-This code extends the "next-auth" library in a Next.js application by adding an optional `idToken` property to both the `Session` and `JWT` interfaces. This allows you to store and access an `idToken` in user sessions and JSON Web Tokens (JWT).
+The code extends the `next-auth` library by adding an optional `idToken` property to both the `Session` and `JWT` interfaces. This allows `idToken` to be accessible within session and JWT objects in a Next.js authentication setup.
 
 ```ts
 import NextAuth from "next-auth"
@@ -568,20 +852,43 @@ declare module "next-auth/jwt" {
   }
 
 ```
+## StyledCard.tsx
+
+### Summary
+
+This code defines a React functional component called `StyledCard` using TypeScript and Material-UI. The component accepts `children` (content to be displayed inside the card) and optional `sx` (style overrides). It renders a `Card` with predefined styles (maximum width, padding, background color, border radius, and shadow) and applies any additional styles passed through `sx`. It uses `CardContent` to wrap the `children`.
+
+```tsx
+import { Card, CardContent, SxProps } from "@mui/material";
+
+interface StyledCardProps {
+  children: React.ReactNode;
+  sx?: SxProps;
+}
+
+const StyledCard: React.FC<StyledCardProps> = ({ children, sx }) => (
+  <Card
+    sx={{
+      maxWidth: 400,
+      p: 4,
+      bgcolor: "secondary.main",
+      borderRadius: 2,
+      boxShadow: 3,
+      ...sx,
+    }}
+  >
+    <CardContent>{children}</CardContent>
+  </Card>
+);
+
+export default StyledCard;
+
+```
 ## login.steps.ts
 
 ### Summary
 
-This code defines a function `loginToGoogle` that automates the process of logging into a Google account using the Playwright library. It checks if the environment is CI (Continuous Integration). In a non-CI environment, it performs the following steps:
-
-1. Waits for the email input field to appear and fills it with credentials.
-2. Clicks the "Next" button.
-3. Waits for the password input field to appear and fills it with credentials.
-4. Clicks the "Next" button.
-5. Optionally clicks a "Continue" button if it appears.
-6. Waits for the "Sign Out" text to confirm a successful login.
-
-The email and password are retrieved from environment variables.
+This code defines a function `loginToGoogle` that logs into Google using Playwright. It handles two scenarios: one for CI (Continuous Integration) where credentials are skipped, and another for local environments where it fills in the email and password fields, handles navigation steps, and waits for the "Sign Out" text to confirm a successful login. The function uses environment variables to retrieve the Google test email and password.
 
 ```ts
 import { Page } from "playwright";
@@ -625,14 +932,14 @@ export const loginToGoogle = async (page: Page): Promise<void> => {
 
 ### Summary
 
-This code defines a React functional component `AssistifyLogo`. It renders an SVG graphic that consists of:
+This code defines a React functional component named `AssistifyLogo`. It returns an SVG graphic that includes:
 
-1. A purple circle with a radius of 45 centered at (50, 50). 
-2. A white diamond shape in the center.
-3. A smaller purple circle with a white border in the middle of the diamond.
-4. Four white lines extending outward from the center in a cross pattern.
+- A large purple circle as the background.
+- A white diamond shape in the middle.
+- A smaller purple circle in the center of the diamond with a white stroke.
+- Four white lines extending outward from the middle to the edges of the large circle. 
 
-The SVG is given a set width and height of 16 units and will be automatically centered horizontally due to the class `mx-auto`.
+The SVG is sized at 16x16 units and is centered horizontally with `mx-auto`. It has an aria-label for accessibility describing it as the "assistify logo".
 
 ```tsx
 export const AssistifyLogo = () => (
@@ -641,6 +948,7 @@ export const AssistifyLogo = () => (
     viewBox="0 0 100 100"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    aria-label="assistify logo"
   >
     <circle cx="50" cy="50" r="45" fill="#4F46E5" />
     <path d="M30 50 L50 30 L70 50 L50 70 Z" fill="white" />
@@ -662,11 +970,48 @@ export const AssistifyLogo = () => (
 );
 
 ```
+## Header.test.tsx
+
+### Summary
+
+This code defines a test suite for the `Header` component using @testing-library/react. It includes four test cases:
+1. Checks if the header correctly renders the provided title.
+2. Verifies that a provided subtitle is rendered.
+3. Ensures that the subtitle is not rendered when it is not provided.
+4. Confirms that the header includes the `AssistifyLogo` component.
+
+```tsx
+import { render, screen } from "@testing-library/react";
+import Header from "./Header";
+
+describe("Header", () => {
+  it("renders the title correctly", () => {
+    render(<Header title="Test Title" />);
+    expect(screen.getByText("Test Title")).toBeInTheDocument();
+  });
+
+  it("renders the subtitle when provided", () => {
+    render(<Header title="Test Title" subtitle="Test Subtitle" />);
+    expect(screen.getByText("Test Subtitle")).toBeInTheDocument();
+  });
+
+  it("does not render the subtitle when not provided", () => {
+    render(<Header title="Test Title" />);
+    expect(screen.queryByText("Test Subtitle")).not.toBeInTheDocument();
+  });
+
+  it("renders the AssistifyLogo component", () => {
+    render(<Header title="Test Title" />);
+    expect(screen.getByLabelText(/assistify logo/i)).toBeInTheDocument();
+  });
+});
+
+```
 ## [...nextauth].ts
 
 ### Summary
 
-This code configures NextAuth authentication for a Next.js application using Google as a provider. It specifies Google client ID and secret from environment variables, sets up a secret for NextAuth, and includes custom callback functions for redirecting users, managing JSON Web Tokens (JWT), and handling session information. The callbacks ensure URLs are valid, add the id_token to the token and session objects, and log information during the JWT and session handling process.
+This code sets up authentication using NextAuth with Google as the provider. It configures the Google provider using environment variables for the client ID and secret. The `secret` for NextAuth is also sourced from an environment variable. The code includes callback functions to control redirects, modify JWTs, and customize session data. Specifically, it logs JWT and session events for debugging and attaches Google's ID token to the session and JWT.
 
 ```ts
 import NextAuth from "next-auth";
@@ -705,17 +1050,50 @@ export default NextAuth({
 
 ### Summary
 
-This code imports the `@testing-library/jest-dom` library, which provides custom DOM element matchers for Jest, simplifying the process of writing assertions for testing UI components.
+This code imports custom Jest matchers from the `@testing-library/jest-dom` library, which are used to extend Jest's default assertions for better testing of DOM nodes in React applications.
 
 ```ts
 import '@testing-library/jest-dom';
+
+```
+## MainContent.tsx
+
+### Summary
+
+This code defines a React functional component called `MainContent`, which takes `drawerWidth` as a prop. The component uses Material-UI's `Box` and `Toolbar` components to structure its layout. The main content area adjusts its width based on the `drawerWidth` prop and includes a `UserProfile` component. The `MainContent` component is then exported for use in other parts of the application.
+
+```tsx
+import UserProfile from "@/components/dashboard/UserProfile";
+import { Box, Toolbar } from "@mui/material";
+
+interface MainContentProps {
+  drawerWidth: number;
+}
+
+const MainContent = ({ drawerWidth }: MainContentProps) => {
+  return (
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        p: 3,
+        width: { sm: `calc(100% - ${drawerWidth}px)` },
+      }}
+    >
+      <Toolbar />
+      <UserProfile />
+    </Box>
+  );
+};
+
+export default MainContent;
 
 ```
 ## AssistifyHead.tsx
 
 ### Summary
 
-This React component, `AssistifyHead`, sets the document's title to the given `title` prop using both the `useEffect` hook and the `Head` component from Next.js. The default title is "Assistify" if no `title` prop is provided.
+This code defines a React component named `AssistifyHead` using Next.js. It sets the document's title to the `title` prop (defaulting to "Assistify") and includes a favicon link. The `useEffect` hook updates the document's title whenever the `title` prop changes. The component uses the `Head` component from Next.js to handle changes in the document's head section.
 
 ```tsx
 import Head from "next/head";
@@ -729,6 +1107,7 @@ const AssistifyHead = ({ title = "Assistify" }) => {
   return (
     <Head>
       <title>{title}</title>
+      <link rel="icon" href="/favicon.png" />
     </Head>
   );
 };
@@ -736,25 +1115,95 @@ const AssistifyHead = ({ title = "Assistify" }) => {
 export default AssistifyHead;
 
 ```
+## Header.tsx
+
+### Summary
+
+This React functional component, `Header`, displays a header section with a centered `AssistifyLogo`, a title, and an optional subtitle. It uses Material-UI components for styling and layout. The `Header` component takes `title` and `subtitle` as props, and if the `subtitle` is provided, it is rendered below the title.
+
+```tsx
+import { AssistifyLogo } from "@/components/common/AssistifyLogo";
+import { Box, Typography } from "@mui/material";
+
+interface HeaderProps {
+  title: string;
+  subtitle?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ title, subtitle }) => (
+  <Box textAlign="center">
+    <AssistifyLogo />
+    <Typography variant="h4" component="h2" mt={2} color="text.primary">
+      {title}
+    </Typography>
+    {subtitle && (
+      <Typography variant="body2" mt={1} color="text.secondary">
+        {subtitle}
+      </Typography>
+    )}
+  </Box>
+);
+
+export default Header;
+
+```
+## Message.tsx
+
+### Summary
+
+This code defines a React functional component called `ProtectedComponent`. It uses a custom hook `usePostMessage` to send a message and check user authentication status. The component retrieves data by sending a message when it is mounted and only proceeds if the user is authenticated. It conditionally renders either a login prompt, a loading message, or the fetched data.
+
+```tsx
+import { usePostMessage } from "@/services/service";
+import { useEffect, useState } from "react";
+
+const ProtectedComponent = () => {
+  const [data, setData] = useState(null);
+  const { postMessage, isAuthenticated } = usePostMessage();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isAuthenticated) {
+        try {
+          const result = await postMessage("Hello, world!");
+          setData(result);
+        } catch (error) {
+          console.error("Failed to fetch protected data:", error);
+        }
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (!isAuthenticated) {
+    return <div>Please log in to view this content.</div>;
+  }
+
+  if (!data) return <div>Loading...</div>;
+
+  return <div>Message: {JSON.stringify(data)}</div>;
+};
+
+export default ProtectedComponent;
+
+```
 ## theme.ts
 
 ### Summary
 
-This code creates a custom theme for a Material-UI (MUI) application using the `createTheme` function. Key customizations are:
+This code creates and exports a custom theme using Material-UI's `createTheme` function. The theme customizes various design aspects, including:
 
-- **Color Palette:**
-  - **Primary:** Purple with white text.
-  - **Secondary:** Dark background color.
-  - **Background:** Darker shades for the default and paper backgrounds.
-  - **Text:** White for primary text and light gray for secondary text.
+- **Palette**: Defines colors for primary and secondary elements, background, and text.
+  - Primary elements are blue with white text.
+  - Secondary elements and backgrounds are dark shades.
+  - Text colors are light gray for primary and dark gray for secondary.
 
-- **Typography:** Sets the font family to "Dank Mono, Arial, sans-serif".
-  
-- **Component Styles:** Specifically modifies the `MuiButton` component to:
-  - Change the background color to a darker purple on hover.
-  - Add a light purple focus ring without an outline when focused.
+- **Typography**: Sets the default font family to "Dank Mono, Arial, sans-serif" and customizes font sizes and weights for different text elements (`h1`, `h2`, `body1`, `body2`).
 
-This theme is exported as the default export.
+- **Components**: Provides style overrides for specific Material-UI components:
+  - `MuiButton`: Customizes appearance, including colors and styles for different states (hover and focus).
+  - `MuiCard`: Sets a dark background and light text color.
+  - `MuiInputBase`: Specifies background and text colors for input fields.
 
 ```ts
 import { createTheme } from "@mui/material/styles";
@@ -762,35 +1211,69 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#4F46E5", // Purple color for primary elements
+      main: "#007acc", // Blue color for primary elements
       contrastText: "#ffffff", // White text on primary elements
     },
     secondary: {
-      main: "#1a202c", // Dark background color
+      main: "#1e1e1e", // Dark background color
     },
     background: {
-      default: "#0f172a", // Darker background color
-      paper: "#1e293b", // Slightly lighter background for paper elements
+      default: "#252526", // Darker background color
+      paper: "#1e1e1e", // Slightly lighter background for paper elements
     },
     text: {
-      primary: "#ffffff", // White text
-      secondary: "#94a3b8", // Light gray text
+      primary: "#d4d4d4", // Light gray text
+      secondary: "#808080", // Dark gray text
     },
   },
   typography: {
     fontFamily: "Dank Mono, Arial, sans-serif", // Use Dank Mono for primary text
+    h1: {
+      fontSize: "2rem",
+      fontWeight: 700,
+    },
+    h2: {
+      fontSize: "1.75rem",
+      fontWeight: 700,
+    },
+    body1: {
+      fontSize: "1rem",
+      fontWeight: 400,
+    },
+    body2: {
+      fontSize: "0.875rem",
+      fontWeight: 400,
+    },
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
+          backgroundColor: "#007acc",
+          color: "#ffffff",
           "&:hover": {
-            backgroundColor: "#4338ca", // Darker purple for hover state
+            backgroundColor: "#005a9e", // Darker blue for hover state
           },
           "&:focus": {
             outline: "none",
-            boxShadow: "0 0 0 2px #818cf8", // Light purple focus ring
+            boxShadow: "0 0 0 2px #007acc", // Blue focus ring
           },
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#1e1e1e", // Card background color
+          color: "#d4d4d4", // Card text color
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#252526", // Input background color
+          color: "#d4d4d4", // Input text color
         },
       },
     },
@@ -804,18 +1287,30 @@ export default theme;
 
 ### Summary
 
-This code configures Playwright for end-to-end (E2E) testing. Key points include:
+This code configures Playwright for end-to-end (E2E) testing with some additional custom settings:
 
-1. **Environment Setup**: Loads environment variables with `dotenv` and supports local `.env` configurations.
-2. **Playwright Customization**: Uses `playwright-extra` with a stealth plugin to avoid detection by anti-automation measures.
-3. **CI Handling**: Adjusts settings based on whether it's running in a Continuous Integration (CI) environment.
-4. **Test Configuration**: 
-   - Directs tests to the `./e2e` directory.
-   - Sets various timeouts and retries.
-   - Runs tests fully parallel.
-   - Specifies the HTML reporter for results.
-   - Configures `baseURL`, trace, screenshots on failure, and browser launch options.
-5. **Project Settings**: Specifies a project for testing with the Chromium browser simulating a Desktop Chrome environment.
+1. **Dependencies and Configurations**:
+   - Imports necessary modules including Playwright, dotenv for environment variables, and plugins for stealth mode.
+   - Loads environment variables from `.env` and `.env.local`.
+
+2. **Plugins**:
+   - Adds a stealth plugin to Playwright to avoid detection by automated systems.
+
+3. **CI Configuration**:
+   - Detects if running in Continuous Integration (CI) environment and sets flags accordingly.
+
+4. **Playwright Test Settings**:
+   - Defines configuration for Playwright tests:
+     - Tests are located in the `./e2e` directory.
+     - Sets test and expectation timeouts.
+     - Allows tests to run in parallel.
+     - Configures retries and worker numbers based on CI presence.
+     - Specifies the base URL for tests, headless mode, screenshot settings, and additional browser launch options.
+
+5. **Projects**:
+   - Configures test to run on Chromium using Desktop Chrome settings.
+
+In essence, this script sets up Playwright for robust and stealthy E2E testing, tailored for both local and CI environments.
 
 ```ts
 import { defineConfig, devices } from "@playwright/test";
@@ -867,56 +1362,90 @@ export default defineConfig({
 
 ### Summary
 
-This code contains two main exports in a Next.js application using `next-auth` for authentication:
+This code defines utility functions for interacting with a web server using Axios, incorporating authentication status checked through NextAuth's `useSession` hook:
 
-1. **fetchRandomNumber**: Asynchronously fetches a random number from an API endpoint and returns it as a string.
-
+1. **fetchRandomNumber**: A function to fetch a random number from the server and return its message.
 2. **useFetchProtectedData**: A custom hook that:
-   - Uses `useSession` to get authentication status and session data.
-   - Defines a function to fetch protected data from an API endpoint, only if the user is authenticated.
-   - Returns the fetch function and authentication status.
+   - Retrieves authentication and session information.
+   - Defines a `fetchProtectedData` function to fetch protected data, throwing an error if the user is not authenticated or if the request fails.
+3. **usePostMessage**: A custom hook that:
+   - Retrieves authentication and session information.
+   - Defines a `postMessage` function to post a message to the server, throwing an error if the user is not authenticated or if the request fails.
+
+Both hooks return their respective functions and an `isAuthenticated` boolean based on the user's session status.
 
 ```ts
+import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
+import axiosInstance from "./axiosInstance";
 
 export const fetchRandomNumber = async (): Promise<string> => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/random-number`);
-    const data = await response.json();
-    return data.message;
-  };
+  const response = await axiosInstance.get("/random-number");
+  return response.data.message;
+};
 
 export const useFetchProtectedData = () => {
   const { data: session, status } = useSession();
 
   const fetchProtectedData = async (): Promise<any> => {
     if (status !== "authenticated" || !session?.idToken) {
-      throw new Error('User is not authenticated');
+      throw new Error("User is not authenticated");
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/protected`, {
-      headers: {
-        'Authorization': `Bearer ${session.idToken}`
+    try {
+      const response = await axiosInstance.get("/protected");
+      return response.data;
+    } catch (error) {
+      if (error) {
+        const axiosError = error as AxiosError;
+        console.error("Error Response:", axiosError.response?.data);
+        throw new Error("Failed to fetch protected data");
+      } else {
+        throw new Error("An unexpected error occurred");
       }
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch protected data');
     }
-
-    return response.json();
   };
 
   return {
     fetchProtectedData,
-    isAuthenticated: status === "authenticated"
+    isAuthenticated: status === "authenticated",
   };
 };
+
+export const usePostMessage = () => {
+  const { data: session, status } = useSession();
+
+  const postMessage = async (message: string): Promise<any> => {
+    if (status !== "authenticated" || !session?.idToken) {
+      throw new Error("User is not authenticated");
+    }
+
+    try {
+      const response = await axiosInstance.post("/send-message", { message });
+      return response.data;
+    } catch (error) {
+      if (error) {
+        const axiosError = error as AxiosError;
+        console.error("Error Response:", axiosError.response?.data);
+        throw new Error("Failed to send message");
+      } else {
+        throw new Error("An unexpected error occurred");
+      }
+    }
+  };
+
+  return {
+    postMessage,
+    isAuthenticated: status === "authenticated",
+  };
+};
+
 ```
 ## globals.css
 
 ### Summary
 
-This code snippet sets up a Tailwind CSS environment and specifies custom design palette variables for colors. It defines root variables for primary and secondary background colors, text colors, and button styles, including hover and focus states. The `body` uses the primary background and text colors, while `button` elements use the primary button color and change on hover and focus.
+The code is a Tailwind CSS setup that defines a custom design palette using CSS variables. It includes base, components, and utilities from Tailwind. The `:root` selector specifies color variables for backgrounds, text, and buttons. The `body` element uses these variables to set a dark background and light gray text. Button styles are hinted to be managed externally through a Material-UI theme.
 
 ```css
 @tailwind base;
@@ -925,13 +1454,13 @@ This code snippet sets up a Tailwind CSS environment and specifies custom design
 
 /* Design Palette */
 :root {
-  --bg-primary: #1a202c; /* bg-gray-900 */
-  --bg-secondary: #2d3748; /* bg-gray-800 */
-  --text-primary: #ffffff; /* text-white */
-  --text-secondary: #a0aec0; /* text-gray-400 */
-  --btn-primary: #e53e3e; /* bg-red-600 */
-  --btn-primary-hover: #c53030; /* hover:bg-red-700 */
-  --btn-focus-ring: #feb2b2; /* focus:ring-red-500 */
+  --bg-primary: #252526; /* Dark background color */
+  --bg-secondary: #1e1e1e; /* Slightly lighter background */
+  --text-primary: #d4d4d4; /* Light gray text */
+  --text-secondary: #808080; /* Dark gray text */
+  --btn-primary: #007acc; /* Blue button */
+  --btn-primary-hover: #005a9e; /* Darker blue button hover */
+  --btn-focus-ring: #007acc; /* Blue focus ring */
 }
 
 /* General Styles */
@@ -940,33 +1469,20 @@ body {
   color: var(--text-primary);
 }
 
-button {
-  background-color: var(--btn-primary);
-  color: var(--text-primary);
-}
-
-button:hover {
-  background-color: var(--btn-primary-hover);
-}
-
-button:focus {
-  outline: none;
-  ring: 2px solid var(--btn-focus-ring);
-}
+/* Button styles are now managed by the MUI theme */
 
 ```
 ## _app.tsx
 
 ### Summary
 
-This code defines a custom Next.js App component named `AssistifyApp` that wraps each page with session management and theming support. Specifically:
+This code defines the main application component `AssistifyApp` for a Next.js application. It wraps the application with several providers:
 
-1. It uses `SessionProvider` from `next-auth` to manage user sessions.
-2. It applies a custom Material-UI theme using `ThemeProvider`.
-3. It includes Material-UI's `CssBaseline` to standardize the CSS across different browsers.
-4. Finally, it renders the specific page component (`Component`) passed to it with its props (`pageProps`). 
+1. **SessionProvider** from `next-auth` for managing user sessions.
+2. **ThemeProvider** from `@mui/material` to apply a custom theme.
+3. **CssBaseline** from `@mui/material` to reset and standardize CSS.
 
-The custom app is then exported as the default export.
+It imports global styles and a custom theme, then renders the individual page components with their respective props.
 
 ```tsx
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -996,12 +1512,7 @@ export default AssistifyApp;
 
 ### Summary
 
-This code is a configuration file for a web application that integrates with Google for authentication and uses NextAuth for managing auth sessions. It includes:
-
-- Environment variables for Google's OAuth credentials (`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`).
-- Variables for NextAuth configuration (`NEXTAUTH_SECRET` and `NEXTAUTH_URL`).
-- The base URL for the API (`NEXT_PUBLIC_API_BASE_URL`).
-- Test user credentials and settings for Playwright, a testing tool (`GOOGLE_TEST_NAME`, `GOOGLE_TEST_EMAIL`, `GOOGLE_TEST_PASSWORD`).
+This code sets up environment variables for a project, including credentials for Google OAuth (client ID and secret), a secret for NextAuth authentication, and URLs for the app and API. It also configures Playwright testing settings with a test user's name, email, and password.
 
 ```default
 GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
@@ -1022,7 +1533,7 @@ GOOGLE_TEST_PASSWORD=your-password
 
 ### Summary
 
-This code sets up a Jest configuration for a Next.js project. It starts by importing necessary modules and types. It then creates a Jest configuration using `nextJest` to integrate with Next.js. The configuration includes settings for verbosity, clearing mocks, collecting coverage, specifying the coverage directory and provider, setting the test environment to 'jsdom', and pointing to additional setup files. Tests in the `e2e` directory are ignored. Finally, the customized Jest configuration is exported.
+This code sets up a Jest configuration for a Next.js project. It imports necessary modules, creates a Jest config using Next.js specific settings, and defines various configuration options like verbosity, mock clearing, coverage collection, test environment, and paths to ignore during testing. Finally, it exports the customized Jest configuration.
 
 ```ts
 import type { Config } from 'jest';
@@ -1045,5 +1556,61 @@ const config: Config = {
 };
 
 export default createJestConfig(config)
+
+```
+## DrawerToggle.tsx
+
+### Summary
+
+This code defines a React functional component called `DrawerToggle` using TypeScript. It imports specific icons and components from the Material-UI library. The component receives several props related to the drawer's state and appearance (e.g., `drawerExpanded`, `handleDrawerExpandToggle`, etc.). When rendered, it displays an `IconButton` that switches between a left and right chevron icon based on the drawer's expansion state. The button's position and animation properties are dynamically adjusted using Material-UI's styling system. If the component is used in a mobile context and the drawer is not open, it returns null and renders nothing.
+
+```tsx
+import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+} from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+
+interface DrawerToggleProps {
+  drawerExpanded: boolean;
+  handleDrawerExpandToggle: () => void;
+  minDrawerWidth: number;
+  maxDrawerWidth: number;
+  isMobile: boolean;
+  mobileOpen: boolean;
+}
+
+const DrawerToggle = ({
+  drawerExpanded,
+  handleDrawerExpandToggle,
+  minDrawerWidth,
+  maxDrawerWidth,
+  isMobile,
+  mobileOpen,
+}: DrawerToggleProps) => {
+  if (isMobile && !mobileOpen) {
+    return null;
+  }
+
+  return (
+    <IconButton
+      onClick={handleDrawerExpandToggle}
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: drawerExpanded ? maxDrawerWidth - 20 : minDrawerWidth - 20,
+        transform: "translateY(-50%)",
+        backgroundColor: "secondary.main",
+        color: "primary.main",
+        transition: "left 0.3s",
+        zIndex: 1300, // Ensure the button is above the drawer
+      }}
+    >
+      {drawerExpanded ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+    </IconButton>
+  );
+};
+
+export default DrawerToggle;
 
 ```

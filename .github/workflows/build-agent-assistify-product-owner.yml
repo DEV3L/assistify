@@ -1,0 +1,72 @@
+name: Build Agent - Assistify Product Owner
+
+on:
+  workflow_dispatch:
+    inputs:
+      trello_board_name:
+        description: "Name of the Trello board"
+        required: true
+        default: "Assistify"
+      openai_api_key:
+        description: "OpenAI API key"
+        required: true
+        default: ""
+
+jobs:
+  run-build-agent-assistify-product-owner:
+    runs-on: ubuntu-latest
+
+    env:
+      OPENAI_API_KEY: ${{ github.event.inputs.openai_api_key }}
+      TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+      TRELLO_API_TOKEN: ${{ secrets.TRELLO_API_TOKEN }}
+      TRELLO_BOARD_NAME: ${{ github.event.inputs.trello_board_name }}
+
+    defaults:
+      run:
+        working-directory: ./agents/assistify-product-owner
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install hatch
+          hatch env create
+
+      - name: Unit tests
+        run: |
+          hatch run test
+
+      - name: Run Trello Integration
+        run: |
+          hatch run trello-extract
+
+      - name: Run Code Extraction (Agent - Assistify Product Owner)
+        run: |
+          hatch run summary .
+          mv tmp/assistify-product-owner.md data/files/code/assistify-product-owner.txt
+
+      - name: Run Code Extraction (Assistify API)
+        run: |
+          hatch run summary "../../assistify-api"
+          mv tmp/assistify-api.md data/files/code/assistify-api.txt
+
+      - name: Run Code Extraction (Assistify API)
+        run: |
+          hatch run summary "../../assistify-ui"
+          mv tmp/assistify-ui.md data/files/code/assistify-ui.txt
+
+      - name: Run Code Extraction (Assistify GitHub Workflows)
+        run: |
+          hatch run summary "../../.github"
+          mv tmp/workflows.md data/files/code/assistify-github-workflows.txt
+
+      - name: Run Build Agent Assistify Product Owner
+        run: |
+          hatch run build

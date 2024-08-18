@@ -1,3 +1,4 @@
+import argparse
 import shutil
 from pathlib import Path
 
@@ -13,7 +14,7 @@ from assistify_product_owner.prompts.prompt import get_prompt
 from data_exporter import export_data
 
 
-def main():
+def main(delete_assistant: bool):
     _clear_bin_directory(f"./{ENV_VARIABLES.bin_dir}")
     logger.info(f"Building {ENV_VARIABLES.assistant_name}")
 
@@ -41,7 +42,8 @@ def main():
     start_response = chat.send_user_message(start_message)
     print(f"\n{service.assistant_name}:\n{start_response}")
 
-    service.delete_assistant()
+    if delete_assistant:
+        service.delete_assistant()
 
 
 def _clear_bin_directory(bin_path: str) -> None:
@@ -58,8 +60,17 @@ def _clear_bin_directory(bin_path: str) -> None:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run the end-to-end assistant process.")
+    parser.add_argument(
+        "--delete-assistant",
+        action="store_true",
+        default=False,
+        help="Flag to delete the assistant at the end of the process.",
+    )
+    args = parser.parse_args()
+
     try:
         set_env_variables()
-        main()
+        main(args.delete_assistant)
     except Exception as e:
         logger.info(f"Error: {e}")

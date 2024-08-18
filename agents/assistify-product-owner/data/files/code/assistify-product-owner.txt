@@ -1,0 +1,440 @@
+# assistify-product-owner
+
+## prompt_test.py
+
+### Summary
+
+This code defines a test function, `test_get_prompt`, which verifies that the `get_prompt` function from the `assistify_product_owner.prompts.prompt` module correctly retrieves a prompt as a string. The test also checks that the current date (in ISO format) is included within the retrieved prompt.
+
+```py
+from datetime import datetime
+
+from assistify_product_owner.prompts.prompt import PROMPT_PATH, get_prompt
+
+
+def test_get_prompt():
+    current_date = datetime.today().date().isoformat()
+
+    prompt = get_prompt(prompt_path=PROMPT_PATH)
+    assert isinstance(prompt, str)
+    assert current_date in prompt
+
+```
+
+## run_trello_extract.py
+
+### Summary
+
+This code initializes a Trello client using environment variables, creates an orchestration service, and attempts to write Trello board data to a Markdown file in the "./data" directory. It logs the success or error of this operation.
+
+```py
+from ai_trello_extract.clients.trello_client import get_trello_client
+from ai_trello_extract.env_variables import ENV_VARIABLES, set_env_variables
+from ai_trello_extract.orchestrators.orchestration_service import OrchestrationService
+from ai_trello_extract.services.trello_service import TrelloService
+from loguru import logger
+
+
+def main():
+    orchestration_service = OrchestrationService(
+        TrelloService(get_trello_client(ENV_VARIABLES.trello_api_key, ENV_VARIABLES.trello_api_token))
+    )
+
+    try:
+        markdown_directory_name = orchestration_service.write_board_markdown_to_directory(
+            ENV_VARIABLES.trello_board_name, "./data"
+        )
+        logger.info(f"Markdown directory written to {markdown_directory_name}")
+    except RuntimeError as e:
+        logger.error(e)
+
+
+if __name__ == "__main__":
+    set_env_variables()
+    main()
+
+```
+
+## run_chat.py
+
+### Summary
+
+This script initializes an AI assistant service using OpenAI's API and allows for chat-based interactions with the assistant. Key components include:
+
+1. **Logging and Environment Setup**: Sets up logging and environment variables.
+2. **Service Initialization**: Initializes the OpenAI client and the assistant service.
+3. **Optional Deletion**: Deletes existing assistant data if `SHOULD_DELETE_ASSISTANT` is True.
+4. **Chat Interaction**: Starts a chat session where user inputs are sent to the assistant, and the responses are printed. The chat continues until the user types "exit".
+
+The script includes exception handling to log any errors occurring during execution.
+
+```py
+from ai_assistant_manager.assistants.assistant_service import (
+    AssistantService,
+)
+from ai_assistant_manager.chats.chat import Chat
+from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
+from ai_assistant_manager.env_variables import ENV_VARIABLES, set_env_variables
+from loguru import logger
+
+from assistify_product_owner.prompts.prompt import get_prompt
+from data_exporter import export_data
+
+SHOULD_DELETE_ASSISTANT = False
+
+START_MESSAGE = """"""
+
+
+def main():
+    logger.info(f"Starting {ENV_VARIABLES.assistant_name}")
+
+    export_data()
+
+    client = OpenAIClient(build_openai_client())
+    service = AssistantService(client, get_prompt())
+
+    if SHOULD_DELETE_ASSISTANT:
+        logger.info("Removing existing assistant and category files")
+        service.delete_assistant()
+
+    assistant_id = service.get_assistant_id()
+
+    logger.info(f"Assistant ID: {assistant_id}")
+
+    chat = Chat(
+        client,
+        assistant_id,
+        # thread_id="abc",
+    )
+    chat.start()
+
+    if START_MESSAGE:
+        start_response = chat.send_user_message(START_MESSAGE)
+        print(f"\n{service.assistant_name}:\n{start_response}")
+
+    while True:
+        user_message = input("\nMessage: ")
+
+        if not user_message:
+            print("Invalid user message.")
+            continue
+        if user_message == "exit":
+            break
+
+        chat_response = chat.send_user_message(user_message)
+        print(f"\n{service.assistant_name}:\n{chat_response}")
+
+
+if __name__ == "__main__":
+    try:
+        set_env_variables()
+        main()
+    except Exception as e:
+        logger.info(f"Error: {e}")
+
+```
+
+## pyproject.toml
+
+### Summary
+
+The code provided is a configuration file for a Python project using Hatchling as the build system. Here's a summarized breakdown:
+
+- **Build System:** Specifies the use of Hatchling.
+- **Project Metadata:**
+  - Name: `assistify-product-owner`
+  - Dynamic versioning
+  - Description: Insights for product owners using AI, part of Assistify
+  - License defined in `LICENSE` file
+  - Readme in `README.md`
+  - Author: Justin Beall
+  - Requires Python 3.12 or higher
+  - Dependencies listed for project functionality
+- **Hatch Configuration:**
+  - Version information sourced from `setup.cfg`
+  - Build targets for source distribution and wheel, focusing on `assistify_product_owner` package
+  - Default virtual environment configuration, with additional dependencies and script shortcuts for various tasks (e.g., building, testing, running scripts)
+- **Static Analysis:** Configuration path and settings for Ruff tool, including extending settings and banning certain import styles.
+
+In essence, this file sets up the project’s dependencies, metadata, and build instructions while providing utilities for development like testing and static analysis.
+
+```toml
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "assistify-product-owner"
+dynamic = ["version"]
+description = "Product owner tech insights using AI for Assistify."
+license = { file = "LICENSE" }
+readme = "README.md"
+authors = [{ name = "Justin Beall", email = "jus.beall@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = [
+    "ai-assistant-manager==1.0.1",
+    "ai-code-summary==0.0.3",
+    "ai-trello-extract==0.0.7",
+    "loguru",
+    "openai",
+    "python-dateutil",
+    "python-dotenv",
+]
+
+[tool.hatch.version]
+path = "setup.cfg"
+pattern = "version = (?P<version>\\S+)"
+
+[tool.hatch.build.targets.sdist]
+include = ["/assistify_product_owner"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["assistify_product_owner"]
+
+[tool.hatch.envs.default]
+type = "virtual"
+path = ".venv"
+dependencies = ["pyright", "pytest", "pytest-cov"]
+
+[tool.hatch.envs.default.scripts]
+chat = "python run_chat.py"
+build = "python run_end_to_end.py"
+e2e = "python run_end_to_end.py --delete-assistant true"
+summary = "python run_code_summary.py {args}"
+trello-extract = "python run_trello_extract.py"
+test = "pytest --cache-clear --cov --cov-report lcov --cov-report term -m 'not integration'"
+test-integration = "pytest --cache-clear --cov --cov-report lcov --cov-report term"
+
+[tool.hatch.envs.hatch-static-analysis]
+config-path = "ruff_defaults.toml"
+
+[tool.ruff]
+extend = "ruff_defaults.toml"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "parents"
+
+```
+
+## prompt.py
+
+### Summary
+
+This code defines a function `get_prompt` that reads a text file specified by `prompt_path`, replaces the placeholder `{{CURRENT_DATE}}` with the current date, and returns the modified content. The file is read with UTF-8 encoding. The default file path is "assistify_product_owner/prompts/prompt.md".
+
+```py
+from datetime import datetime
+
+from ai_assistant_manager.encoding import UTF_8
+
+PROMPT_PATH = "assistify_product_owner/prompts/prompt.md"
+
+CURRENT_DATE_VARIABLE = "{{CURRENT_DATE}}"
+
+
+def get_prompt(*, prompt_path: str = PROMPT_PATH):
+    with open(prompt_path, "r", encoding=UTF_8) as prompt:
+        current_date = datetime.today().date().isoformat()
+        return prompt.read().replace(CURRENT_DATE_VARIABLE, current_date)
+
+```
+
+## ruff_defaults.toml
+
+### Summary
+
+This configuration file specifies code formatting and linting rules:
+
+- Sets the maximum line length to 120.
+- Formats code within docstrings with a maximum line length of 80.
+- Disallows all relative imports.
+- Identifies "src" as a first-party package.
+- Configures pytest style to not require parentheses for fixtures and marks.
+
+```toml
+line-length = 120
+
+[format]
+docstring-code-format = true
+docstring-code-line-length = 80
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[lint.isort]
+known-first-party = ["src"]
+
+[lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+```
+
+## run_code_summary.py
+
+### Summary
+
+This Python script generates markdown documentation from source code in a specified directory. It takes an optional command-line argument `source_path` (defaulting to the current directory if not provided). The core functionality is in the `main` function, which calls `create_markdown_from_code(source_path)` to perform the documentation generation. The script uses the `argparse` module to handle command-line arguments.
+
+```py
+import argparse
+
+from ai_code_summary.markdown.export import create_markdown_from_code
+
+
+def main(source_path: str) -> None:
+    """
+    Generate markdown documentation from the source code.
+
+    Args:
+        source_path (str): The path to the source code directory.
+    """
+    create_markdown_from_code(source_path)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate markdown documentation from the source code.")
+    parser.add_argument(
+        "source_path", nargs="?", default=".", help="The path to the source code directory (default: current directory)"
+    )
+    args = parser.parse_args()
+    main(args.source_path)
+
+```
+
+## data_exporter.py
+
+### Summary
+
+The code defines a function `export_data()` that uses `DirectoryExporter` and `FilesExporter` classes to export various files and a directory. Specifically, it exports a directory named "Assistify Status Trello Board" and multiple files including "Assistify Product Definition.txt", "Assistify Product Owner README.txt", "assistify-api.txt" (in "files/code" directory), and "assistify-ui.txt" (in "files/code" directory).
+
+```py
+from ai_assistant_manager.exporters.directory.directory_exporter import DirectoryExporter
+from ai_assistant_manager.exporters.files.files_exporter import FilesExporter
+
+
+def export_data():
+    DirectoryExporter("Assistify Status Trello Board").export()
+    FilesExporter("Assistify Product Definition.txt").export()
+    FilesExporter("Assistify Product Owner README.txt").export()
+    # code
+    FilesExporter("assistify-api.txt", directory="files/code").export()
+    FilesExporter("assistify-ui.txt", directory="files/code").export()
+
+```
+
+## .env.default
+
+### Summary
+
+This code snippet sets environment variables for two APIs (OpenAI and Trello) and configures basic project details for a tool named "Assistify - Product Owner," which uses AI to provide tech insights for product owners.
+
+```default
+OPENAI_API_KEY=${OPENAI_API_KEY}
+
+# Trello
+TRELLO_API_KEY=TRELLO_API_KEY
+TRELLO_API_TOKEN=TRELLO_API_TOKEN
+TRELLO_BOARD_NAME="Assistify"
+
+# Project
+ASSISTANT_DESCRIPTION="Product owner tech insights using AI for Assistify"
+ASSISTANT_NAME="Assistify - Product Owner"
+DATA_FILE_PREFIX="Assistify - Product Owner"
+
+```
+
+## run_end_to_end.py
+
+### Summary
+
+This Python script orchestrates the end-to-end process of handling an AI assistant using several imported modules and functions:
+
+1. **Clears a specified directory** (`_clear_bin_directory`).
+2. **Exports data** (`export_data`).
+3. **Builds a client and assistant service** (`OpenAIClient` and `AssistantService`).
+4. **Removes existing assistant and category files**.
+5. **Initializes a chat session** and starts an initial conversation.
+6. **Optionally deletes the assistant** at the end based on the `--delete-assistant` flag from the command line.
+7. **Handles environment variables and exception logging**.
+
+The script uses `argparse` to parse command-line arguments and `loguru` for logging.
+
+```py
+import argparse
+import shutil
+from pathlib import Path
+
+from ai_assistant_manager.assistants.assistant_service import (
+    AssistantService,
+)
+from ai_assistant_manager.chats.chat import Chat
+from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
+from ai_assistant_manager.env_variables import ENV_VARIABLES, set_env_variables
+from loguru import logger
+
+from assistify_product_owner.prompts.prompt import get_prompt
+from data_exporter import export_data
+
+
+def main(delete_assistant: bool):
+    _clear_bin_directory(f"./{ENV_VARIABLES.bin_dir}")
+    logger.info(f"Building {ENV_VARIABLES.assistant_name}")
+
+    export_data()
+
+    client = OpenAIClient(build_openai_client())
+    service = AssistantService(client, get_prompt())
+
+    logger.info("Removing existing assistant and category files")
+    service.delete_assistant()
+
+    assistant_id = service.get_assistant_id()
+
+    logger.info(f"Assistant ID: {assistant_id}")
+
+    chat = Chat(
+        client,
+        assistant_id,
+        # thread_id="abc",
+    )
+    chat.start()
+
+    start_message = "Hello, what are we working on today?"
+    print(f"\nMessage:\n{start_message}")
+    start_response = chat.send_user_message(start_message)
+    print(f"\n{service.assistant_name}:\n{start_response}")
+
+    if delete_assistant:
+        service.delete_assistant()
+
+
+def _clear_bin_directory(bin_path: str) -> None:
+    """
+    Remove all files and directories in the specified bin directory.
+
+    Args:
+        bin_path (str): The path to the bin directory.
+    """
+    bin_dir = Path(bin_path)
+    if bin_dir.exists() and bin_dir.is_dir():
+        shutil.rmtree(bin_dir)
+        bin_dir.mkdir()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run the end-to-end assistant process.")
+    parser.add_argument(
+        "--delete-assistant",
+        action="store_true",
+        default=False,
+        help="Flag to delete the assistant at the end of the process.",
+    )
+    args = parser.parse_args()
+
+    try:
+        set_env_variables()
+        main(args.delete_assistant)
+    except Exception as e:
+        logger.info(f"Error: {e}")
+
+```
