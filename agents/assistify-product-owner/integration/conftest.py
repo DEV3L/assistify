@@ -5,6 +5,7 @@ from ai_assistant_manager.assistants.assistant_service import (
 from ai_assistant_manager.chats.chat import Chat
 from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
 from ai_assistant_manager.env_variables import set_env_variables as set_env_variables_ai
+from ai_assistant_manager.prompts.prompt import get_prompt
 from ai_trello_extract.clients.trello_client import get_trello_client
 from ai_trello_extract.env_variables import ENV_VARIABLES
 from ai_trello_extract.env_variables import set_env_variables as set_env_variables_trello
@@ -12,7 +13,7 @@ from ai_trello_extract.orchestrators.orchestration_service import OrchestrationS
 from ai_trello_extract.services.trello_service import TrelloService
 from loguru import logger
 
-from assistify_product_owner.prompts.prompt import get_prompt
+from data_exporter import PROMPT_PATH
 
 # Set environment variables for AI and Trello services
 set_env_variables_ai()
@@ -28,7 +29,7 @@ def chat() -> Chat:
         Chat: An instance of the Chat class initialized with an OpenAI client and assistant ID.
     """
     client = OpenAIClient(build_openai_client())
-    service = AssistantService(client, get_prompt())
+    service = AssistantService(client, get_prompt(prompt_path=PROMPT_PATH))
     assistant_id = service.get_assistant_id()
 
     logger.info(f"Assistant ID: {assistant_id}")

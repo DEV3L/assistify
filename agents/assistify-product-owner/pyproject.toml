@@ -11,7 +11,7 @@ readme = "README.md"
 authors = [{ name = "Justin Beall", email = "jus.beall@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = [
-    "ai-assistant-manager==1.0.1",
+    "ai-assistant-manager==1.0.2",
     "ai-code-summary==0.0.3",
     "ai-trello-extract==0.0.7",
     "loguru",

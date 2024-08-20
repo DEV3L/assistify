@@ -8,10 +8,10 @@ from ai_assistant_manager.assistants.assistant_service import (
 from ai_assistant_manager.chats.chat import Chat
 from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
 from ai_assistant_manager.env_variables import ENV_VARIABLES, set_env_variables
+from ai_assistant_manager.prompts.prompt import get_prompt
 from loguru import logger
 
-from assistify_product_owner.prompts.prompt import get_prompt
-from data_exporter import export_data
+from data_exporter import PROMPT_PATH, export_data
 
 
 def main(delete_assistant: bool):
@@ -21,7 +21,7 @@ def main(delete_assistant: bool):
     export_data()
 
     client = OpenAIClient(build_openai_client())
-    service = AssistantService(client, get_prompt())
+    service = AssistantService(client, get_prompt(prompt_path=PROMPT_PATH))
 
     logger.info("Removing existing assistant and category files")
     service.delete_assistant()

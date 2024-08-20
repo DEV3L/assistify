@@ -1,6 +1,8 @@
 from ai_assistant_manager.exporters.directory.directory_exporter import DirectoryExporter
 from ai_assistant_manager.exporters.files.files_exporter import FilesExporter
 
+PROMPT_PATH = "prompts/prompt.md"
+
 
 def export_data():
     # Assistify Status Trello Board
@@ -9,6 +11,7 @@ def export_data():
     FilesExporter("Assistify Product Definition.txt").export()
     FilesExporter("Assistify Product Owner README.txt").export()
     # code
+    FilesExporter("ai-assistant-manager.txt", directory="files/code").export()
     FilesExporter("assistify-api.txt", directory="files/code").export()
     FilesExporter("assistify-github-workflows.txt", directory="files/code").export()
     FilesExporter("assistify-product-owner.txt", directory="files/code").export()
