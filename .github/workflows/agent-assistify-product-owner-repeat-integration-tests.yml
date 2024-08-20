@@ -21,6 +21,10 @@ jobs:
     env:
       OPENAI_API_KEY: ${{ github.event.inputs.openai_api_key }}
       RUN_INTEGRATION: true
+      # Agent Project
+      ASSISTANT_DESCRIPTION: "Product owner tech insights using AI for Assistify"
+      ASSISTANT_NAME: "Assistify - Product Owner"
+      DATA_FILE_PREFIX: "Assistify - Product Owner"
 
     defaults:
       run:
