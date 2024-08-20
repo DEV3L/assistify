@@ -1,16 +1,12 @@
-import os
-
-from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from google.auth.transport import requests
 from google.oauth2 import id_token
 
 from assistify_api.app.auth.user import User
+from assistify_api.env_variables import ENV_VARIABLES
 
-load_dotenv()
-
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_ID = ENV_VARIABLES.google_client_id
 
 security = HTTPBearer()
 

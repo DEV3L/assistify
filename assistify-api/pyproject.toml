@@ -10,15 +10,16 @@ readme = "README.md"
 authors = [{ name = "Justin Beall", email = "jus.beall@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = [
-    "ai-assistant-manager",
-    "fastapi",
-    "loguru",
-    "google-auth",
-    "openai",
-    "python-dotenv",
-    "uvicorn",
-    "requests",
+    "ai-assistant-manager==1.0.2",
     "authlib",
+    "fastapi",
+    "google-auth",
+    "loguru",
+    "openai",
+    "pymongo",
+    "python-dotenv",
+    "requests",
+    "uvicorn",
 ]
 
 [tool.hatch.version]
