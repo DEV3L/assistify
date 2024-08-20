@@ -52,10 +52,6 @@ jobs:
           python -m pip install hatch
           hatch env create
 
-      - name: Unit tests
-        run: |
-          hatch run test
-
       - name: Set number of runs
         id: set-number-of-runs
         run: |
