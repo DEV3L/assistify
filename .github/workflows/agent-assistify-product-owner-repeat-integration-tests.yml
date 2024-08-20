@@ -12,6 +12,10 @@ on:
         type: number
         required: true
         default: 5
+      trello_board_name:
+        description: "Name of the Trello board"
+        required: true
+        default: "Assistify"
 
 jobs:
   run-repeat-integration-tests:
@@ -20,11 +24,16 @@ jobs:
 
     env:
       OPENAI_API_KEY: ${{ github.event.inputs.openai_api_key }}
-      RUN_INTEGRATION: true
+      # Trello API
+      TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+      TRELLO_API_TOKEN: ${{ secrets.TRELLO_API_TOKEN }}
+      TRELLO_BOARD_NAME: ${{ github.event.inputs.trello_board_name }}
       # Agent Project
       ASSISTANT_DESCRIPTION: "Product owner tech insights using AI for Assistify"
       ASSISTANT_NAME: "Assistify - Product Owner"
       DATA_FILE_PREFIX: "Assistify - Product Owner"
+      # Run Integration Tests
+      RUN_INTEGRATION: true
 
     defaults:
       run:
