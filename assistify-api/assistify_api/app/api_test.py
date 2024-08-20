@@ -85,7 +85,7 @@ def test_get_assistants(
     """
     api_client, _, mock_openai_client = api_with_mocks
 
-    assistant_name_included = "Jasper Bell - Knowledge Bot"
+    assistant_name_included = "Justin Beall - Knowledge Bot"
     assistant_name_not_included = "Assistant 2"
 
     mock_assistant_included = MagicMock(id="1", model="gpt-4o")
