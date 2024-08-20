@@ -20,6 +20,7 @@ jobs:
 
     env:
       MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      MONGODB_DB: assistify-api
 
     defaults:
       run:
