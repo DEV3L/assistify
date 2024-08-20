@@ -6,6 +6,14 @@
 
 - Python (v3.12 or higher)
 
+## Environment Variables
+
+The following environment variables are required:
+
+- `MONGODB_URI`: Your Google OAuth client ID
+- `GOOGLE_CLIENT_ID`: Your Google OAuth client secret
+- `OPENAI_API_KEY`: A secret used to encrypt session tokens
+
 ## Installation/Setup
 
 1. Clone the repository:

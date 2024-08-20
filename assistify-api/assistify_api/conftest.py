@@ -2,9 +2,14 @@ from unittest.mock import MagicMock
 
 import pytest
 from fastapi.testclient import TestClient
+from pymongo.database import Database
 
 from assistify_api.app.api import api
 from assistify_api.app.dependencies.api_dependencies import get_chat_service, get_openai_client
+from assistify_api.database.mongodb import MongoDb
+from assistify_api.env_variables import set_env_variables
+
+set_env_variables()
 
 mock_idinfo = {
     "iss": "accounts.google.com",
@@ -30,3 +35,9 @@ def api_with_mocks():
 
     api.dependency_overrides[get_chat_service] = get_chat_service
     api.dependency_overrides[get_openai_client] = get_openai_client
+
+
+@pytest.fixture
+def mongo_db() -> Database:
+    _mongo_db = MongoDb.instance(force=True)
+    return _mongo_db
