@@ -1,4 +1,4 @@
-name: Repeat AI Tests
+name: Agent - Repeat AI Tests - Assistify Product Owner
 
 on:
   workflow_dispatch:
@@ -51,6 +51,6 @@ jobs:
           echo "number_of_runs=$ROUNDS" >> "$GITHUB_OUTPUT"
 
       - name: Run Integration Tests Multiple Times
-        run: hatch run test:repeat
+        run: hatch run test-repeat
         env:
           TESTS_NUMBER_OF_CHOICES: ${{ steps.set-number-of-runs.outputs.number_of_runs }}

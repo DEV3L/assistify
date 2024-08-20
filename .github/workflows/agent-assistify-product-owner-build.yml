@@ -1,4 +1,4 @@
-name: Build Agent - Assistify Product Owner
+name: Agent - Build - Assistify Product Owner
 
 on:
   workflow_dispatch:
