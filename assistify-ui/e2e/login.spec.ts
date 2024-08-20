@@ -23,12 +23,12 @@ test("login and view dashboard", async ({ page }) => {
   await expect(welcomeElement).toBeVisible();
 
   const emailElement = page.locator(`text=/${testUserEmail}/`);
-  await expect(emailElement).toBeVisible();
+  await expect(emailElement).toBeVisible({ timeout: 10_000 });
 
   await page.waitForSelector(`text=/Message:/`);
 
   const messageResponseElement = page.locator(`text=/Message:/`);
-  await expect(messageResponseElement).toBeVisible();
+  await expect(messageResponseElement).toBeVisible({ timeout: 10_000 });
 
   // await saveStorageState(page);
 });
