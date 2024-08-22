@@ -16,7 +16,7 @@ dependencies = [
     "google-auth",
     "loguru",
     "openai",
-    "pymongo",
+    "pymongo==3.12.3",
     "python-dotenv",
     "requests",
     "uvicorn",
