@@ -20,7 +20,7 @@ class MongoDb:
         Returns:
             Database: The MongoDB database instance.
         """
-        if force or not cls.db:
+        if force or cls.db is None:
             logger.info("Connecting to MongoDb")
             # Use the provided URI or fallback to the environment variable
             mongodb_uri = mongodb_uri or ENV_VARIABLES.mongodb_uri

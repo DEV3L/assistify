@@ -40,6 +40,7 @@ dependencies = ["pyright", "pytest-cov", "pytest"]
 [tool.hatch.envs.default.scripts]
 dev = "python server.py"
 start-app = "uvicorn assistify_api.app.api:api --host 0.0.0.0 --port 8000"
+migrations = "python assistify_api/database/handle_migrations.py"
 test = "pytest --cache-clear --cov --cov-report lcov --cov-report term"
 
 [tool.hatch.envs.hatch-static-analysis]

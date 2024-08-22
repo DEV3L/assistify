@@ -3,34 +3,55 @@ import random
 from ai_assistant_manager.clients.openai_api import OpenAIClient
 from fastapi import Depends, FastAPI
 
-from assistify_api.app.assistants.available_assistants import assistants_whitelist
-from assistify_api.app.assistants.list_assistants_response import AssistantsResponse, ListAssistantsResponse
-from assistify_api.app.auth.user import User
-from assistify_api.app.chat.send_message import SendMessageRequest, SendMessageResponse
-from assistify_api.app.cors.custom_cors_middleware import CustomCORSMiddleware
-from assistify_api.app.dependencies.api_dependencies import get_chat_service, get_openai_client
 from assistify_api.services.chat import ChatService
 
+from .assistants.available_assistants import assistants_whitelist
+from .assistants.list_assistants_response import AssistantsResponse, ListAssistantsResponse
+from .auth.user import User
 from .auth.verify_token import verify_token
+from .chat.send_message import SendMessageRequest, SendMessageResponse
+from .cors.custom_cors_middleware import CustomCORSMiddleware
+from .dependencies.api_dependencies import get_chat_service, get_openai_client
+from .lifespan import lifespan
 
-api = FastAPI()
-
+api = FastAPI(lifespan=lifespan)
 api.add_middleware(CustomCORSMiddleware)
 
 
 @api.get("/")
-def read_root():
+def read_root() -> dict:
+    """
+    Root endpoint.
+
+    Returns:
+        dict: A welcome message.
+    """
     return {"message": "Hello Assistify"}
 
 
 @api.get("/random-number")
-def read_random_number():
+def read_random_number() -> dict:
+    """
+    Endpoint to get a random number.
+
+    Returns:
+        dict: A message containing a random number between 1 and 100.
+    """
     number = random.randint(1, 100)
     return {"message": f"Your random number is {number}"}
 
 
 @api.get("/protected")
-def protected_route(user_info: User = Depends(verify_token)):
+def protected_route(user_info: User = Depends(verify_token)) -> dict:
+    """
+    Protected endpoint that requires authentication.
+
+    Args:
+        user_info (User): The authenticated user's information.
+
+    Returns:
+        dict: A message containing the user's name and email.
+    """
     return {"message": f"Hello {user_info.name}, your email is {user_info.email}"}
 
 
@@ -39,13 +60,14 @@ def send_message(
     message: SendMessageRequest,
     chat_service: ChatService = Depends(get_chat_service),
     _: User = Depends(verify_token),
-):
+) -> SendMessageResponse:
     """
     Endpoint to receive a message. Requires authentication.
 
     Args:
         message (SendMessageRequest): The send message payload.
-        user_info (User): The authenticated user's information.
+        chat_service (ChatService): The chat service dependency.
+        _ (User): The authenticated user's information.
 
     Returns:
         SendMessageResponse: The chatbot's response.
@@ -59,7 +81,17 @@ def send_message(
 def get_assistants(
     open_ai_client: OpenAIClient = Depends(get_openai_client),
     _: User = Depends(verify_token),
-):
+) -> ListAssistantsResponse:
+    """
+    Endpoint to get a list of available assistants. Requires authentication.
+
+    Args:
+        open_ai_client (OpenAIClient): The OpenAI client dependency.
+        _ (User): The authenticated user's information.
+
+    Returns:
+        ListAssistantsResponse: A list of assistants that are whitelisted.
+    """
     response = open_ai_client.assistants_list()
     return ListAssistantsResponse(
         assistants=[

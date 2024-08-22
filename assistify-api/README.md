@@ -34,7 +34,6 @@ cp env.local .env
 ```bash
 brew install hatch
 hatch env create
-hatch shell
 ```
 
 ## Running the Application
@@ -66,6 +65,19 @@ docker build -t assistify-api .
 ```bash
 docker run -p 8000:8000 assistify-api
 ```
+
+## Hatch Commands
+
+```bash
+hatch run <command>
+```
+
+The following hatch commands are available:
+
+- `dev`: Runs the development server using `python server.py`. This is useful for local development with hot-reloading.
+- `start-app`: Starts the application using `uvicorn` with the specified host and port. This is the main command to run the application.
+- `migrations`: Executes the database migrations by running the `handle_migrations.py` script. This ensures the database schema is up-to-date.
+- `test`: Runs the test suite using `pytest` with coverage reporting. This is used to ensure the codebase is functioning correctly and to measure test coverage.
 
 ## Testing
 

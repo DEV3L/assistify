@@ -1,3 +1,5 @@
+import pytest
+
 from assistify_api.env_variables import ENV_VARIABLES, set_env_variables
 
 
@@ -18,3 +20,16 @@ def test_reset_env_variables(tmp_path):
 
     # Assert the environment variables are set correctly in the ENV_VARIABLES instance
     assert ENV_VARIABLES.mongodb_uri == "mongodb_uri"
+
+
+def test_set_env_variables_file_not_found():
+    """
+    Test the set_env_variables function to ensure it raises a FileNotFoundError
+    when a non-existent .env file is specified.
+    """
+    non_existent_file = "non_existent.env"
+
+    with pytest.raises(FileNotFoundError) as exc_info:
+        set_env_variables(non_existent_file)
+
+    assert str(exc_info.value) == f"The specified .env file does not exist: {non_existent_file}"
