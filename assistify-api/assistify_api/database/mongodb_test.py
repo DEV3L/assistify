@@ -5,8 +5,11 @@ from assistify_api.env_variables import ENV_VARIABLES
 
 
 @patch("assistify_api.database.mongodb.logger")
+@patch("assistify_api.database.mongodb.ServerApi")
 @patch("assistify_api.database.mongodb.pymongo")
-def test_mongodb_instance_only_ever_called_once(mock_pymongo: patch, mock_logger: patch) -> None:
+def test_mongodb_instance_only_ever_called_once(
+    mock_pymongo: patch, mocker_server_api: patch, mock_logger: patch
+) -> None:
     """
     Test that MongoDb.instance() only creates a MongoClient once and reuses it thereafter.
 
@@ -20,7 +23,7 @@ def test_mongodb_instance_only_ever_called_once(mock_pymongo: patch, mock_logger
     MongoDb.instance()  # Second call to instance, should reuse the existing MongoClient
 
     # Ensure MongoClient is called with the correct URI
-    mock_pymongo.MongoClient.assert_called_with(ENV_VARIABLES.mongodb_uri)
+    mock_pymongo.MongoClient.assert_called_with(ENV_VARIABLES.mongodb_uri, server_api=mocker_server_api.return_value)
     # Ensure MongoClient is only called once
     assert mock_pymongo.MongoClient.call_count == 1
     # Ensure the returned database is correct
