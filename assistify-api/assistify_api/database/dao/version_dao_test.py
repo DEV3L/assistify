@@ -55,7 +55,7 @@ def test_version_dao_delete_no_record(mongo_db: Database):
     """
     version_dao = VersionDao(mongo_db)
     deleted_count = version_dao.delete_one(default_version)
-    assert 0 == deleted_count
+    assert deleted_count == 0
 
 
 def test_version_dao_deletes_record(mongo_db: Database):
@@ -68,7 +68,7 @@ def test_version_dao_deletes_record(mongo_db: Database):
 
     deleted_count = version_dao.delete_one(default_version)
 
-    assert 1 == deleted_count
+    assert deleted_count == 1
 
 
 def _build_version_model() -> Version:

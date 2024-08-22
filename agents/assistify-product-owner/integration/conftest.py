@@ -8,12 +8,13 @@ from ai_assistant_manager.env_variables import set_env_variables as set_env_vari
 from ai_assistant_manager.prompts.prompt import get_prompt
 from ai_trello_extract.clients.trello_client import get_trello_client
 from ai_trello_extract.env_variables import ENV_VARIABLES
-from ai_trello_extract.env_variables import set_env_variables as set_env_variables_trello
+from ai_trello_extract.env_variables import (
+    set_env_variables as set_env_variables_trello,
+)
 from ai_trello_extract.orchestrators.orchestration_service import OrchestrationService
 from ai_trello_extract.services.trello_service import TrelloService
-from loguru import logger
-
 from data_exporter import PROMPT_PATH
+from loguru import logger
 
 # Set environment variables for AI and Trello services
 set_env_variables_ai()
@@ -51,7 +52,11 @@ def trello_data() -> dict:
         dict: JSON data of the Trello board.
     """
     orchestration_service = OrchestrationService(
-        TrelloService(get_trello_client(ENV_VARIABLES.trello_api_key, ENV_VARIABLES.trello_api_token))
+        TrelloService(
+            get_trello_client(
+                ENV_VARIABLES.trello_api_key, ENV_VARIABLES.trello_api_token
+            )
+        )
     )
 
     return orchestration_service.get_board_json(ENV_VARIABLES.trello_board_name)

@@ -41,7 +41,7 @@ dependencies = ["pyright", "pytest-cov", "pytest"]
 dev = "python server.py"
 start-app = "uvicorn assistify_api.app.api:api --host 0.0.0.0 --port 8000"
 migrations = "python assistify_api/database/handle_migrations.py"
-test = "pytest --cache-clear --cov --cov-report lcov --cov-report term"
+test = "ENV_FILE_PATH=.env.test pytest --cache-clear --cov --cov-report lcov --cov-report term -v"
 
 [tool.hatch.envs.hatch-static-analysis]
 config-path = "ruff_defaults.toml"

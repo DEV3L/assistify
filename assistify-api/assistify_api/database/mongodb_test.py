@@ -22,7 +22,7 @@ def test_mongodb_instance_only_ever_called_once(mock_pymongo: patch, mock_logger
     # Ensure MongoClient is called with the correct URI
     mock_pymongo.MongoClient.assert_called_with(ENV_VARIABLES.mongodb_uri)
     # Ensure MongoClient is only called once
-    assert 1 == mock_pymongo.MongoClient.call_count
+    assert mock_pymongo.MongoClient.call_count == 1
     # Ensure the returned database is correct
     assert mock_pymongo.MongoClient.return_value[ENV_VARIABLES.mongodb_db] == result_db
     # Ensure logger.info was called

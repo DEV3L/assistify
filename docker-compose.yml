@@ -1,42 +1,43 @@
-   version: '3.8'
+version: '3.8'
 
-   services:
-     backend:
-       build: ./assistify-api
-       container_name: assistify_backend
-       environment:
-         - OPENAI_API_KEY=${OPENAI_API_KEY}
-         - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-         - MONGODB_URI=${MONGODB_URI}
-       ports:
-         - "8000:8000"
-       depends_on:
-         - mongo
+services:
+  backend:
+    build: ./assistify-api
+    container_name: assistify_backend
+    environment:
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - MONGODB_DB=${MONGODB_DB}
+      - MONGODB_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
 
-     frontend:
-       build: ./assistify-ui
-       container_name: assistify_frontend
-       environment:
-         - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-         - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-         - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-         - NEXTAUTH_URL=${NEXTAUTH_URL}
-         - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
-       ports:
-         - "3000:3000"
-       depends_on:
-         - backend
+  frontend:
+    build: ./assistify-ui
+    container_name: assistify_frontend
+    environment:
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 
-     mongo:
-       image: mongo:latest
-       container_name: mongo-db-assistify
-       environment:
-         - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-         - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-       ports:
-         - "27017:27017"
-       volumes:
-         - mongo_data:/data/db
+  mongo:
+    image: mongo:latest
+    container_name: mongo-db-assistify
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
-   volumes:
-     mongo_data:
+volumes:
+  mongo_data:

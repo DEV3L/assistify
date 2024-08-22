@@ -10,7 +10,7 @@ def _load_migration(file_path: str, module_name: str) -> Callable:
     spec = importlib.util.spec_from_file_location(module_name, file_path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return getattr(module, "run")
+    return module.run
 
 
 def _get_migration_files(migrations_dir: str) -> list[(str, str)]:

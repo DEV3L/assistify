@@ -60,7 +60,9 @@ def _clear_bin_directory(bin_path: str) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run the end-to-end assistant process.")
+    parser = argparse.ArgumentParser(
+        description="Run the end-to-end assistant process."
+    )
     parser.add_argument(
         "--delete-assistant",
         action="store_true",
