@@ -2,7 +2,7 @@ import AssistifyHead from "@/components/common/AssistifyHead";
 import { GoogleLogo } from "@/components/common/GoogleLogo";
 import Header from "@/components/common/Header";
 import StyledCard from "@/components/common/StyledCard";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { fetchRandomNumber } from "../services/service";
@@ -47,6 +47,11 @@ const Login = () => {
         >
           Sign in with Google
         </Button>
+        <Box mt={2} textAlign="center">
+          <Link href="/about" color="primary">
+            About Assistify
+          </Link>
+        </Box>
       </StyledCard>
     </Box>
   );
