@@ -2,7 +2,10 @@ import random
 
 from ai_assistant_manager.clients.openai_api import OpenAIClient
 from fastapi import Depends, FastAPI
+from pymongo.database import Database
 
+from assistify_api.database.dao.version_dao import VersionDao
+from assistify_api.database.mongodb import MongoDb
 from assistify_api.services.chat import ChatService
 
 from .assistants.available_assistants import assistants_whitelist
@@ -42,7 +45,7 @@ def read_random_number() -> dict:
 
 
 @api.get("/protected")
-def protected_route(user_info: User = Depends(verify_token)) -> dict:
+def protected_route(user_info: User = Depends(verify_token), db: Database = Depends(MongoDb.instance)) -> dict:
     """
     Protected endpoint that requires authentication.
 
@@ -52,7 +55,14 @@ def protected_route(user_info: User = Depends(verify_token)) -> dict:
     Returns:
         dict: A message containing the user's name and email.
     """
-    return {"message": f"Hello {user_info.name}, your email is {user_info.email}"}
+    version_dao = VersionDao(db)
+    versions = version_dao.find_all()
+    latest_version = versions[-1]
+
+    return {
+        "message": f"Hello {user_info.name}, your email is {user_info.email}",
+        "latest_version": f"The latest database migration version is {latest_version.version}",
+    }
 
 
 @api.post("/send-message")

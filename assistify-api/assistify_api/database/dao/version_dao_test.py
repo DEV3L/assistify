@@ -1,3 +1,6 @@
+import uuid
+from unittest.mock import MagicMock
+
 from pymongo.database import Database
 
 from assistify_api.database.dao.version_dao import VersionDao
@@ -22,14 +25,22 @@ def test_version_dao_inserts_record(mongo_db: Database):
     assert version_id
 
 
-def test_version_does_not_find_record(mongo_db: Database):
+def test_find_all():
     """
-    Test that a non-existent version record is not found in the database.
+    Test that the find_all method retrieves all version documents from the database.
     """
-    version_dao = VersionDao(mongo_db)
-    result = version_dao.find_one(default_version)
+    mock_db = MagicMock()
+    mock_collection = MagicMock()
+    mock_db.__getitem__.return_value = mock_collection
 
-    assert result is None
+    sample_data = [{"_id": uuid.uuid4(), "version": "1.0.0"}, {"_id": uuid.uuid4(), "version": "1.1.0"}]
+    mock_collection.find.return_value = sample_data
+
+    result = VersionDao(mock_db).find_all()
+
+    assert len(result) == 2
+    assert result[0].version == "1.0.0"
+    assert result[1].version == "1.1.0"
 
 
 def test_version_does_find_record(mongo_db: Database):
@@ -47,6 +58,16 @@ def test_version_does_find_record(mongo_db: Database):
     assert version_dao.delete_one(default_version)
 
     assert expected_version_id == str(result_version.id)
+
+
+def test_version_does_not_find_record(mongo_db: Database):
+    """
+    Test that a non-existent version record is not found in the database.
+    """
+    version_dao = VersionDao(mongo_db)
+    result = version_dao.find_one(default_version)
+
+    assert result is None
 
 
 def test_version_dao_delete_no_record(mongo_db: Database):

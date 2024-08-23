@@ -40,6 +40,16 @@ class VersionDao:
         result = self.version_collection.replace_one(query, values, upsert=True)
         return str(result.upserted_id or values["_id"])
 
+    def find_all(self) -> list[Version]:
+        """
+        Find all version documents in the database.
+
+        Returns:
+            list[Version]: A list of all version models.
+        """
+        results = self.version_collection.find()
+        return [Version.model_validate(result) for result in results]
+
     def find_one(self, version: str) -> Version:
         """
         Find a version document by its version string.
@@ -55,8 +65,7 @@ class VersionDao:
         if result is None:
             return None
 
-        version_model = Version.model_validate(result)
-        return version_model
+        return Version.model_validate(result)
 
     def delete_one(self, version: str) -> int:
         """

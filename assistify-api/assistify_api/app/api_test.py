@@ -50,7 +50,10 @@ def test_protected_route(
     response = api_client.get("/protected", headers={"Authorization": "Bearer fake_token"})
 
     assert response.status_code == 200
-    assert response.json() == {"message": f"Hello {mock_idinfo['name']}, your email is {mock_idinfo['email']}"}
+    assert response.json() == {
+        "message": f"Hello {mock_idinfo['name']}, your email is {mock_idinfo['email']}",
+        "latest_version": "The latest database migration version is v001_hello_world",
+    }
 
 
 @patch("assistify_api.app.auth.verify_token.id_token")
