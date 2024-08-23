@@ -1,4 +1,5 @@
 import AssistifyHead from "@/components/common/AssistifyHead";
+import LoadingSkeleton from "@/components/common/LoadingSkeleton";
 import AppBar from "@/components/dashboard/AppBar";
 import Drawer from "@/components/dashboard/Drawer";
 import DrawerToggle from "@/components/dashboard/DrawerToggle";
@@ -20,7 +21,7 @@ const Dashboard = () => {
   useAuthRedirect("/dashboard");
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <LoadingSkeleton />;
   }
 
   const handleDrawerToggle = () => {

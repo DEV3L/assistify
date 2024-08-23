@@ -1,4 +1,5 @@
 import AssistifyHead from "@/components/common/AssistifyHead";
+import PageSkeleton from "@/components/common/PageSkeleton";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -18,7 +19,16 @@ export default function Home() {
   return (
     <>
       <AssistifyHead />
-      <div>Loading...</div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <PageSkeleton />
+      </div>
     </>
   );
 }

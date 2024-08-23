@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFetchProtectedData } from "../services/service";
+import LoadingSkeleton from "./common/LoadingSkeleton";
 
 const ProtectedComponent = () => {
   const [data, setData] = useState(null);
@@ -23,7 +24,9 @@ const ProtectedComponent = () => {
     return <div>Please log in to view this content.</div>;
   }
 
-  if (!data) return <div>Loading...</div>;
+  if (!data) {
+    return <LoadingSkeleton />;
+  }
 
   return <div>{JSON.stringify(data)}</div>;
 };
