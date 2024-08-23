@@ -25,11 +25,8 @@ class MongoDb:
             logger.info("Connecting to MongoDb")
             # Use the provided URI or fallback to the environment variable
             mongodb_uri = mongodb_uri or ENV_VARIABLES.mongodb_uri
-            logger.info(f"MongoDB URI: {mongodb_uri}")
-            client = pymongo.MongoClient(mongodb_uri, server_api=ServerApi("1"))  # Create a new MongoClient
-            # ssl=True,ssl_cert_reqs=ssl.CERT_NONE
-            # ssl_cert_reqs='CERT_NONE'  # Use 'CERT_REQUIRED' in production with proper certificates
+            client = pymongo.MongoClient(mongodb_uri, server_api=ServerApi("1"))
 
-            cls.db = client[ENV_VARIABLES.mongodb_db]  # Get the database instance
+            cls.db = client[ENV_VARIABLES.mongodb_db]
 
-        return cls.db  # Return the database instance
+        return cls.db
