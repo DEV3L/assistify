@@ -1,23 +1,45 @@
-import { AssistifyLogo } from "@/components/common/AssistifyLogo";
 import { Box, Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
+import React, { useEffect } from "react";
 
-interface HeaderProps {
-  title: string;
-  subtitle?: string;
-}
+const Header = () => {
+  const { data: session, status } = useSession();
 
-const Header: React.FC<HeaderProps> = ({ title, subtitle }) => (
-  <Box textAlign="center">
-    <AssistifyLogo />
-    <Typography variant="h4" component="h2" mt={2} color="text.primary">
-      {title}
-    </Typography>
-    {subtitle && (
-      <Typography variant="body2" mt={1} color="text.secondary">
-        {subtitle}
+  useEffect(() => {
+    console.log(status);
+  }, [status]);
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "0 16px",
+        backgroundColor: "secondary.main",
+        height: "var(--header-height)",
+        borderBottom: "var(--border-slim-muted)",
+      }}
+    >
+      <Typography variant="h6" noWrap component="div">
+        Assistify
       </Typography>
-    )}
-  </Box>
-);
+      {status === "authenticated" ? (
+        <>
+          <Box display="flex" alignItems="center">
+            <Typography variant="body1" mr={2}>
+              {session.user?.name}
+            </Typography>
+            <img
+              src={session.user?.image ?? ""}
+              alt="User Icon"
+              style={{ borderRadius: "50%", width: 40, height: 40 }}
+            />
+          </Box>
+        </>
+      ) : null}
+    </Box>
+  );
+};
 
-export default Header;
+export default React.memo(Header);

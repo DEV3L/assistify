@@ -1,11 +1,10 @@
-import AssistifyHead from "@/components/common/AssistifyHead";
 import LoadingSkeleton from "@/components/common/LoadingSkeleton";
 import AppBar from "@/components/dashboard/AppBar";
 import Drawer from "@/components/dashboard/Drawer";
 import DrawerToggle from "@/components/dashboard/DrawerToggle";
 import MainContent from "@/components/dashboard/MainContent";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
-import { Box, CssBaseline } from "@mui/material";
+import { Box } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -35,26 +34,26 @@ const Dashboard = () => {
   const drawerWidth = drawerExpanded ? maxDrawerWidth : minDrawerWidth;
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <AssistifyHead />
-      <CssBaseline />
+    <>
       <AppBar handleDrawerToggle={handleDrawerToggle} />
-      <Drawer
-        mobileOpen={mobileOpen}
-        handleDrawerToggle={handleDrawerToggle}
-        drawerWidth={drawerWidth}
-        drawerExpanded={drawerExpanded}
-      />
-      <DrawerToggle
-        drawerExpanded={drawerExpanded}
-        handleDrawerExpandToggle={handleDrawerExpandToggle}
-        minDrawerWidth={minDrawerWidth}
-        maxDrawerWidth={maxDrawerWidth}
-        isMobile={window.innerWidth <= 600}
-        mobileOpen={mobileOpen}
-      />
-      <MainContent drawerWidth={drawerWidth} />
-    </Box>
+      <Box sx={{ display: "flex" }}>
+        <Drawer
+          mobileOpen={mobileOpen}
+          handleDrawerToggle={handleDrawerToggle}
+          drawerWidth={drawerWidth}
+          drawerExpanded={drawerExpanded}
+        />
+        <DrawerToggle
+          drawerExpanded={drawerExpanded}
+          handleDrawerExpandToggle={handleDrawerExpandToggle}
+          minDrawerWidth={minDrawerWidth}
+          maxDrawerWidth={maxDrawerWidth}
+          isMobile={window.innerWidth <= 600}
+          mobileOpen={mobileOpen}
+        />
+        <MainContent drawerWidth={drawerWidth} />
+      </Box>
+    </>
   );
 };
 

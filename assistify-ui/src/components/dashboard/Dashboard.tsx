@@ -1,11 +1,11 @@
-import { AssistifyLogo } from "@/components/common/AssistifyLogo";
-import Message from "@/components/Message";
 import Protected from "@/components/Protected";
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { WelcomeMessage } from "../common/WelcomeMessage";
+import Message from "../Message";
 
-const UserProfile = () => {
+const DashBoard = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -26,17 +26,8 @@ const UserProfile = () => {
       }}
     >
       <CardContent>
-        <Box textAlign="center">
-          <AssistifyLogo />
-          <Typography variant="h4" component="h2" mt={2} color="text.primary">
-            Welcome to Assistify
-          </Typography>
-          <Typography variant="body2" mt={1} color="text.secondary">
-            Your AI Assistant Interaction Hub
-          </Typography>
-          <Typography variant="h6" mt={2} color="text.primary">
-            Welcome, {session?.user?.name}
-          </Typography>
+        <WelcomeMessage name={session?.user?.name} />
+        <Box>
           <Button
             onClick={handleSignOut}
             fullWidth
@@ -46,6 +37,8 @@ const UserProfile = () => {
           >
             Sign out
           </Button>
+        </Box>
+        <Box>
           <Protected />
           <Message />
         </Box>
@@ -54,4 +47,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default DashBoard;

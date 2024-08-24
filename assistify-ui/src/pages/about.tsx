@@ -1,5 +1,4 @@
 import AboutAssistify from "@/components/AboutAssistify";
-import AssistifyHead from "@/components/common/AssistifyHead";
 
 /**
  * About page to display the vision, goals, and values of Assistify.
@@ -9,7 +8,6 @@ import AssistifyHead from "@/components/common/AssistifyHead";
 const About = (): JSX.Element => {
   return (
     <>
-      <AssistifyHead title="About Assistify" />
       <AboutAssistify />
     </>
   );

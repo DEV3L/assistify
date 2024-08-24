@@ -11,6 +11,8 @@
   --btn-primary: #007acc; /* Blue button */
   --btn-primary-hover: #005a9e; /* Darker blue button hover */
   --btn-focus-ring: #007acc; /* Blue focus ring */
+  --header-height: 64px;
+  --border-slim-muted: 0.5px solid #828282;
 }
 
 /* General Styles */
@@ -18,5 +20,3 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
-
-/* Button styles are now managed by the MUI theme */

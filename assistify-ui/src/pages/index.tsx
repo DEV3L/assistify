@@ -1,4 +1,3 @@
-import AssistifyHead from "@/components/common/AssistifyHead";
 import PageSkeleton from "@/components/common/PageSkeleton";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -18,7 +17,6 @@ export default function Home() {
 
   return (
     <>
-      <AssistifyHead />
       <div
         style={{
           display: "flex",

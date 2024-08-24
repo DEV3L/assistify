@@ -1,7 +1,6 @@
-import AssistifyHead from "@/components/common/AssistifyHead";
 import { GoogleLogo } from "@/components/common/GoogleLogo";
-import Header from "@/components/common/Header";
 import StyledCard from "@/components/common/StyledCard";
+import { WelcomeMessage } from "@/components/common/WelcomeMessage";
 import { Box, Button, Link, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -26,12 +25,8 @@ const Login = () => {
       minHeight="100vh"
       bgcolor="background.default"
     >
-      <AssistifyHead />
       <StyledCard>
-        <Header
-          title="Welcome to Assistify"
-          subtitle="Your AI Assistant Interaction Hub"
-        />
+        <WelcomeMessage />
         {randomNumber !== null && (
           <Typography variant="h6" mt={2} color="text.primary">
             Random Number: {randomNumber}

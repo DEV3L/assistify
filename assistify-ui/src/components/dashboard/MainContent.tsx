@@ -1,4 +1,4 @@
-import UserProfile from "@/components/dashboard/UserProfile";
+import DashBoard from "@/components/dashboard/Dashboard";
 import { Box, Toolbar } from "@mui/material";
 
 interface MainContentProps {
@@ -16,7 +16,7 @@ const MainContent = ({ drawerWidth }: MainContentProps) => {
       }}
     >
       <Toolbar />
-      <UserProfile />
+      <DashBoard />
     </Box>
   );
 };

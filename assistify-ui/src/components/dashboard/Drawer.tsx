@@ -4,11 +4,10 @@ import {
 } from "@mui/icons-material";
 import {
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Drawer as MuiDrawer,
-  Toolbar,
 } from "@mui/material";
 
 interface DrawerProps {
@@ -26,10 +25,9 @@ const Drawer = ({
 }: DrawerProps) => {
   const drawer = (
     <div>
-      <Toolbar />
       <List>
         {["Home", "Settings"].map((text, index) => (
-          <ListItem button key={text}>
+          <ListItemButton key={text}>
             <ListItemIcon>
               {index % 2 === 0 ? (
                 <HomeIcon color="primary" />
@@ -41,11 +39,31 @@ const Drawer = ({
               primary={text}
               sx={{ display: drawerExpanded ? "block" : "none" }}
             />
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
     </div>
   );
+
+  const drawerStyles = {
+    boxSizing: "border-box",
+    width: drawerWidth,
+    backgroundColor: "secondary.main",
+    transition: "width 0.3s",
+    marginTop: "var(--header-height)",
+    borderRight: "var(--border-slim-muted)",
+  };
+
+  const drawerSx = (variant: "permanent" | "temporary") => {
+    const isTemporary = variant === "temporary";
+    return {
+      display: {
+        xs: isTemporary ? "block" : "none",
+        sm: isTemporary ? "none" : "block",
+      },
+      "& .MuiDrawer-paper": drawerStyles,
+    };
+  };
 
   return (
     <>
@@ -56,31 +74,11 @@ const Drawer = ({
         ModalProps={{
           keepMounted: true,
         }}
-        sx={{
-          display: { xs: "block", sm: "none" },
-          "& .MuiDrawer-paper": {
-            boxSizing: "border-box",
-            width: drawerWidth,
-            backgroundColor: "secondary.main",
-            transition: "width 0.3s",
-          },
-        }}
+        sx={drawerSx("temporary")}
       >
         {drawer}
       </MuiDrawer>
-      <MuiDrawer
-        variant="permanent"
-        sx={{
-          display: { xs: "none", sm: "block" },
-          "& .MuiDrawer-paper": {
-            boxSizing: "border-box",
-            width: drawerWidth,
-            backgroundColor: "secondary.main",
-            transition: "width 0.3s",
-          },
-        }}
-        open
-      >
+      <MuiDrawer variant="permanent" sx={drawerSx("permanent")} open>
         {drawer}
       </MuiDrawer>
     </>
