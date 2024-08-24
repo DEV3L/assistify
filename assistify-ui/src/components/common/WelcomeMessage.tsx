@@ -1,4 +1,4 @@
-import { AssistifyLogo } from "@/components/common/AssistifyLogo";
+import { AssistifyLogo } from "@/components/common/images/AssistifyLogo";
 import { Box, Typography } from "@mui/material";
 
 export interface WelcomeMessageProps {

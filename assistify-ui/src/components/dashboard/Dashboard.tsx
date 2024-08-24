@@ -1,7 +1,8 @@
+import StyledCard from "@/components/common/StyledCard";
 import { WelcomeMessage } from "@/components/common/WelcomeMessage";
 import Message from "@/components/Message";
 import Protected from "@/components/Protected";
-import { Box, Button, Card, CardContent } from "@mui/material";
+import { Box, Button, CardContent } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -15,14 +16,10 @@ const DashBoard = () => {
   };
 
   return (
-    <Card
+    <StyledCard
       sx={{
         maxWidth: 800,
         margin: "auto",
-        bgcolor: "background.paper",
-        borderRadius: 2,
-        boxShadow: 3,
-        p: 4,
       }}
     >
       <CardContent>
@@ -43,7 +40,7 @@ const DashBoard = () => {
           <Message />
         </Box>
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 };
 

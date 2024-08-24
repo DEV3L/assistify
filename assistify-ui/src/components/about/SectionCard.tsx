@@ -1,4 +1,4 @@
-import BaseCard from "@/components/common/BaseCard";
+import StyledCard from "@/components/common/StyledCard";
 import { Typography } from "@mui/material";
 
 interface SectionCardProps {
@@ -14,12 +14,12 @@ interface SectionCardProps {
  */
 const SectionCard = ({ title, children }: SectionCardProps): JSX.Element => {
   return (
-    <BaseCard>
+    <StyledCard>
       <Typography variant="h5" component="h2" gutterBottom>
         {title}
       </Typography>
       {children}
-    </BaseCard>
+    </StyledCard>
   );
 };
 

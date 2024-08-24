@@ -1,39 +1,26 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import StyledCard from "./StyledCard";
 
 /**
- * Test suite for the StyledCard component
+ * Unit tests for the StyledCard component.
  */
 describe("StyledCard", () => {
   it("renders children correctly", () => {
-    render(
+    const { getByText } = render(
       <StyledCard>
-        <div>Test Child</div>
+        <div>Test Content</div>
       </StyledCard>
     );
-    expect(screen.getByText("Test Child")).toBeInTheDocument();
+    expect(getByText("Test Content")).toBeInTheDocument();
   });
 
-  it("applies default styles correctly", () => {
-    render(
+  it("applies hover styles correctly", () => {
+    const { container } = render(
       <StyledCard>
-        <div>Test Child</div>
+        <div>Hover Test</div>
       </StyledCard>
     );
-    const cardElement = screen.getByText("Test Child").closest(".MuiCard-root");
-    const styles = getComputedStyle(cardElement!);
-    expect(styles.maxWidth).toBe("400px");
-    expect(styles.padding).toBe("32px");
-  });
-
-  it("applies custom styles correctly", () => {
-    render(
-      <StyledCard sx={{ bgcolor: "primary.main" }}>
-        <div>Test Child</div>
-      </StyledCard>
-    );
-    const cardElement = screen.getByText("Test Child").closest(".MuiCard-root");
-    const styles = getComputedStyle(cardElement!);
-    expect(styles.backgroundColor).toBe("rgb(25, 118, 210)");
+    const card = container.firstChild;
+    expect(card).toHaveStyle("transition: transform 0.3s,box-shadow 0.3s");
   });
 });

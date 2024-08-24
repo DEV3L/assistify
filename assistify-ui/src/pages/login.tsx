@@ -1,4 +1,4 @@
-import { GoogleLogo } from "@/components/common/GoogleLogo";
+import { GoogleLogo } from "@/components/common/images/GoogleLogo";
 import StyledCard from "@/components/common/StyledCard";
 import { WelcomeMessage } from "@/components/common/WelcomeMessage";
 import { fetchRandomNumber } from "@/services/service";
