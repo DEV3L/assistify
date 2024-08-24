@@ -17,21 +17,24 @@
 
 @font-face {
   font-family: "DankMono";
-  src: url("/fonts/DankMono.ttf") format("truetype");
+  src: url("/fonts/DankMono.woff2") format("woff2"),
+    url("/fonts/DankMono.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "DankMono";
-  src: url("/fonts/DankMono-Bold.ttf") format("truetype");
+  src: url("/fonts/DankMono-Bold.woff2") format("woff2"),
+    url("/fonts/DankMono-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Dank Mono";
-  src: url("/fonts/DankMono-Italic.ttf") format("truetype");
+  src: url("/fonts/DankMono-Italic.woff2") format("woff2"),
+    url("/fonts/DankMono-Italic.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
 }
