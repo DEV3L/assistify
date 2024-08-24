@@ -1,6 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { SessionProvider } from "next-auth/react";
+import { useRouter } from "next/router";
 import Header from "./Header";
+
+jest.mock("next/router", () => ({
+  useRouter: jest.fn(),
+}));
 
 describe("Header", () => {
   const renderWithSessionProvider = (
@@ -24,8 +29,18 @@ describe("Header", () => {
 
   it("renders the user when in session", () => {
     renderWithSessionProvider(<Header />);
-
     expect(screen.getByText("Test User")).toBeInTheDocument();
     expect(screen.getByAltText("User Icon")).toBeInTheDocument();
+  });
+
+  it("navigates to the root index page when the logo is clicked", () => {
+    const push = jest.fn();
+    (useRouter as jest.Mock).mockReturnValue({ push });
+
+    renderWithSessionProvider(<Header />);
+    const logo = screen.getByAltText("Assistify Logo");
+    fireEvent.click(logo);
+
+    expect(push).toHaveBeenCalledWith("/");
   });
 });
