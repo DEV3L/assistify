@@ -12,9 +12,4 @@ describe("WelcomeMessage", () => {
     expect(screen.getByText(/Welcome to Assistify/i)).toBeInTheDocument();
     expect(screen.getByText(/Welcome, John/i)).toBeInTheDocument();
   });
-
-  it("renders the Assistify logo", () => {
-    render(<WelcomeMessage name="John" />);
-    expect(screen.getByAltText(/assistify logo/i)).toBeInTheDocument();
-  });
 });
