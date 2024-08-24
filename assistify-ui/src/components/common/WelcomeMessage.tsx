@@ -1,5 +1,5 @@
-import { AssistifyLogo } from "@/components/common/images/AssistifyLogo";
 import { Box, Typography } from "@mui/material";
+import Image from "next/image";
 
 export interface WelcomeMessageProps {
   name?: string | null;
@@ -15,8 +15,18 @@ export const WelcomeMessage = ({
   name,
 }: WelcomeMessageProps): JSX.Element | null => {
   return (
-    <Box textAlign="center">
-      <AssistifyLogo />
+    <Box
+      textAlign="center"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+    >
+      <Image
+        src="/assistify-logo.png"
+        alt="Assistify Logo"
+        width={75}
+        height={75}
+      />
       <Typography variant="h4" component="h2" mt={2} color="text.primary">
         Welcome to Assistify
       </Typography>
