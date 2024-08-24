@@ -1,4 +1,4 @@
-import AboutAssistify from "@/components/AboutAssistify";
+import AboutAssistify from "@/components/about/AboutAssistify";
 
 /**
  * About page to display the vision, goals, and values of Assistify.

@@ -15,8 +15,29 @@
   --border-slim-muted: 0.5px solid #828282;
 }
 
-/* General Styles */
+@font-face {
+  font-family: "DankMono";
+  src: url("/fonts/DankMono.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DankMono";
+  src: url("/fonts/DankMono-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Dank Mono";
+  src: url("/fonts/DankMono-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
 body {
+  font-family: "Dank Mono", Arial, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }

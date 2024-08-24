@@ -5,9 +5,7 @@ import React, { useEffect } from "react";
 const Header = () => {
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    console.log(status);
-  }, [status]);
+  useEffect(() => {}, [status]);
 
   return (
     <Box

@@ -1,10 +1,10 @@
 import { GoogleLogo } from "@/components/common/GoogleLogo";
 import StyledCard from "@/components/common/StyledCard";
 import { WelcomeMessage } from "@/components/common/WelcomeMessage";
+import { fetchRandomNumber } from "@/services/service";
 import { Box, Button, Link, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { fetchRandomNumber } from "../services/service";
 
 const Login = () => {
   const [randomNumber, setRandomNumber] = useState<string | null>(null);

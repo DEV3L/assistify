@@ -1,9 +1,9 @@
+import { WelcomeMessage } from "@/components/common/WelcomeMessage";
+import Message from "@/components/Message";
 import Protected from "@/components/Protected";
 import { Box, Button, Card, CardContent } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { WelcomeMessage } from "../common/WelcomeMessage";
-import Message from "../Message";
 
 const DashBoard = () => {
   const { data: session } = useSession();

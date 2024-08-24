@@ -1,6 +1,6 @@
+import LoadingSkeleton from "@/components//common/LoadingSkeleton";
+import { useFetchProtectedData } from "@/services/service";
 import { useEffect, useState } from "react";
-import { useFetchProtectedData } from "../services/service";
-import LoadingSkeleton from "./common/LoadingSkeleton";
 
 const ProtectedComponent = () => {
   const [data, setData] = useState(null);
