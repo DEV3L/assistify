@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 from pymongo.database import Database
 
 from assistify_api.app.api import api
+from assistify_api.app.assistants.assistants_service import AssistantsService
 from assistify_api.app.dependencies.api_dependencies import get_chat_service, get_openai_client
 from assistify_api.database.handle_migrations import run_migrations
 from assistify_api.database.mongodb import MongoDb
@@ -67,3 +68,13 @@ def mongo_db() -> Database:
 
     run_migrations("assistify_api/database/migrations")
     return _mongo_db
+
+
+@pytest.fixture
+def mock_openai_client():
+    return MagicMock()
+
+
+@pytest.fixture
+def assistants_service(mock_openai_client):
+    return AssistantsService(open_ai_client=mock_openai_client)

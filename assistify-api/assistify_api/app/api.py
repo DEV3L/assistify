@@ -1,24 +1,24 @@
 import random
 
-from ai_assistant_manager.clients.openai_api import OpenAIClient
 from fastapi import Depends, FastAPI
 from pymongo.database import Database
 
+from assistify_api.app.assistants.assistants_router import router as assistants_router
 from assistify_api.database.dao.version_dao import VersionDao
 from assistify_api.database.mongodb import MongoDb
 from assistify_api.services.chat import ChatService
 
-from .assistants.available_assistants import assistants_whitelist
-from .assistants.list_assistants_response import AssistantsResponse, ListAssistantsResponse
 from .auth.user import User
 from .auth.verify_token import verify_token
 from .chat.send_message import SendMessageRequest, SendMessageResponse
 from .cors.custom_cors_middleware import CustomCORSMiddleware
-from .dependencies.api_dependencies import get_chat_service, get_openai_client
+from .dependencies.api_dependencies import get_chat_service
 from .lifespan import lifespan
 
 api = FastAPI(lifespan=lifespan)
 api.add_middleware(CustomCORSMiddleware)
+
+api.include_router(assistants_router)
 
 
 @api.get("/")
@@ -85,28 +85,3 @@ def send_message(
     response = chat_service.send_message(message=message.message)
 
     return SendMessageResponse(response=response)
-
-
-@api.get("/assistants")
-def get_assistants(
-    open_ai_client: OpenAIClient = Depends(get_openai_client),
-    _: User = Depends(verify_token),
-) -> ListAssistantsResponse:
-    """
-    Endpoint to get a list of available assistants. Requires authentication.
-
-    Args:
-        open_ai_client (OpenAIClient): The OpenAI client dependency.
-        _ (User): The authenticated user's information.
-
-    Returns:
-        ListAssistantsResponse: A list of assistants that are whitelisted.
-    """
-    response = open_ai_client.assistants_list()
-    return ListAssistantsResponse(
-        assistants=[
-            AssistantsResponse(id=assistant.id, model=assistant.model, name=assistant.name)
-            for assistant in response
-            if assistant.name in assistants_whitelist
-        ]
-    )
