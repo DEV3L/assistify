@@ -1,14 +1,6 @@
-import {
-  Home as HomeIcon,
-  Settings as SettingsIcon,
-} from "@mui/icons-material";
-import {
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Drawer as MuiDrawer,
-} from "@mui/material";
+import SideMenuItem from "@/components/side-menu/SideMenuItem";
+import { Person as PersonIcon } from "@mui/icons-material";
+import { List, Drawer as MuiDrawer } from "@mui/material";
 
 interface DrawerProps {
   mobileOpen: boolean;
@@ -26,21 +18,12 @@ const Drawer = ({
   const drawer = (
     <div>
       <List>
-        {["Home", "Settings"].map((text, index) => (
-          <ListItemButton key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? (
-                <HomeIcon color="primary" />
-              ) : (
-                <SettingsIcon color="primary" />
-              )}
-            </ListItemIcon>
-            <ListItemText
-              primary={text}
-              sx={{ display: drawerExpanded ? "block" : "none" }}
-            />
-          </ListItemButton>
-        ))}
+        <SideMenuItem
+          href="/assistants"
+          icon={PersonIcon}
+          text="Assistants"
+          drawerExpanded={drawerExpanded}
+        />
       </List>
     </div>
   );

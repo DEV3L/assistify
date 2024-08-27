@@ -12,6 +12,7 @@ const MainContent = ({ drawerWidth }: MainContentProps) => {
       sx={{
         flexGrow: 1,
         p: 3,
+        marginLeft: `${drawerWidth}px`,
         width: { sm: `calc(100% - ${drawerWidth}px)` },
       }}
     >
