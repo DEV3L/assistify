@@ -1,8 +1,8 @@
 import LoadingSkeleton from "@/components/common/LoadingSkeleton";
 import withDashboardLayout from "@/components/layouts/withDashboardLayout";
+import useMobile from "@/hooks/useMobile";
 import { useFetchAssistants } from "@/services/assistants";
 import {
-  Box,
   Paper,
   Table,
   TableBody,
@@ -12,7 +12,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 interface Assistant {
@@ -22,10 +21,10 @@ interface Assistant {
 }
 
 const AssistantsPage = () => {
-  const { data: session } = useSession();
   const [assistants, setAssistants] = useState<Assistant[]>([]);
   const [loading, setLoading] = useState(true);
   const { fetchAssistants, isAuthenticated } = useFetchAssistants();
+  const isMobile = useMobile();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,7 +43,7 @@ const AssistantsPage = () => {
   }, [isAuthenticated]);
 
   return (
-    <Box p={3}>
+    <>
       <Typography variant="h4" gutterBottom>
         Your Assistants
       </Typography>
@@ -53,7 +52,7 @@ const AssistantsPage = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
+                {!isMobile && <TableCell>ID</TableCell>}
                 <TableCell>Name</TableCell>
                 <TableCell>Model</TableCell>
               </TableRow>
@@ -61,7 +60,7 @@ const AssistantsPage = () => {
             <TableBody>
               {assistants.map((assistant) => (
                 <TableRow key={assistant.id}>
-                  <TableCell>{assistant.id}</TableCell>
+                  {!isMobile && <TableCell>{assistant.id}</TableCell>}
                   <TableCell>{assistant.name}</TableCell>
                   <TableCell>{assistant.model}</TableCell>
                 </TableRow>
@@ -70,7 +69,7 @@ const AssistantsPage = () => {
           </Table>
         </TableContainer>
       )}
-    </Box>
+    </>
   );
 };
 
