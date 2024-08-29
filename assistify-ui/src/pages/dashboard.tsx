@@ -1,8 +1,8 @@
-import MainContent from "@/components/dashboard/MainContent";
+import { default as DashBoard } from "@/components/dashboard/Dashboard";
 import withDashboardLayout from "@/components/layouts/withDashboardLayout";
 
 const Dashboard = () => {
-  return <MainContent drawerWidth={0} />;
+  return <DashBoard />;
 };
 
 export default withDashboardLayout(Dashboard);

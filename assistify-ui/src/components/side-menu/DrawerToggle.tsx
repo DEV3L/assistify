@@ -1,3 +1,4 @@
+import useMobile from "@/hooks/useMobile";
 import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
@@ -9,8 +10,6 @@ interface DrawerToggleProps {
   handleDrawerExpandToggle: () => void;
   minDrawerWidth: number;
   maxDrawerWidth: number;
-  isMobile: boolean;
-  mobileOpen: boolean;
 }
 
 const DrawerToggle = ({
@@ -18,10 +17,10 @@ const DrawerToggle = ({
   handleDrawerExpandToggle,
   minDrawerWidth,
   maxDrawerWidth,
-  isMobile,
-  mobileOpen,
 }: DrawerToggleProps) => {
-  if (isMobile && !mobileOpen) {
+  const mobile = useMobile();
+
+  if (mobile) {
     return null;
   }
 
@@ -29,14 +28,14 @@ const DrawerToggle = ({
     <IconButton
       onClick={handleDrawerExpandToggle}
       sx={{
-        position: "absolute",
+        position: "fixed",
         top: "50%",
         left: drawerExpanded ? maxDrawerWidth - 20 : minDrawerWidth - 20,
         transform: "translateY(-50%)",
         backgroundColor: "secondary.main",
         color: "primary.main",
         transition: "left 0.3s",
-        zIndex: 1300, // Ensure the button is above the drawer
+        zIndex: 1300,
       }}
     >
       {drawerExpanded ? <ChevronLeftIcon /> : <ChevronRightIcon />}

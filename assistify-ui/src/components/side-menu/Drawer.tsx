@@ -1,4 +1,5 @@
 import SideMenuItem from "@/components/side-menu/SideMenuItem";
+import useMobile from "@/hooks/useMobile";
 import {
   Dashboard as DashboardIcon,
   Person as PersonIcon,
@@ -6,7 +7,7 @@ import {
 import { List, Drawer as MuiDrawer } from "@mui/material";
 
 interface DrawerProps {
-  mobileOpen: boolean;
+  drawerOpen: boolean;
   handleDrawerToggle: () => void;
   drawerWidth: number;
   drawerExpanded: boolean;
@@ -14,12 +15,15 @@ interface DrawerProps {
 }
 
 const Drawer = ({
-  mobileOpen,
+  drawerOpen,
   handleDrawerToggle,
   drawerWidth,
   drawerExpanded,
   currentPath,
 }: DrawerProps) => {
+  const mobile = useMobile();
+  const drawerVariant = mobile ? "temporary" : "permanent";
+
   const drawer = (
     <div>
       <List>
@@ -64,17 +68,18 @@ const Drawer = ({
   return (
     <>
       <MuiDrawer
-        variant="temporary"
-        open={mobileOpen}
+        variant={drawerVariant}
+        open={drawerOpen}
         onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
-        sx={drawerSx("temporary")}
+        ModalProps={
+          mobile
+            ? {
+                keepMounted: true,
+              }
+            : undefined
+        }
+        sx={drawerSx(drawerVariant)}
       >
-        {drawer}
-      </MuiDrawer>
-      <MuiDrawer variant="permanent" sx={drawerSx("permanent")} open>
         {drawer}
       </MuiDrawer>
     </>

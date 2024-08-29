@@ -1,9 +1,10 @@
 import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import AppBar from "@/components/side-menu/AppBar";
 import Drawer from "@/components/side-menu/Drawer";
 import DrawerToggle from "@/components/side-menu/DrawerToggle";
+import { MobileMenu } from "@/components/side-menu/MobileMenu";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
-import { Box } from "@mui/material";
+import useMobile from "@/hooks/useMobile";
+import Box from "@mui/material/Box";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ComponentType, useState } from "react";
@@ -11,12 +12,15 @@ import { ComponentType, useState } from "react";
 const minDrawerWidth = 60;
 const maxDrawerWidth = 240;
 
-const withDashboardLayout = (WrappedComponent: ComponentType) => {
-  return (props: any) => {
+const withDashboardLayout = <P extends object>(
+  WrappedComponent: ComponentType<P>
+) => {
+  return (props: P) => {
     const { status } = useSession();
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
     const [drawerExpanded, setDrawerExpanded] = useState(false);
     const router = useRouter();
+    const mobile = useMobile();
 
     // Use the custom hook to handle authentication redirection
     useAuthRedirect();
@@ -26,7 +30,7 @@ const withDashboardLayout = (WrappedComponent: ComponentType) => {
     }
 
     const handleDrawerToggle = () => {
-      setMobileOpen(!mobileOpen);
+      setDrawerOpen(!drawerOpen);
     };
 
     const handleDrawerExpandToggle = () => {
@@ -37,10 +41,10 @@ const withDashboardLayout = (WrappedComponent: ComponentType) => {
 
     return (
       <>
-        <AppBar handleDrawerToggle={handleDrawerToggle} />
+        <MobileMenu handleDrawerToggle={handleDrawerToggle} />
         <Box sx={{ display: "flex" }}>
           <Drawer
-            mobileOpen={mobileOpen}
+            drawerOpen={drawerOpen}
             handleDrawerToggle={handleDrawerToggle}
             drawerWidth={drawerWidth}
             drawerExpanded={drawerExpanded}
@@ -51,15 +55,15 @@ const withDashboardLayout = (WrappedComponent: ComponentType) => {
             handleDrawerExpandToggle={handleDrawerExpandToggle}
             minDrawerWidth={minDrawerWidth}
             maxDrawerWidth={maxDrawerWidth}
-            isMobile={window.innerWidth <= 600}
-            mobileOpen={mobileOpen}
           />
           <Box
             component="main"
             sx={{
               flexGrow: 1,
+              mt: "var(--header-height)",
+              ml: mobile ? undefined : `${drawerWidth}px`,
               p: 3,
-              marginLeft: `${drawerWidth}px`,
+              pt: mobile ? 5 : 3,
               width: { sm: `calc(100% - ${drawerWidth}px)` },
             }}
           >

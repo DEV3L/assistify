@@ -15,7 +15,7 @@ describe("Drawer", () => {
   it("renders the assistants link correctly", () => {
     renderWithSessionProvider(
       <Drawer
-        mobileOpen={false}
+        drawerOpen={false}
         handleDrawerToggle={() => {}}
         drawerWidth={240}
         drawerExpanded={true}
