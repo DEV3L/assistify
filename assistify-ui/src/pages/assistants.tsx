@@ -1,4 +1,5 @@
 import LoadingSkeleton from "@/components/common/LoadingSkeleton";
+import withDashboardLayout from "@/components/layouts/withDashboardLayout";
 import { useFetchAssistants } from "@/services/assistants";
 import {
   Box,
@@ -42,37 +43,35 @@ const AssistantsPage = () => {
     fetchData();
   }, [isAuthenticated]);
 
-  if (loading) {
-    return <LoadingSkeleton />;
-  }
-
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>
         Your Assistants
       </Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Model</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {assistants.map((assistant) => (
-              <TableRow key={assistant.id}>
-                <TableCell>{assistant.id}</TableCell>
-                <TableCell>{assistant.name}</TableCell>
-                <TableCell>{assistant.model}</TableCell>
+      {(loading && <LoadingSkeleton />) || (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Model</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {assistants.map((assistant) => (
+                <TableRow key={assistant.id}>
+                  <TableCell>{assistant.id}</TableCell>
+                  <TableCell>{assistant.name}</TableCell>
+                  <TableCell>{assistant.model}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 };
 
-export default AssistantsPage;
+export default withDashboardLayout(AssistantsPage);

@@ -19,6 +19,7 @@ describe("Drawer", () => {
         handleDrawerToggle={() => {}}
         drawerWidth={240}
         drawerExpanded={true}
+        currentPath="/assistants"
       />
     );
     expect(screen.getAllByText("Assistants").length).toBeGreaterThan(0);

@@ -14,6 +14,7 @@ describe("SideMenuItem", () => {
           icon={HomeIcon}
           text="Home"
           drawerExpanded={true}
+          active={true}
         />
       </RouterContext.Provider>
     );
@@ -31,6 +32,7 @@ describe("SideMenuItem", () => {
           icon={HomeIcon}
           text="Home"
           drawerExpanded={false}
+          active={false}
         />
       </RouterContext.Provider>
     );

@@ -7,6 +7,7 @@ interface SideMenuItemProps {
   icon: SvgIconComponent;
   text: string;
   drawerExpanded: boolean;
+  active: boolean;
 }
 
 const SideMenuItem = ({
@@ -14,12 +15,21 @@ const SideMenuItem = ({
   icon: Icon,
   text,
   drawerExpanded,
+  active,
 }: SideMenuItemProps) => {
   return (
     <Link href={href} passHref>
-      <ListItemButton>
+      <ListItemButton
+        sx={{
+          backgroundColor: active ? "primary.main" : "inherit",
+          color: active ? "primary.contrastText" : "inherit",
+          "&:hover": {
+            backgroundColor: active ? "primary.dark" : "action.hover",
+          },
+        }}
+      >
         <ListItemIcon>
-          <Icon color="primary" />
+          <Icon color={active ? "inherit" : "primary"} />
         </ListItemIcon>
         {drawerExpanded && <ListItemText primary={text} />}
       </ListItemButton>
