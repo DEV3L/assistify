@@ -12,9 +12,6 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${session.idToken}`;
     }
     return config;
-  },
-  (error) => {
-    return Promise.reject(error);
   }
 );
 

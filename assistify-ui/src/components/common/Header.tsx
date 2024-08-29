@@ -37,6 +37,7 @@ const Header = () => {
           alt="Assistify Logo"
           width={40}
           height={40}
+          priority
         />
         <Typography variant="h6" noWrap component="div" ml={1}>
           Assistify
