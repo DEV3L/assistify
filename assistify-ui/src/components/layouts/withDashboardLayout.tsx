@@ -1,7 +1,7 @@
 import LoadingSkeleton from "@/components/common/LoadingSkeleton";
 import Drawer from "@/components/side-menu/Drawer";
 import DrawerToggle from "@/components/side-menu/DrawerToggle";
-import { MobileMenu } from "@/components/side-menu/MobileMenu";
+import { useMenu } from "@/contexts/menuContext";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
 import useMobile from "@/hooks/useMobile";
 import Box from "@mui/material/Box";
@@ -17,10 +17,10 @@ const withDashboardLayout = <P extends object>(
 ) => {
   return (props: P) => {
     const { status } = useSession();
-    const [drawerOpen, setDrawerOpen] = useState(false);
     const [drawerExpanded, setDrawerExpanded] = useState(false);
     const router = useRouter();
     const mobile = useMobile();
+    const { showMenu, menuDisplayToggle } = useMenu();
 
     // Use the custom hook to handle authentication redirection
     useAuthRedirect();
@@ -28,10 +28,6 @@ const withDashboardLayout = <P extends object>(
     if (status === "loading") {
       return <LoadingSkeleton />;
     }
-
-    const handleDrawerToggle = () => {
-      setDrawerOpen(!drawerOpen);
-    };
 
     const handleDrawerExpandToggle = () => {
       setDrawerExpanded(!drawerExpanded);
@@ -41,11 +37,10 @@ const withDashboardLayout = <P extends object>(
 
     return (
       <>
-        <MobileMenu handleDrawerToggle={handleDrawerToggle} />
         <Box sx={{ display: "flex" }}>
           <Drawer
-            drawerOpen={drawerOpen}
-            handleDrawerToggle={handleDrawerToggle}
+            drawerOpen={showMenu}
+            handleDisplayToggle={menuDisplayToggle}
             drawerWidth={drawerWidth}
             drawerExpanded={drawerExpanded}
             currentPath={router.pathname}
@@ -63,7 +58,6 @@ const withDashboardLayout = <P extends object>(
               mt: "var(--header-height)",
               ml: mobile ? undefined : `${drawerWidth}px`,
               p: 3,
-              pt: mobile ? 5 : 3,
               width: { sm: `calc(100% - ${drawerWidth}px)` },
             }}
           >

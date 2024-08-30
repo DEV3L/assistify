@@ -27,6 +27,8 @@ const Login = () => {
       justifyContent="center"
       minHeight="calc(100vh - var(--header-height))"
       bgcolor="background.default"
+      p={3}
+      paddingTop="var(--header-height)"
     >
       <StyledCard sx={{ minHeight: "200px" }}>
         <WelcomeMessage />

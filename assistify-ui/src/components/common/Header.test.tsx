@@ -1,3 +1,4 @@
+import { MenuProvider } from "@/contexts/menuContext";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { SessionProvider } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -13,7 +14,9 @@ describe("Header", () => {
     session: { user: { name: string } } | null = { user: { name: "Test User" } }
   ) => {
     return render(
-      <SessionProvider session={session as any}>{ui}</SessionProvider>
+      <SessionProvider session={session as any}>
+        <MenuProvider>{ui}</MenuProvider>
+      </SessionProvider>
     );
   };
 
@@ -27,8 +30,11 @@ describe("Header", () => {
     expect(screen.queryByText("Test Subtitle")).not.toBeInTheDocument();
   });
 
-  it("renders the user when in session", () => {
+  it("renders the user", () => {
     renderWithSessionProvider(<Header />);
+
+    expect(screen.getByText("Test User")).toBeInTheDocument();
+    expect(screen.getByAltText("User Icon")).toBeInTheDocument();
   });
 
   it("navigates to the root index page when the logo is clicked", () => {

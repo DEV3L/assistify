@@ -8,7 +8,7 @@ import { List, Drawer as MuiDrawer } from "@mui/material";
 
 interface DrawerProps {
   drawerOpen: boolean;
-  handleDrawerToggle: () => void;
+  handleDisplayToggle: () => void;
   drawerWidth: number;
   drawerExpanded: boolean;
   currentPath: string;
@@ -16,7 +16,7 @@ interface DrawerProps {
 
 const Drawer = ({
   drawerOpen,
-  handleDrawerToggle,
+  handleDisplayToggle,
   drawerWidth,
   drawerExpanded,
   currentPath,
@@ -70,7 +70,7 @@ const Drawer = ({
       <MuiDrawer
         variant={drawerVariant}
         open={drawerOpen}
-        onClose={handleDrawerToggle}
+        onClose={handleDisplayToggle}
         ModalProps={
           mobile
             ? {

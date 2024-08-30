@@ -1,3 +1,4 @@
+import { useMenu } from "@/contexts/menuContext";
 import { SvgIconComponent } from "@mui/icons-material";
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import Link from "next/link";
@@ -17,8 +18,16 @@ const SideMenuItem = ({
   drawerExpanded,
   active,
 }: SideMenuItemProps) => {
+  const { closeMenu } = useMenu();
+
   return (
-    <Link href={href} passHref>
+    <Link
+      href={href}
+      passHref
+      onClick={() => {
+        closeMenu();
+      }}
+    >
       <ListItemButton
         sx={{
           backgroundColor: active ? "primary.main" : "inherit",
