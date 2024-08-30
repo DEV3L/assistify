@@ -148,6 +148,7 @@ The CI pipeline includes steps for:
 - Setting up Python
 - Installing dependencies
 - Running unit tests
+- Running end to end tests
 - Deploying the API to Fly.io
 - Deploying the UI to Vercel
 
