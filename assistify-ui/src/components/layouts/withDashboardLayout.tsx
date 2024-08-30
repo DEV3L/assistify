@@ -4,6 +4,7 @@ import DrawerToggle from "@/components/side-menu/DrawerToggle";
 import { useMenu } from "@/contexts/menuContext";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
 import useMobile from "@/hooks/useMobile";
+import useTokenRefresh from "@/hooks/useTokenRefresh";
 import Box from "@mui/material/Box";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -24,6 +25,7 @@ const withDashboardLayout = <P extends object>(
 
     // Use the custom hook to handle authentication redirection
     useAuthRedirect();
+    useTokenRefresh();
 
     if (status === "loading") {
       return <LoadingSkeleton />;
