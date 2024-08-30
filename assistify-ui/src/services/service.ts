@@ -16,7 +16,7 @@ export const useFetchProtectedData = () => {
     }
 
     try {
-      const response = await axiosInstance.get("/protected");
+      const response = await axiosInstance.get("/assistants");
       return response.data;
     } catch (error) {
       if (error) {
