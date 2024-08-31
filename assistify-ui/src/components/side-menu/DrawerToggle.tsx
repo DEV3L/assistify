@@ -1,4 +1,4 @@
-import useMobile from "@/hooks/useMobile";
+import { useMobile } from "@/hooks/useMobile";
 import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
