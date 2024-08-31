@@ -74,6 +74,7 @@ Assistify is a web-based platform designed to connect users with specialized Ope
 - **Title**: A clear, descriptive title.
 - **Business Value**: How will this user story add value?
 - **Problem**: The problem or issue this user story aims to resolve.
+- ** Job-to-Be-Done**: Ensuring features meet user needs by focusing on their ultimate goals and desired outcomes.
 - **Description**: Detailed narrative to guide the development team.
 - **Acceptance Criteria**: Precise criteria in Gherkin format (Given, When, Then) to determine when the user story has been successfully implemented.
 
