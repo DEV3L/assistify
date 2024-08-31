@@ -4,314 +4,354 @@
  */
 
 export interface paths {
-    "/assistants/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Assistants
-         * @description Endpoint to retrieve a list of assistants.
-         *
-         *     Args:
-         *         assistants_service (AssistantsService): The service to handle assistant-related operations.
-         *         _ (User): The authenticated user, verified by the token.
-         *
-         *     Returns:
-         *         ListAssistantsResponse: A response object containing the list of assistants.
-         */
-        get: operations["get_assistants_assistants__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  "/api/assistants": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Read Root
-         * @description Root endpoint.
-         *
-         *     Returns:
-         *         dict: A welcome message.
-         */
-        get: operations["read_root__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Assistants
+     * @description Endpoint to retrieve a list of assistants.
+     *
+     *     Args:
+     *         assistants_service (AssistantsService): The service to handle assistant-related operations.
+     *         _ (User): The authenticated user, verified by the token.
+     *
+     *     Returns:
+     *         ListAssistantsResponse: A response object containing the list of assistants.
+     */
+    get: operations["get_assistants_api_assistants_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/assistants/": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/random-number": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Read Random Number
-         * @description Endpoint to get a random number.
-         *
-         *     Returns:
-         *         dict: A message containing a random number between 1 and 100.
-         */
-        get: operations["read_random_number_random_number_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Assistants
+     * @description Endpoint to retrieve a list of assistants.
+     *
+     *     Args:
+     *         assistants_service (AssistantsService): The service to handle assistant-related operations.
+     *         _ (User): The authenticated user, verified by the token.
+     *
+     *     Returns:
+     *         ListAssistantsResponse: A response object containing the list of assistants.
+     */
+    get: operations["get_assistants_api_assistants__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/protected": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Protected Route
-         * @description Protected endpoint that requires authentication.
-         *
-         *     Args:
-         *         user_info (User): The authenticated user's information.
-         *
-         *     Returns:
-         *         dict: A message containing the user's name and email.
-         */
-        get: operations["protected_route_protected_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Read Root
+     * @description Root endpoint.
+     *
+     *     Returns:
+     *         dict: A welcome message.
+     */
+    get: operations["read_root__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/random-number": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/send-message": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Send Message
-         * @description Endpoint to receive a message. Requires authentication.
-         *
-         *     Args:
-         *         message (SendMessageRequest): The send message payload.
-         *         chat_service (ChatService): The chat service dependency.
-         *         _ (User): The authenticated user's information.
-         *
-         *     Returns:
-         *         SendMessageResponse: The chatbot's response.
-         */
-        post: operations["send_message_send_message_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Read Random Number
+     * @description Endpoint to get a random number.
+     *
+     *     Returns:
+     *         dict: A message containing a random number between 1 and 100.
+     */
+    get: operations["read_random_number_random_number_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/protected": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    /**
+     * Protected Route
+     * @description Protected endpoint that requires authentication.
+     *
+     *     Args:
+     *         user_info (User): The authenticated user's information.
+     *
+     *     Returns:
+     *         dict: A message containing the user's name and email.
+     */
+    get: operations["protected_route_protected_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/send-message": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Send Message
+     * @description Endpoint to receive a message. Requires authentication.
+     *
+     *     Args:
+     *         message (SendMessageRequest): The send message payload.
+     *         chat_service (ChatService): The chat service dependency.
+     *         _ (User): The authenticated user's information.
+     *
+     *     Returns:
+     *         SendMessageResponse: The chatbot's response.
+     */
+    post: operations["send_message_send_message_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        /** AssistantsResponse */
-        AssistantsResponse: {
-            /** Id */
-            id: string;
-            /** Model */
-            model: string;
-            /** Name */
-            name: string;
-        };
-        /** HTTPValidationError */
-        HTTPValidationError: {
-            /** Detail */
-            detail?: components["schemas"]["ValidationError"][];
-        };
-        /** ListAssistantsResponse */
-        ListAssistantsResponse: {
-            /** Assistants */
-            assistants: components["schemas"]["AssistantsResponse"][];
-        };
-        /** SendMessageRequest */
-        SendMessageRequest: {
-            /** Message */
-            message: string;
-        };
-        /** SendMessageResponse */
-        SendMessageResponse: {
-            /** Response */
-            response: string;
-        };
-        /** ValidationError */
-        ValidationError: {
-            /** Location */
-            loc: (string | number)[];
-            /** Message */
-            msg: string;
-            /** Error Type */
-            type: string;
-        };
+  schemas: {
+    /** AssistantsResponse */
+    AssistantsResponse: {
+      /** Id */
+      id: string;
+      /** Model */
+      model: string;
+      /** Name */
+      name: string;
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    /** HTTPValidationError */
+    HTTPValidationError: {
+      /** Detail */
+      detail?: components["schemas"]["ValidationError"][];
+    };
+    /** ListAssistantsResponse */
+    ListAssistantsResponse: {
+      /** Assistants */
+      assistants: components["schemas"]["AssistantsResponse"][];
+    };
+    /** SendMessageRequest */
+    SendMessageRequest: {
+      /** Message */
+      message: string;
+    };
+    /** SendMessageResponse */
+    SendMessageResponse: {
+      /** Response */
+      response: string;
+    };
+    /** ValidationError */
+    ValidationError: {
+      /** Location */
+      loc: (string | number)[];
+      /** Message */
+      msg: string;
+      /** Error Type */
+      type: string;
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    get_assistants_assistants__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ListAssistantsResponse"];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
+  get_assistants_api_assistants_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    read_root__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["ListAssistantsResponse"];
         };
+      };
     };
-    read_random_number_random_number_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-        };
+  };
+  get_assistants_api_assistants__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    protected_route_protected_get: {
-        parameters: {
-            query?: {
-                force?: boolean;
-                mongodb_uri?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["ListAssistantsResponse"];
         };
+      };
     };
-    send_message_send_message_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SendMessageRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SendMessageResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
+  };
+  read_root__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": Record<string, never>;
+        };
+      };
+    };
+  };
+  read_random_number_random_number_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": Record<string, never>;
+        };
+      };
+    };
+  };
+  protected_route_protected_get: {
+    parameters: {
+      query?: {
+        force?: boolean;
+        mongodb_uri?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": Record<string, never>;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  send_message_send_message_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SendMessageRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SendMessageResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
 }

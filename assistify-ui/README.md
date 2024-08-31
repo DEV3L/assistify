@@ -65,6 +65,16 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Updating API Types
+
+The api types are automatically generated from the local API server.
+
+- `src/types/AssistifyApiTypes.ts`
+
+```bash
+yarn update:local-api-types
+```
+
 ### Linting
 
 To run the linter:
