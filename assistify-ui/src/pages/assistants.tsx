@@ -1,8 +1,5 @@
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import withDashboardLayout from "@/components/layouts/withDashboardLayout";
-import useMobile from "@/hooks/useMobile";
-import { useFetchAssistants } from "@/services/assistants";
 import {
+  Box,
   Paper,
   Table,
   TableBody,
@@ -12,6 +9,8 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 interface Assistant {
@@ -21,56 +20,58 @@ interface Assistant {
 }
 
 const AssistantsPage = () => {
+  const { data: session } = useSession();
   const [assistants, setAssistants] = useState<Assistant[]>([]);
   const [loading, setLoading] = useState(true);
-  const { fetchAssistants, isAuthenticated } = useFetchAssistants();
-  const isMobile = useMobile();
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (isAuthenticated) {
-        try {
-          const data = await fetchAssistants();
-          setAssistants(data.assistants);
-        } catch (error) {
-          console.error("Failed to fetch assistants:", error);
-        } finally {
-          setLoading(false);
-        }
+    const fetchAssistants = async () => {
+      try {
+        const response = await axios.get("/api/assistants");
+        setAssistants(response.data);
+      } catch (error) {
+        console.error("Failed to fetch assistants:", error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchData();
-  }, [isAuthenticated]);
+
+    if (session) {
+      fetchAssistants();
+    }
+  }, [session]);
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
-    <>
+    <Box p={3}>
       <Typography variant="h4" gutterBottom>
         Your Assistants
       </Typography>
-      {(loading && <LoadingSkeleton />) || (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {!isMobile && <TableCell>ID</TableCell>}
-                <TableCell>Name</TableCell>
-                <TableCell>Model</TableCell>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Model</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {assistants.map((assistant) => (
+              <TableRow key={assistant.id}>
+                <TableCell>{assistant.id}</TableCell>
+                <TableCell>{assistant.name}</TableCell>
+                <TableCell>{assistant.model}</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {assistants.map((assistant) => (
-                <TableRow key={assistant.id}>
-                  {!isMobile && <TableCell>{assistant.id}</TableCell>}
-                  <TableCell>{assistant.name}</TableCell>
-                  <TableCell>{assistant.model}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 
-export default withDashboardLayout(AssistantsPage);
+export default AssistantsPage;

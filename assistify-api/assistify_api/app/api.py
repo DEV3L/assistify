@@ -3,7 +3,8 @@ import random
 from fastapi import Depends, FastAPI
 from pymongo.database import Database
 
-from assistify_api.app.assistants.assistants_router import router as assistants_router
+from assistify_api.app.assistants.assistants_service import AssistantsService
+from assistify_api.app.assistants.list_assistants_response import ListAssistantsResponse
 from assistify_api.database.dao.version_dao import VersionDao
 from assistify_api.database.mongodb import MongoDb
 from assistify_api.services.chat import ChatService
@@ -18,7 +19,7 @@ from .lifespan import lifespan
 api = FastAPI(lifespan=lifespan)
 api.add_middleware(CustomCORSMiddleware)
 
-api.include_router(assistants_router)
+# api.include_router(assistants_router)
 
 
 @api.get("/")
@@ -30,6 +31,25 @@ def read_root() -> dict:
         dict: A welcome message.
     """
     return {"message": "Hello Assistify"}
+
+
+@api.post("/assistants")
+@api.get("/assistants")
+def get_assistants(
+    assistants_service: AssistantsService = Depends(AssistantsService),
+    _: User = Depends(verify_token),
+) -> ListAssistantsResponse:
+    """
+    Endpoint to retrieve a list of assistants.
+
+    Args:
+        assistants_service (AssistantsService): The service to handle assistant-related operations.
+        _ (User): The authenticated user, verified by the token.
+
+    Returns:
+        ListAssistantsResponse: A response object containing the list of assistants.
+    """
+    return assistants_service.get_assistants()
 
 
 @api.get("/random-number")

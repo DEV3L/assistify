@@ -7,10 +7,10 @@ from assistify_api.app.auth.verify_token import verify_token
 from .list_assistants_response import ListAssistantsResponse
 
 # Initialize the router with a prefix and default response for bad requests
-router = APIRouter(prefix="/assistants", responses={status.HTTP_400_BAD_REQUEST: {"description": "Bad Request"}})
+# router = APIRouter(prefix="/assistants", responses={status.HTTP_400_BAD_REQUEST: {"description": "Bad Request"}})
 
 
-@router.get("/")
+# @router.get("/")
 def get_assistants(
     assistants_service: AssistantsService = Depends(AssistantsService),
     _: User = Depends(verify_token),
