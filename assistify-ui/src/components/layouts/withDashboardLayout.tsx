@@ -1,6 +1,6 @@
 import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import Drawer from "@/components/side-menu/Drawer";
-import DrawerToggle from "@/components/side-menu/DrawerToggle";
+import { Drawer } from "@/components/side-menu/Drawer";
+import { DrawerToggle } from "@/components/side-menu/DrawerToggle";
 import { useMenu } from "@/contexts/menuContext";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
 import useMobile from "@/hooks/useMobile";

@@ -1,28 +1,27 @@
+import { SendMessageResponse } from "@/types/AssistifyTypes";
 import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import axiosInstance from "./axiosInstance";
 
-export const fetchRandomNumber = async (): Promise<string> => {
-  const response = await axiosInstance.get("/random-number");
-  return response.data.message;
-};
-
-export const useFetchProtectedData = () => {
+export const usePostMessage = () => {
   const { data: session, status } = useSession();
 
-  const fetchProtectedData = async (): Promise<any> => {
+  const postMessage = async (message: string): Promise<SendMessageResponse> => {
     if (status !== "authenticated" || !session?.idToken) {
       throw new Error("User is not authenticated");
     }
 
     try {
-      const response = await axiosInstance.get("/protected");
+      const response = await axiosInstance.post<SendMessageResponse>(
+        "/send-message",
+        { message }
+      );
       return response.data;
     } catch (error) {
       if (error) {
         const axiosError = error as AxiosError;
         console.error("Error Response:", axiosError.response?.data);
-        throw new Error("Failed to fetch protected data");
+        throw new Error("Failed to send message");
       } else {
         throw new Error("An unexpected error occurred");
       }
@@ -30,7 +29,7 @@ export const useFetchProtectedData = () => {
   };
 
   return {
-    fetchProtectedData,
+    postMessage,
     isAuthenticated: status === "authenticated",
   };
 };

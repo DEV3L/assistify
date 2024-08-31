@@ -2,9 +2,12 @@ import SideMenuItem from "@/components/side-menu/SideMenuItem";
 import useMobile from "@/hooks/useMobile";
 import {
   Dashboard as DashboardIcon,
+  ExitToApp as ExitToAppIcon,
   Person as PersonIcon,
 } from "@mui/icons-material";
-import { List, Drawer as MuiDrawer } from "@mui/material";
+import { Box, List, Drawer as MuiDrawer } from "@mui/material";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 interface DrawerProps {
   drawerOpen: boolean;
@@ -14,7 +17,7 @@ interface DrawerProps {
   currentPath: string;
 }
 
-const Drawer = ({
+export const Drawer = ({
   drawerOpen,
   handleDisplayToggle,
   drawerWidth,
@@ -23,10 +26,22 @@ const Drawer = ({
 }: DrawerProps) => {
   const mobile = useMobile();
   const drawerVariant = mobile ? "temporary" : "permanent";
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push("/login");
+  };
 
   const drawer = (
-    <div>
-      <List>
+    <Box
+      data-testid="drawer"
+      display="flex"
+      flexDirection="column"
+      justifyContent="space-between"
+      height="calc(100vh - var(--header-height))"
+    >
+      <List sx={{ display: "flex", flexDirection: "column" }}>
         <SideMenuItem
           href="/dashboard"
           icon={DashboardIcon}
@@ -42,7 +57,22 @@ const Drawer = ({
           active={currentPath === "/assistants"}
         />
       </List>
-    </div>
+      <List
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+        }}
+      >
+        <SideMenuItem
+          onClick={handleSignOut}
+          icon={ExitToAppIcon}
+          text="Sign Out"
+          drawerExpanded={drawerExpanded}
+          active={false}
+        />
+      </List>
+    </Box>
   );
 
   const drawerStyles = {
@@ -85,5 +115,3 @@ const Drawer = ({
     </>
   );
 };
-
-export default Drawer;

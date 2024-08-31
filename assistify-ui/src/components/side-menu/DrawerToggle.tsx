@@ -12,7 +12,7 @@ interface DrawerToggleProps {
   maxDrawerWidth: number;
 }
 
-const DrawerToggle = ({
+export const DrawerToggle = ({
   drawerExpanded,
   handleDrawerExpandToggle,
   minDrawerWidth,
@@ -42,5 +42,3 @@ const DrawerToggle = ({
     </IconButton>
   );
 };
-
-export default DrawerToggle;

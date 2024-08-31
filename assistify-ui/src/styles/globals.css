@@ -17,8 +17,8 @@
 
 @font-face {
   font-family: "Dank Mono";
-  src: url("/fonts/DankMono.woff2") format("woff2"),
-    url("/fonts/DankMono.ttf") format("truetype");
+  src: url("/fonts/DankMono-Regular.woff2") format("woff2"),
+    url("/fonts/DankMono-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }

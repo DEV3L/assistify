@@ -17,6 +17,10 @@ const testUserPassword = process.env.GOOGLE_TEST_PASSWORD ?? "";
  * The function waits for the "Sign Out" text to ensure the login was successful.
  */
 export const loginToGoogle = async (page: Page): Promise<void> => {
+  // Click the "Sign in with Google" button
+  const signInButton = page.locator("text=Sign in with Google");
+  await signInButton.click();
+
   if (!isCI) {
     await page.waitForSelector('input[type="email"]');
     await page.fill('input[type="email"]', testUserEmail);
@@ -31,5 +35,5 @@ export const loginToGoogle = async (page: Page): Promise<void> => {
     await continueButton.click();
   }
 
-  await page.waitForSelector("text=Sign Out");
+  await page.waitForSelector("text=Welcome to Assistify");
 };

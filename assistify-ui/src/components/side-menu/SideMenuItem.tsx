@@ -4,7 +4,8 @@ import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import Link from "next/link";
 
 interface SideMenuItemProps {
-  href: string;
+  href?: string;
+  onClick?: () => void;
   icon: SvgIconComponent;
   text: string;
   drawerExpanded: boolean;
@@ -13,6 +14,7 @@ interface SideMenuItemProps {
 
 const SideMenuItem = ({
   href,
+  onClick,
   icon: Icon,
   text,
   drawerExpanded,
@@ -22,10 +24,11 @@ const SideMenuItem = ({
 
   return (
     <Link
-      href={href}
+      href={href ?? "#"}
       passHref
       onClick={() => {
         closeMenu();
+        onClick?.();
       }}
     >
       <ListItemButton

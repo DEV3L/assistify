@@ -1,19 +1,19 @@
+import ChatMessage from "@/components/common/ChatMessage";
 import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import { useFetchAssistants } from "@/services/assistants";
-import { usePostMessage } from "@/services/service";
+import { usePostMessage } from "@/services/messages";
+import { SendMessageResponse } from "@/types/AssistifyTypes";
 import { useEffect, useState } from "react";
 
-const ProtectedComponent = () => {
-  const [data, setData] = useState(null);
+export const Message = () => {
+  const [data, setData] = useState<SendMessageResponse | null>(null);
   const { postMessage, isAuthenticated } = usePostMessage();
-  const { fetchAssistants } = useFetchAssistants();
 
   useEffect(() => {
     const fetchData = async () => {
       if (isAuthenticated) {
         try {
           const result = await postMessage(
-            "Introduce yourself! And gve me some ideas on what you could help me with today."
+            "Briefly introduce yourself! And give me one idea on what you could help me with today."
           );
           setData(result);
         } catch (error) {
@@ -32,7 +32,10 @@ const ProtectedComponent = () => {
     return <LoadingSkeleton />;
   }
 
-  return <div>Message: {JSON.stringify(data)}</div>;
+  return (
+    <ChatMessage
+      userMessage="Briefly introduce yourself! And give me one idea on what you could help me with today."
+      botResponse={data.response}
+    />
+  );
 };
-
-export default ProtectedComponent;
