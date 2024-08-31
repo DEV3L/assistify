@@ -41,7 +41,7 @@ export const Drawer = ({
       justifyContent="space-between"
       height="calc(100vh - var(--header-height))"
     >
-      <List sx={{ display: "flex", flexDirection: "column" }}>
+      <List>
         <SideMenuItem
           href="/dashboard"
           icon={DashboardIcon}
@@ -57,13 +57,7 @@ export const Drawer = ({
           active={currentPath === "/assistants"}
         />
       </List>
-      <List
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-        }}
-      >
+      <List sx={{ mb: mobile ? "92px" : "0px" }}>
         <SideMenuItem
           onClick={handleSignOut}
           icon={ExitToAppIcon}
