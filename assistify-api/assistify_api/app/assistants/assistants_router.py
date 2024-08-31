@@ -1,6 +1,5 @@
-from fastapi import Depends
+from fastapi import APIRouter, Depends
 
-from assistify_api.app.api_router import APIRouter
 from assistify_api.app.auth.user import User
 from assistify_api.app.auth.verify_token import verify_token
 
@@ -11,6 +10,7 @@ router = APIRouter(prefix="/api/assistants")
 
 
 @router.get("/")
+@router.get("")
 def get_assistants(
     assistants_service: AssistantsService = Depends(AssistantsService),
     _: User = Depends(verify_token),

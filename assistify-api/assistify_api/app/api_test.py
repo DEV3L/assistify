@@ -100,7 +100,7 @@ def test_get_assistants(
     ]
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 
-    response = api_client.post("/assistants", headers={"Authorization": "Bearer fake_token"})
+    response = api_client.get("/api/assistants", headers={"Authorization": "Bearer fake_token"})
 
     assert response.status_code == 200
     assert response.json() == {"assistants": [{"id": "1", "model": "gpt-4o", "name": assistant_name_included}]}
