@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
  * Custom hook to determine if the current device is mobile.
  * @returns {boolean} - True if the device is mobile, false otherwise.
  */
-const useMobile = (): boolean => {
+export const useMobile = (): boolean => {
   const [mobile, setMobile] = useState<boolean>(false);
 
   useEffect(() => {
@@ -23,5 +23,3 @@ const useMobile = (): boolean => {
 
   return mobile;
 };
-
-export default useMobile;

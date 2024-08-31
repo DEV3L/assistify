@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
  *
  * @returns {JSX.Element} The loading skeleton component.
  */
-const LoadingSkeleton = (): JSX.Element => {
+export const LoadingSkeleton = (): JSX.Element => {
   return (
     <Paper
       elevation={3}
@@ -42,5 +42,3 @@ const LoadingSkeleton = (): JSX.Element => {
     </Paper>
   );
 };
-
-export default LoadingSkeleton;

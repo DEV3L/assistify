@@ -2,7 +2,7 @@ import { MenuProvider } from "@/contexts/menuContext";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { SessionProvider } from "next-auth/react";
 import { useRouter } from "next/router";
-import Header from "./Header";
+import { Header } from "./Header";
 
 jest.mock("next/router", () => ({
   useRouter: jest.fn(),

@@ -1,4 +1,4 @@
-import StyledCard from "@/components/common/StyledCard";
+import { StyledCard } from "@/components/common/StyledCard";
 import { Typography } from "@mui/material";
 
 interface SectionCardProps {
@@ -12,7 +12,10 @@ interface SectionCardProps {
  * @param {SectionCardProps} props - The props for the component.
  * @returns {JSX.Element} The SectionCard component.
  */
-const SectionCard = ({ title, children }: SectionCardProps): JSX.Element => {
+export const SectionCard = ({
+  title,
+  children,
+}: SectionCardProps): JSX.Element => {
   return (
     <StyledCard>
       <Typography variant="h5" component="h2" gutterBottom>
@@ -22,5 +25,3 @@ const SectionCard = ({ title, children }: SectionCardProps): JSX.Element => {
     </StyledCard>
   );
 };
-
-export default SectionCard;

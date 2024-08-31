@@ -12,7 +12,7 @@ interface StyledCardProps {
  * @param {StyledCardProps} props - The props for the component.
  * @returns {JSX.Element} The StyledCard.
  */
-const StyledCard = ({ children, sx }: StyledCardProps): JSX.Element => {
+export const StyledCard = ({ children, sx }: StyledCardProps): JSX.Element => {
   const styles: SxProps = {
     p: 2,
     borderRadius: 2,
@@ -30,5 +30,3 @@ const StyledCard = ({ children, sx }: StyledCardProps): JSX.Element => {
     </Card>
   );
 };
-
-export default StyledCard;

@@ -1,4 +1,4 @@
-import StyledCard from "@/components/common/StyledCard";
+import { StyledCard } from "@/components/common/StyledCard";
 import { WelcomeMessage } from "@/components/common/WelcomeMessage";
 import { Message } from "@/components/Message";
 import { useSession } from "next-auth/react";

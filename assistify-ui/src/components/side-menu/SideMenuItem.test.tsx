@@ -2,7 +2,7 @@ import { MenuProvider } from "@/contexts/menuContext";
 import { Home as HomeIcon } from "@mui/icons-material";
 import { render, screen } from "@testing-library/react";
 import { RouterContext } from "next/dist/shared/lib/router-context.shared-runtime";
-import SideMenuItem from "./SideMenuItem";
+import { SideMenuItem } from "./SideMenuItem";
 
 describe("SideMenuItem", () => {
   const mockRouter = {} as any;

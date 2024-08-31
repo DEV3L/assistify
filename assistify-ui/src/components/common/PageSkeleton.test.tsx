@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import PageSkeleton from "./PageSkeleton";
+import { PageSkeleton } from "./PageSkeleton";
 
 /**
  * Unit tests for PageSkeleton component.

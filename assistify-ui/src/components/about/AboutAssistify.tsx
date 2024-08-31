@@ -11,15 +11,15 @@ import {
   VerifiedUser,
 } from "@mui/icons-material";
 import { Box, Grid, Link, Typography } from "@mui/material";
-import FeatureItem from "./FeatureItem";
-import SectionCard from "./SectionCard";
+import { FeatureItem } from "./FeatureItem";
+import { SectionCard } from "./SectionCard";
 
 /**
  * AboutAssistify component to display the vision, goals, and values of Assistify.
  *
  * @returns {JSX.Element} The AboutAssistify component.
  */
-const AboutAssistify = (): JSX.Element => {
+export const AboutAssistify = (): JSX.Element => {
   return (
     <Box
       display="flex"
@@ -159,5 +159,3 @@ const AboutAssistify = (): JSX.Element => {
     </Box>
   );
 };
-
-export default AboutAssistify;

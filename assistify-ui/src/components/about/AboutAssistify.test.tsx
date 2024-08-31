@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import AboutAssistify from "./AboutAssistify";
+import { AboutAssistify } from "./AboutAssistify";
 
 describe("AboutAssistify", () => {
   it("renders the vision, goals, and values of Assistify", () => {

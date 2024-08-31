@@ -7,7 +7,7 @@ interface ChatMessageProps {
   botResponse: string;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({
+export const ChatMessage: React.FC<ChatMessageProps> = ({
   userMessage,
   botResponse,
 }) => {
@@ -37,5 +37,3 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     </Box>
   );
 };
-
-export default ChatMessage;

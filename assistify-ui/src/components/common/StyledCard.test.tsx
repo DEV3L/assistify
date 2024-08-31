@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import StyledCard from "./StyledCard";
+import { StyledCard } from "./StyledCard";
 
 /**
  * Unit tests for the StyledCard component.

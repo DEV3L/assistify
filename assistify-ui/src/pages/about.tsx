@@ -1,4 +1,4 @@
-import AboutAssistify from "@/components/about/AboutAssistify";
+import { AboutAssistify } from "@/components/about/AboutAssistify";
 import { Box } from "@mui/material";
 
 /**

@@ -38,18 +38,6 @@ def read_root() -> dict:
     return {"message": "Hello Assistify"}
 
 
-@api.get("/random-number")
-def read_random_number() -> dict:
-    """
-    Endpoint to get a random number.
-
-    Returns:
-        dict: A message containing a random number between 1 and 100.
-    """
-    number = random.randint(1, 100)
-    return {"message": f"Your random number is {number}"}
-
-
 @api.get("/protected")
 def protected_route(user_info: User = Depends(verify_token), db: Database = Depends(MongoDb.instance)) -> dict:
     """

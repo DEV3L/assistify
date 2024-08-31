@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useEffect } from "react";
 
-const AssistifyHead = ({ title = "Assistify" }) => {
+export const AssistifyHead = ({ title = "Assistify" }) => {
   useEffect(() => {
     document.title = title;
   }, [title]);
@@ -13,5 +13,3 @@ const AssistifyHead = ({ title = "Assistify" }) => {
     </Head>
   );
 };
-
-export default AssistifyHead;

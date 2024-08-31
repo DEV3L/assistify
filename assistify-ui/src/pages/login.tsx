@@ -1,25 +1,10 @@
 import { GoogleLogo } from "@/components/common/images/GoogleLogo";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import StyledCard from "@/components/common/StyledCard";
+import { StyledCard } from "@/components/common/StyledCard";
 import { WelcomeMessage } from "@/components/common/WelcomeMessage";
-import { fetchRandomNumber } from "@/services/service";
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Button, Link } from "@mui/material";
 import { signIn } from "next-auth/react";
-import { useEffect, useState } from "react";
 
 const Login = () => {
-  const [randomNumber, setRandomNumber] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const getRandomNumber = async () => {
-      const number = await fetchRandomNumber();
-      setRandomNumber(number);
-      setLoading(false);
-    };
-    getRandomNumber();
-  }, []);
-
   return (
     <Box
       display="flex"
@@ -32,15 +17,6 @@ const Login = () => {
     >
       <StyledCard sx={{ minHeight: "200px" }}>
         <WelcomeMessage />
-        {loading ? (
-          <LoadingSkeleton />
-        ) : (
-          randomNumber !== null && (
-            <Typography variant="h6" mt={2} color="text.primary">
-              Random Number: {randomNumber}
-            </Typography>
-          )
-        )}
         <Button
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
           fullWidth

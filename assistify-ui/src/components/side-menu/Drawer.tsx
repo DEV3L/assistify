@@ -1,5 +1,5 @@
-import SideMenuItem from "@/components/side-menu/SideMenuItem";
-import useMobile from "@/hooks/useMobile";
+import { SideMenuItem } from "@/components/side-menu/SideMenuItem";
+import { useMobile } from "@/hooks/useMobile";
 import {
   Dashboard as DashboardIcon,
   ExitToApp as ExitToAppIcon,

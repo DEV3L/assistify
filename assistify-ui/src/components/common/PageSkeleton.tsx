@@ -6,7 +6,7 @@ import Skeleton from "@mui/material/Skeleton";
  *
  * @returns {JSX.Element} The loading skeleton component.
  */
-const PageSkeleton = (): JSX.Element => {
+export const PageSkeleton = (): JSX.Element => {
   return (
     <Paper
       elevation={3}
@@ -31,5 +31,3 @@ const PageSkeleton = (): JSX.Element => {
     </Paper>
   );
 };
-
-export default PageSkeleton;

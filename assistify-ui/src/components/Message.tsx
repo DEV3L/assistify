@@ -1,5 +1,5 @@
-import ChatMessage from "@/components/common/ChatMessage";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
+import { ChatMessage } from "@/components/common/ChatMessage";
+import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { usePostMessage } from "@/services/messages";
 import { SendMessageResponse } from "@/types/AssistifyTypes";
 import { useEffect, useState } from "react";

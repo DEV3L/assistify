@@ -1,12 +1,12 @@
 import { useMenu } from "@/contexts/menuContext";
-import useMobile from "@/hooks/useMobile";
+import { useMobile } from "@/hooks/useMobile";
 import { Box, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 
-const Header = () => {
+const _Header = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const mobile = useMobile();
@@ -70,4 +70,4 @@ const Header = () => {
   );
 };
 
-export default React.memo(Header);
+export const Header = React.memo(_Header);

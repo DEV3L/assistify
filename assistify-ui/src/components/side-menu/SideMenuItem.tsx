@@ -12,7 +12,7 @@ interface SideMenuItemProps {
   active: boolean;
 }
 
-const SideMenuItem = ({
+export const SideMenuItem = ({
   href,
   onClick,
   icon: Icon,
@@ -48,5 +48,3 @@ const SideMenuItem = ({
     </Link>
   );
 };
-
-export default SideMenuItem;

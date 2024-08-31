@@ -1,7 +1,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
-const useTokenRefresh = () => {
+export const useTokenRefresh = () => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
@@ -18,5 +18,3 @@ const useTokenRefresh = () => {
 
   return null;
 };
-
-export default useTokenRefresh;

@@ -1,6 +1,6 @@
 import { Feedback } from "@mui/icons-material";
 import { render } from "@testing-library/react";
-import FeatureItem from "./FeatureItem";
+import { FeatureItem } from "./FeatureItem";
 
 describe("FeatureItem", () => {
   it("renders the icon, title, and text correctly", () => {

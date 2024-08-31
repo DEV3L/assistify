@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import SectionCard from "./SectionCard";
+import { SectionCard } from "./SectionCard";
 
 /**
  * Unit tests for the SectionCard component.

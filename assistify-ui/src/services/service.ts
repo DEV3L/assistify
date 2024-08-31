@@ -2,11 +2,6 @@ import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import axiosInstance from "./axiosInstance";
 
-export const fetchRandomNumber = async (): Promise<string> => {
-  const response = await axiosInstance.get("/random-number");
-  return response.data.message;
-};
-
 export const useFetchProtectedData = () => {
   const { data: session, status } = useSession();
 

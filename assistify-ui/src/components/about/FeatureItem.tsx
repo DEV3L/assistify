@@ -13,7 +13,7 @@ interface FeatureItemProps {
  * @param {FeatureItemProps} props - The props for the component.
  * @returns {JSX.Element} The FeatureItem component.
  */
-const FeatureItem = ({
+export const FeatureItem = ({
   icon: Icon,
   title,
   text,
@@ -37,5 +37,3 @@ const FeatureItem = ({
     </Box>
   );
 };
-
-export default FeatureItem;

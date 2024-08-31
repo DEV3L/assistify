@@ -1,5 +1,5 @@
 import { render, waitFor } from "@testing-library/react";
-import AssistifyHead from "./AssistifyHead";
+import { AssistifyHead } from "./AssistifyHead";
 
 describe("AssistifyHead", () => {
   it("renders default title", async () => {

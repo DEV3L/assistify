@@ -1,10 +1,10 @@
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
+import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { Drawer } from "@/components/side-menu/Drawer";
 import { DrawerToggle } from "@/components/side-menu/DrawerToggle";
 import { useMenu } from "@/contexts/menuContext";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
-import useMobile from "@/hooks/useMobile";
-import useTokenRefresh from "@/hooks/useTokenRefresh";
+import { useMobile } from "@/hooks/useMobile";
+import { useTokenRefresh } from "@/hooks/useTokenRefresh";
 import Box from "@mui/material/Box";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -13,7 +13,7 @@ import { ComponentType, useState } from "react";
 const minDrawerWidth = 60;
 const maxDrawerWidth = 240;
 
-const withDashboardLayout = <P extends object>(
+export const withDashboardLayout = <P extends object>(
   WrappedComponent: ComponentType<P>
 ) => {
   return (props: P) => {
@@ -70,5 +70,3 @@ const withDashboardLayout = <P extends object>(
     );
   };
 };
-
-export default withDashboardLayout;

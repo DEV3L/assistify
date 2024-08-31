@@ -1,5 +1,5 @@
-import AssistifyHead from "@/components/common/AssistifyHead";
-import Header from "@/components/common/Header";
+import { AssistifyHead } from "@/components/common/AssistifyHead";
+import { Header } from "@/components/common/Header";
 import { MenuProvider } from "@/contexts/menuContext";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { SessionProvider } from "next-auth/react";

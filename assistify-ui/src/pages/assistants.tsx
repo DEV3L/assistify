@@ -1,6 +1,6 @@
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import withDashboardLayout from "@/components/layouts/withDashboardLayout";
-import useMobile from "@/hooks/useMobile";
+import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
+import { withDashboardLayout } from "@/components/layouts/withDashboardLayout";
+import { useMobile } from "@/hooks/useMobile";
 import { useFetchAssistants } from "@/services/assistants";
 import {
   Paper,
