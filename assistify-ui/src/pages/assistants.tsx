@@ -1,3 +1,4 @@
+import axiosInstance from "@/services/axiosInstance";
 import {
   Box,
   Paper,
@@ -9,7 +10,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -27,8 +27,8 @@ const AssistantsPage = () => {
   useEffect(() => {
     const fetchAssistants = async () => {
       try {
-        const response = await axios.get("/api/assistants");
-        setAssistants(response.data);
+        const response = await axiosInstance.get("/assistants");
+        setAssistants(response.data.assistants);
       } catch (error) {
         console.error("Failed to fetch assistants:", error);
       } finally {
