@@ -1,4 +1,4 @@
-import { signIn, useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 export const useTokenRefresh = () => {
@@ -9,7 +9,7 @@ export const useTokenRefresh = () => {
       if (status === "authenticated" && session) {
         const expires = new Date(session.expires).getTime();
         if (expires - Date.now() < 5 * 60 * 1000) {
-          await signIn("google");
+          await getSession();
         }
       }
     };
