@@ -17,7 +17,13 @@ from .cors.custom_cors_middleware import CustomCORSMiddleware
 from .dependencies.api_dependencies import get_chat_service
 from .lifespan import lifespan
 
-api = FastAPI(lifespan=lifespan)
+api = FastAPI(
+    lifespan=lifespan,
+    title="Assistify API",
+    description="API for Assistify",
+    summary="API for Assistify",
+    version="0.1.0",
+)
 api.add_middleware(CustomCORSMiddleware)
 
 api.include_router(assistants_router)
