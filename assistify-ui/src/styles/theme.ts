@@ -43,6 +43,12 @@ const theme = createTheme({
       fontStyle: "italic",
       fontSize: "1rem",
     },
+    subtitle2: {
+      fontFamily: "Dank Mono Italic",
+      fontStyle: "italic",
+      fontSize: "1.25rem",
+      fontWeight: "bold",
+    },
   },
   components: {
     MuiButton: {

@@ -59,7 +59,7 @@ export const withDashboardLayout = <P extends object>(
               flexGrow: 1,
               mt: "var(--header-height)",
               ml: mobile ? undefined : `${drawerWidth}px`,
-              p: 3,
+              p: mobile ? 1 : 3,
               width: { sm: `calc(100% - ${drawerWidth}px)` },
             }}
           >
