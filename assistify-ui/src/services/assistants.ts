@@ -13,7 +13,7 @@ export const useFetchAssistants = () => {
 
     try {
       const response = await axiosInstance.get<ListAssistantsResponse>(
-        "/assistants"
+        "/api/assistants"
       );
       return response.data;
     } catch (error) {

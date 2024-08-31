@@ -1,16 +1,15 @@
 from fastapi import APIRouter, Depends, status
 
-from assistify_api.app.assistants.assistants_service import AssistantsService
 from assistify_api.app.auth.user import User
 from assistify_api.app.auth.verify_token import verify_token
 
+from .assistants_service import AssistantsService
 from .list_assistants_response import ListAssistantsResponse
 
-# Initialize the router with a prefix and default response for bad requests
-# router = APIRouter(prefix="/assistants", responses={status.HTTP_400_BAD_REQUEST: {"description": "Bad Request"}})
+router = APIRouter(prefix="/api/assistants", responses={status.HTTP_400_BAD_REQUEST: {"description": "Bad Request"}})
 
 
-# @router.get("/")
+@router.get("/")
 def get_assistants(
     assistants_service: AssistantsService = Depends(AssistantsService),
     _: User = Depends(verify_token),

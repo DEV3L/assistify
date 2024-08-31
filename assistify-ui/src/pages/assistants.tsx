@@ -27,7 +27,7 @@ const AssistantsPage = () => {
   useEffect(() => {
     const fetchAssistants = async () => {
       try {
-        const response = await axiosInstance.get("/assistants");
+        const response = await axiosInstance.get("/api/assistants");
         setAssistants(response.data.assistants);
       } catch (error) {
         console.error("Failed to fetch assistants:", error);

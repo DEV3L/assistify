@@ -3,6 +3,7 @@ import random
 from fastapi import Depends, FastAPI
 from pymongo.database import Database
 
+from assistify_api.app.assistants.assistants_router import router as assistants_router
 from assistify_api.app.assistants.assistants_service import AssistantsService
 from assistify_api.app.assistants.list_assistants_response import ListAssistantsResponse
 from assistify_api.database.dao.version_dao import VersionDao
@@ -19,7 +20,7 @@ from .lifespan import lifespan
 api = FastAPI(lifespan=lifespan)
 api.add_middleware(CustomCORSMiddleware)
 
-# api.include_router(assistants_router)
+api.include_router(assistants_router)
 
 
 @api.get("/")
