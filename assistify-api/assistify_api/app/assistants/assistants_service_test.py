@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 
-from assistify_api.app.assistants.assistants_service import AssistantsService
-from assistify_api.app.assistants.list_assistants_response import AssistantsResponse, ListAssistantsResponse
+from .assistants_service import AssistantsService
+from .list_assistants_response import AssistantsResponse, ListAssistantsResponse
 
 
 def test_get_assistants(assistants_service: AssistantsService):

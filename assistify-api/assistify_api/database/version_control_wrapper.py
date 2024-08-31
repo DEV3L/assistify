@@ -3,9 +3,9 @@ from typing import Any, Callable, Literal
 
 from loguru import logger
 
-from assistify_api.database.dao.version_dao import VersionDao
-from assistify_api.database.models.version import Version
-from assistify_api.database.mongodb import MongoDb
+from .dao.version_dao import VersionDao
+from .models.version import Version
+from .mongodb import MongoDb
 
 
 def update_version_status(version_dao: VersionDao, version: str, status: Literal["Completed", "Failed"]) -> None:

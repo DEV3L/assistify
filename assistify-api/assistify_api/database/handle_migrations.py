@@ -2,9 +2,10 @@ import importlib.util
 import os
 from typing import Callable
 
-from assistify_api.database.dao.version_dao import VersionDao
-from assistify_api.database.mongodb import MongoDb
 from assistify_api.env_variables import set_env_variables
+
+from .dao.version_dao import VersionDao
+from .mongodb import MongoDb
 
 
 def _load_migration(file_path: str, module_name: str) -> Callable:
@@ -24,7 +25,7 @@ def _get_migration_files(migrations_dir: str) -> list[(str, str)]:
     )
 
 
-def _run_migration(file_information: (str, str)) -> None:
+def _run_migration(file_information: tuple[str, str]) -> None:
     """Load and execute a single migration script."""
     file_path, module_name = file_information
     mongo_db = MongoDb.instance()

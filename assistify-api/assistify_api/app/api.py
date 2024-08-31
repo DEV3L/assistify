@@ -3,13 +3,11 @@ import random
 from fastapi import Depends, FastAPI
 from pymongo.database import Database
 
-from assistify_api.app.assistants.assistants_router import router as assistants_router
-from assistify_api.app.assistants.assistants_service import AssistantsService
-from assistify_api.app.assistants.list_assistants_response import ListAssistantsResponse
 from assistify_api.database.dao.version_dao import VersionDao
 from assistify_api.database.mongodb import MongoDb
 from assistify_api.services.chat import ChatService
 
+from .assistants.assistants_router import router as assistants_router
 from .auth.user import User
 from .auth.verify_token import verify_token
 from .chat.send_message import SendMessageRequest, SendMessageResponse

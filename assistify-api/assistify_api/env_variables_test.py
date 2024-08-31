@@ -1,6 +1,6 @@
 import pytest
 
-from assistify_api.env_variables import ENV_VARIABLES, set_env_variables
+from .env_variables import ENV_VARIABLES, set_env_variables
 
 
 def test_reset_env_variables(tmp_path):

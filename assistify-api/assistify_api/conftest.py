@@ -4,12 +4,12 @@ import pytest
 from fastapi.testclient import TestClient
 from pymongo.database import Database
 
-from assistify_api.app.api import api
-from assistify_api.app.assistants.assistants_service import AssistantsService
-from assistify_api.app.dependencies.api_dependencies import get_chat_service, get_openai_client
-from assistify_api.database.handle_migrations import run_migrations
-from assistify_api.database.mongodb import MongoDb
-from assistify_api.env_variables import set_env_variables
+from .app.api import api
+from .app.assistants.assistants_service import AssistantsService
+from .app.dependencies.api_dependencies import get_chat_service, get_openai_client
+from .database.handle_migrations import run_migrations
+from .database.mongodb import MongoDb
+from .env_variables import set_env_variables
 
 mock_idinfo = {
     "iss": "accounts.google.com",

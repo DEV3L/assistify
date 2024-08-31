@@ -1,32 +1,22 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
-from assistify_api.database.mongodb import MongoDb
 from assistify_api.env_variables import ENV_VARIABLES
+
+from .mongodb import MongoDb
 
 
 @patch("assistify_api.database.mongodb.logger")
 @patch("assistify_api.database.mongodb.ServerApi")
 @patch("assistify_api.database.mongodb.pymongo")
 def test_mongodb_instance_only_ever_called_once(
-    mock_pymongo: patch, mocker_server_api: patch, mock_logger: patch
+    mock_pymongo: MagicMock, mocker_server_api: MagicMock, mock_logger: MagicMock
 ) -> None:
-    """
-    Test that MongoDb.instance() only creates a MongoClient once and reuses it thereafter.
-
-    Args:
-        mock_pymongo (patch): Mocked pymongo module.
-        mock_logger (patch): Mocked logger module.
-    """
-    MongoDb.db = None  # Reset the MongoDb instance
+    MongoDb.db = None
 
     result_db = MongoDb.instance()  # First call to instance, should create MongoClient
     MongoDb.instance()  # Second call to instance, should reuse the existing MongoClient
 
-    # Ensure MongoClient is called with the correct URI
     mock_pymongo.MongoClient.assert_called_with(ENV_VARIABLES.mongodb_uri, server_api=mocker_server_api.return_value)
-    # Ensure MongoClient is only called once
     assert mock_pymongo.MongoClient.call_count == 1
-    # Ensure the returned database is correct
     assert mock_pymongo.MongoClient.return_value[ENV_VARIABLES.mongodb_db] == result_db
-    # Ensure logger.info was called
     assert mock_logger.info.called

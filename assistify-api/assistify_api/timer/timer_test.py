@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from assistify_api.timer.timer import timer
+from .timer import timer
 
 
 def test_timer_decorator():

@@ -3,8 +3,9 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from google.auth.transport import requests
 from google.oauth2 import id_token
 
-from assistify_api.app.auth.user import User
 from assistify_api.env_variables import ENV_VARIABLES
+
+from .user import User
 
 GOOGLE_CLIENT_ID = ENV_VARIABLES.google_client_id
 

@@ -3,8 +3,9 @@ from unittest.mock import MagicMock
 
 from pymongo.database import Database
 
-from assistify_api.database.dao.version_dao import VersionDao
 from assistify_api.database.models.version import Version
+
+from .version_dao import VersionDao
 
 default_version = "v001_data_init"
 default_version_dict = {"version": default_version}

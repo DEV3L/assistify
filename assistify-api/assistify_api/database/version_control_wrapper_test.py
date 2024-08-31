@@ -2,10 +2,10 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from assistify_api.database.dao.version_dao import VersionDao
-from assistify_api.database.models.version import Version
-from assistify_api.database.mongodb import MongoDb
-from assistify_api.database.version_control_wrapper import update_version_status, version_control
+from .dao.version_dao import VersionDao
+from .models.version import Version
+from .mongodb import MongoDb
+from .version_control_wrapper import update_version_status, version_control
 
 
 def test_update_version_status_creates_new_version():
