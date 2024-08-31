@@ -29,7 +29,7 @@ describe("useFetchAssistants", () => {
       });
 
       expect(data).toEqual(mockResponse.data);
-      expect(axiosInstance.get).toHaveBeenCalledWith("/assistants");
+      expect(axiosInstance.get).toHaveBeenCalledWith("/api/assistants");
     });
 
     it("should handle axios error correctly", async () => {
