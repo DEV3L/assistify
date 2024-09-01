@@ -1,5 +1,3 @@
-import random
-
 from fastapi import Depends, FastAPI
 from pymongo.database import Database
 
