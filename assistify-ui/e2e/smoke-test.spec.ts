@@ -10,4 +10,6 @@ test("run smoke test", async ({ page }) => {
   await loginToGoogle(page);
   await validateDashboard(page);
   await validateAssistants(page);
+
+  // await saveStorageState(page);
 });

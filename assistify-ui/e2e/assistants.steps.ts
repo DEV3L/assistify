@@ -1,6 +1,6 @@
 import { Page } from "playwright";
 
-const expectedAssistantName = "Assistify - Product Owner";
+const expectedAssistantName = "Assistify - Concierge";
 
 export const validateAssistants = async (page: Page): Promise<void> => {
   const assistantsIconSelector = '[data-testid="PersonIcon"]';
