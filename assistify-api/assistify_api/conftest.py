@@ -76,5 +76,5 @@ def mock_openai_client():
 
 
 @pytest.fixture
-def assistants_service(mock_openai_client):
-    return AssistantsService(open_ai_client=mock_openai_client)
+def assistants_service(mock_openai_client, mongo_db):
+    return AssistantsService(open_ai_client=mock_openai_client, mongo_db=mongo_db)

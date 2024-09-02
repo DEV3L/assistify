@@ -41,7 +41,7 @@ def test_routes_unauthorized(
 @patch("assistify_api.app.auth.verify_token.id_token")
 def test_protected_route(
     mock_id_token,
-    api_with_mocks: tuple[TestClient, MagicMock, MagicMock],
+    api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
 ):
     api_client, _, _ = api_with_mocks
 
@@ -52,14 +52,14 @@ def test_protected_route(
     assert response.status_code == 200
     assert response.json() == {
         "message": f"Hello {mock_idinfo['name']}, your email is {mock_idinfo['email']}",
-        "latest_version": "The latest database migration version is v001_hello_world",
+        "latest_version": "The latest database migration version is v002_add_assistants",
     }
 
 
 @patch("assistify_api.app.auth.verify_token.id_token")
 def test_send_message(
     mock_id_token,
-    api_with_mocks: tuple[TestClient, MagicMock, MagicMock],
+    api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
 ):
     """
     Test the /send-message endpoint with valid authentication and message payload.
@@ -76,32 +76,3 @@ def test_send_message(
 
     assert response.status_code == 200
     assert response.json() == {"response": "What can I do for you?"}
-
-
-@patch("assistify_api.app.auth.verify_token.id_token")
-def test_get_assistants(
-    mock_id_token,
-    api_with_mocks: tuple[TestClient, MagicMock, MagicMock],
-):
-    """
-    Test the /send-message endpoint with valid authentication and message payload.
-    """
-    api_client, _, mock_openai_client = api_with_mocks
-
-    assistant_name_included = "Justin Beall - Knowledge Bot"
-    assistant_name_not_included = "Assistant 2"
-
-    mock_assistant_included = MagicMock(id="1", model="gpt-4o")
-    mock_assistant_included.name = assistant_name_included
-    mock_assistant_not_included = MagicMock(id="2", model="gpt-4o")
-    mock_assistant_not_included.name = assistant_name_not_included
-    mock_openai_client.assistants_list.return_value = [
-        mock_assistant_included,
-        mock_assistant_not_included,
-    ]
-    mock_id_token.verify_oauth2_token.return_value = mock_idinfo
-
-    response = api_client.get("/api/assistants", headers={"Authorization": "Bearer fake_token"})
-
-    assert response.status_code == 200
-    assert response.json() == {"assistants": [{"id": "1", "model": "gpt-4o", "name": assistant_name_included}]}

@@ -30,7 +30,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
           <Typography variant="body1">{botResponse}</Typography>
         </Paper>
         <Avatar
-          src="https://raw.githubusercontent.com/DEV3L/insight-genie/main/data/files/insight_genie.png"
+          src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p0nj1y1c0frdi728486q.png"
           sx={{ width: 40, height: 40, ml: -0.75, alignSelf: "flex-end" }}
         />
       </Box>

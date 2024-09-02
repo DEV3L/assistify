@@ -15,9 +15,10 @@ import {
 import { useEffect, useState } from "react";
 
 interface Assistant {
-  id: string;
+  assistant_id: string;
   name: string;
   model: string;
+  status: string;
 }
 
 const AssistantsPage = () => {
@@ -55,14 +56,16 @@ const AssistantsPage = () => {
                 {!isMobile && <TableCell>ID</TableCell>}
                 <TableCell>Name</TableCell>
                 <TableCell>Model</TableCell>
+                <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {assistants.map((assistant) => (
-                <TableRow key={assistant.id}>
-                  {!isMobile && <TableCell>{assistant.id}</TableCell>}
+                <TableRow key={assistant.assistant_id}>
+                  {!isMobile && <TableCell>{assistant.assistant_id}</TableCell>}
                   <TableCell>{assistant.name}</TableCell>
                   <TableCell>{assistant.model}</TableCell>
+                  <TableCell>{assistant.status}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

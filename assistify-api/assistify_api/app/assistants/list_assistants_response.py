@@ -1,11 +1,15 @@
+from typing import Literal
+
 from pydantic import BaseModel
 
 
-class AssistantsResponse(BaseModel):
-    id: str
+class AssistantResponse(BaseModel):
+    assistant_id: str
+    image: str
     model: str
     name: str
+    status: Literal["Public", "Market", "Private"]
 
 
 class ListAssistantsResponse(BaseModel):
-    assistants: list[AssistantsResponse]
+    assistants: list[AssistantResponse]
