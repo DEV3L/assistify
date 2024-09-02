@@ -1,0 +1,94 @@
+08-17-2024
+
+# BACKLOG
+This is a list of cards, work items, user stories, and tasks that are in the backlog category.
+
+## Title: Implement Loading Skeleton or Animation
+
+### List Name: Backlog
+
+### Labels
+
+- assistify-ui
+
+### Description
+
+**Business Value**: Enhancing the user experience by visually indicating that content is loading improves perceived performance and makes the application feel more responsive and polished.
+
+**Problem**: Currently, a brief flash of 'Loading...' is shown during content load, which falls short of providing the best user experience. There is an urgent need for a more visually appealing loading indicator to address this issue.
+
+**Description**: From a user's perspective, a visually appealing loading skeleton or animation is desired while the application content is loading. This will provide a better visual indication that the content is being fetched and the application is responsive, enhancing the overall user experience.
+
+The tasks involved include:
+
+1. Researching and selecting appropriate loading skeletons or animation components provided by MUI and React.
+2. Implementing the chosen loading indicator in areas where content loading occurs.
+3. Replacing the current "Loading..." message with the new loading skeleton or animation.
+
+**Acceptance Criteria**:
+
+_Given_ the application is loading content
+_When_ a user initiates an action that requires data fetching (e.g., logging in, navigating to a new page)
+_Then_ a visually appealing loading skeleton or animation should be displayed until the content is fully loaded.
+
+## Title: Polish the Login Page
+
+### List Name: Backlog
+
+### Labels
+
+- assistify-ui
+
+### Description
+
+**Business Value**: Enhancing the login page aesthetics creates a better first impression, improves user satisfaction, and potentially increases user retention.
+
+**Issue:** The current login page lacks visual appeal, which can affect user engagement.
+
+**Description**: As a design and development team, we want to style the login page and create a genuine icon to greet users with an appealing and professional entrance to the application.
+
+The tasks involved include:
+
+1. Enhancing the login page styling using MUI components and custom designs.
+2. Creating a real icon/logo to represent Assistify on the login page.
+
+**Acceptance Criteria**:
+_Given_ the login page and design elements
+_When_ a user visits the login page
+_Then_ they should see a visually appealing layout with a professional Assistify icon/logo
+
+## Title: Create the About Assistify Page
+
+### List Name: Backlog
+
+### Labels
+
+- assistify-ui
+
+### Description
+
+**Business Value**: Providing users with clear and engaging information about the Assistify product vision can enhance understanding, improve user engagement, and build trust.
+
+**Problem**: Currently, users need more comprehensive information about the product vision, goals, and values of Assistify, which underscores the necessity of a dedicated About Assistify page.
+
+**Description**: As a design and development team, we want to create a dedicated About Assistify page that shares the app's vision in a friendly and engaging manner so that users can understand the goals and values of Assistify.
+
+The tasks involved include:
+
+1. Developing a component that shares the vision of Assistify in a friendly and engaging manner.
+2. Integrating this component into a dedicated About Assistify page.
+3. Adding a link to the About page from the login page and other relevant application parts.
+
+**Acceptance Criteria**:
+
+_Given_ the dedicated About Assistify page
+_When_ a user navigates to this page
+_Then_ they should see a friendly and engaging component that shares the product vision, goals, and values of Assistify
+
+- - -
+
+###### Draft Content for About Assistify Page Component
+
+Here’s the refined draft text for the About Assistify page:
+
+“Welcome to Assistify! At Assistify, our mission is to revolutionize professional workflows through the power of AI. Our platform connects you with specialized OpenAI Assistants to enhance programming, product management, and content creation productivity. By integrating secure and user-friendly tools, we aim to democratize AI access, making it an indispensable tool for professionals across various fields. Explore seamless collaboration and innovative solutions with Assistify—where AI meets productivity.”

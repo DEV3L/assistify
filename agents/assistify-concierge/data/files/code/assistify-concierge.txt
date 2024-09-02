@@ -1,0 +1,577 @@
+# assistify-product-owner
+
+## conftest.py
+
+### Summary
+
+This code sets up a testing environment using `pytest` for an AI assistant and Trello data extraction service. It imports necessary modules and functions, configures environment variables, and defines two `pytest` fixtures:
+
+1. **`chat` Fixture**: Initializes a `Chat` object with an OpenAI client and assistant. Runs for each test function.
+2. **`trello_data` Fixture**: Fetches and returns Trello board data at the start of the test session and shares it across tests.
+
+These fixtures assist in testing the functionalities of an AI assistant and Trello data orchestration service.
+
+```py
+import pytest
+from ai_assistant_manager.assistants.assistant_service import (
+    AssistantService,
+)
+from ai_assistant_manager.chats.chat import Chat
+from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
+from ai_assistant_manager.env_variables import set_env_variables as set_env_variables_ai
+from ai_assistant_manager.prompts.prompt import get_prompt
+from ai_trello_extract.clients.trello_client import get_trello_client
+from ai_trello_extract.env_variables import ENV_VARIABLES
+from ai_trello_extract.env_variables import set_env_variables as set_env_variables_trello
+from ai_trello_extract.orchestrators.orchestration_service import OrchestrationService
+from ai_trello_extract.services.trello_service import TrelloService
+from loguru import logger
+
+from data_exporter import PROMPT_PATH
+
+# Set environment variables for AI and Trello services
+set_env_variables_ai()
+set_env_variables_trello()
+
+
+@pytest.fixture(scope="function")
+def chat() -> Chat:
+    """
+    Fixture to create a Chat session for each test function.
+
+    Returns:
+        Chat: An instance of the Chat class initialized with an OpenAI client and assistant ID.
+    """
+    client = OpenAIClient(build_openai_client())
+    service = AssistantService(client, get_prompt(PROMPT_PATH))
+    assistant_id = service.get_assistant_id()
+
+    logger.info(f"Assistant ID: {assistant_id}")
+
+    chat = Chat(
+        client,
+        assistant_id,
+    )
+    chat.start()
+    return chat
+
+
+@pytest.fixture(scope="session", name="trello_data")
+def trello_data() -> dict:
+    """
+    Fixture to fetch Trello board data once per test session.
+
+    Returns:
+        dict: JSON data of the Trello board.
+    """
+    orchestration_service = OrchestrationService(
+        TrelloService(get_trello_client(ENV_VARIABLES.trello_api_key, ENV_VARIABLES.trello_api_token))
+    )
+
+    return orchestration_service.get_board_json(ENV_VARIABLES.trello_board_name)
+
+```
+
+## run_trello_extract.py
+
+### Summary
+
+This code initializes and runs an orchestration service that extracts data from a Trello board and writes it to a markdown file in a specified directory. Here's a summary:
+
+1. **Initialize Environment Variables**: The `set_env_variables` function initializes necessary environment variables for Trello API access.
+2. **Create Trello Client**: A Trello client is created using API key and token from environment variables.
+3. **Initialize Services**: `OrchestrationService` is initialized with a `TrelloService` that uses the Trello client.
+4. **Extract and Save Data**: The code attempts to write the Trello board data to markdown files in the "./data" directory.
+5. **Logging**: Success or error messages are logged using `loguru`.
+
+The `main` function is executed when the script runs as the main module.
+
+```py
+from ai_trello_extract.clients.trello_client import get_trello_client
+from ai_trello_extract.env_variables import ENV_VARIABLES, set_env_variables
+from ai_trello_extract.orchestrators.orchestration_service import OrchestrationService
+from ai_trello_extract.services.trello_service import TrelloService
+from loguru import logger
+
+
+def main():
+    orchestration_service = OrchestrationService(
+        TrelloService(get_trello_client(ENV_VARIABLES.trello_api_key, ENV_VARIABLES.trello_api_token))
+    )
+
+    try:
+        markdown_directory_name = orchestration_service.write_board_markdown_to_directory(
+            ENV_VARIABLES.trello_board_name, "./data"
+        )
+        logger.info(f"Markdown directory written to {markdown_directory_name}")
+    except RuntimeError as e:
+        logger.error(e)
+
+
+if __name__ == "__main__":
+    set_env_variables()
+    main()
+
+```
+
+## run_chat.py
+
+### Summary
+
+This code sets up an AI assistant chatbot using the OpenAI API. Key points:
+
+1. **Imports necessary modules** from the AI assistant manager, and a custom data exporter.
+2. **Defines constants** like `SHOULD_DELETE_ASSISTANT` and `START_MESSAGE`.
+3. **Initializes the assistant**:
+   - Logs the assistant's starting message.
+   - Exports data via the `export_data` function.
+   - Builds a client and service objects for interacting with the OpenAI API.
+   - Optionally deletes the assistant's existing setup if specified.
+4. **Fetches the assistant ID** and logs it.
+5. **Starts a chat session**:
+   - Sends an initial message if present.
+   - Continuously prompts the user for input and sends messages to the assistant, printing the responses.
+6. **Handles exceptions** by setting environment variables and logging errors at startup.
+
+Overall, this script is a command-line tool for interacting with an AI assistant.
+
+```py
+from ai_assistant_manager.assistants.assistant_service import (
+    AssistantService,
+)
+from ai_assistant_manager.chats.chat import Chat
+from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
+from ai_assistant_manager.env_variables import ENV_VARIABLES, set_env_variables
+from ai_assistant_manager.prompts.prompt import get_prompt
+from loguru import logger
+
+from data_exporter import PROMPT_PATH, export_data
+
+SHOULD_DELETE_ASSISTANT = False
+
+START_MESSAGE = """"""
+
+
+def main():
+    logger.info(f"Starting {ENV_VARIABLES.assistant_name}")
+
+    export_data()
+
+    client = OpenAIClient(build_openai_client())
+    service = AssistantService(client, get_prompt(PROMPT_PATH))
+
+    if SHOULD_DELETE_ASSISTANT:
+        logger.info("Removing existing assistant and category files")
+        service.delete_assistant()
+
+    assistant_id = service.get_assistant_id()
+
+    logger.info(f"Assistant ID: {assistant_id}")
+
+    chat = Chat(
+        client,
+        assistant_id,
+        # thread_id="abc",
+    )
+    chat.start()
+
+    if START_MESSAGE:
+        start_response = chat.send_user_message(START_MESSAGE)
+        print(f"\n{service.assistant_name}:\n{start_response}")
+
+    while True:
+        user_message = input("\nMessage: ")
+
+        if not user_message:
+            print("Invalid user message.")
+            continue
+        if user_message == "exit":
+            break
+
+        chat_response = chat.send_user_message(user_message)
+        print(f"\n{service.assistant_name}:\n{chat_response}")
+
+
+if __name__ == "__main__":
+    try:
+        set_env_variables()
+        main()
+    except Exception as e:
+        logger.info(f"Error: {e}")
+
+```
+
+## pyproject.toml
+
+### Summary
+
+This code is a configuration file for building and managing a Python project named "assistify-product-owner" using Hatchling as the build backend.
+
+- **Build System**: Requires `hatchling` for building the project.
+- **Project Metadata**:
+  - Name: "assistify-product-owner"
+  - Version: Dynamically determined
+  - Description: "Product owner tech insights using AI for Assistify."
+  - License: Specified in "LICENSE" file
+  - Readme: "README.md"
+  - Author: Justin Beall (email: jus.beall@gmail.com)
+  - Python Requirement: >=3.12
+  - Dependencies: Lists several packages required for the project.
+- **Hatch Version Configuration**: Extracts version from "setup.cfg".
+- **Build Targets**:
+  - Source Distribution (sdist): Includes the directory `/assistify_product_owner`.
+  - Wheel Distribution: Packages the directory `assistify_product_owner`.
+- **Hatch Environment**:
+  - Named `default`: Virtual environment `.venv` with additional dependencies `pyright`, `pytest`, and `pytest-cov`.
+  - Scripts: Defines several commands for chat, building, end-to-end testing, code summary, Trello extract, and various test types.
+- **Static Analysis and Linting**:
+  - Uses `ruff` with configuration extended from `ruff_defaults.toml`.
+  - Enforces no parent-relative imports via `flake8-tidy-imports`.
+
+In summary, this configuration sets up the project's build system, dependencies, and various development tasks and testing commands, aiming to streamline the development process of the "assistify-product-owner" project.
+
+```toml
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "assistify-product-owner"
+dynamic = ["version"]
+description = "Product owner tech insights using AI for Assistify."
+license = { file = "LICENSE" }
+readme = "README.md"
+authors = [{ name = "Justin Beall", email = "jus.beall@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = [
+    "ai-assistant-manager==1.0.2",
+    "ai-code-summary==0.0.3",
+    "ai-trello-extract==0.0.7",
+    "loguru",
+    "openai",
+    "python-dateutil",
+    "python-dotenv",
+]
+
+[tool.hatch.version]
+path = "setup.cfg"
+pattern = "version = (?P<version>\\S+)"
+
+[tool.hatch.build.targets.sdist]
+include = ["/assistify_product_owner"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["assistify_product_owner"]
+
+[tool.hatch.envs.default]
+type = "virtual"
+path = ".venv"
+dependencies = ["pyright", "pytest", "pytest-cov"]
+
+[tool.hatch.envs.default.scripts]
+chat = "python run_chat.py"
+build = "python run_end_to_end.py"
+e2e = "python run_end_to_end.py --delete-assistant true"
+summary = "python run_code_summary.py {args}"
+trello-extract = "python run_trello_extract.py"
+test = "pytest --cache-clear --cov --cov-report lcov --cov-report term -m 'not integration'"
+test-integration = "pytest --cache-clear --cov --cov-report lcov --cov-report term"
+test-repeat = "pytest -m integration -s"
+
+[tool.hatch.envs.hatch-static-analysis]
+config-path = "ruff_defaults.toml"
+
+[tool.ruff]
+extend = "ruff_defaults.toml"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "parents"
+
+```
+
+## run_chat_test.py
+
+### Summary
+
+This code defines two integration tests using the `pytest` framework for a chat application. Both tests check specific functionalities by sending messages and comparing responses.
+
+1. **Environment Setup:**
+
+   - `RUN_INTEGRATION` and `TESTS_NUMBER_OF_CHOICES` are set from environment variables, defaulting to `True` and `1`, respectively.
+
+2. **Test `test_chat_find_done_story`:**
+
+   - Skipped if `RUN_INTEGRATION` is `False`.
+   - Runs `TESTS_NUMBER_OF_CHOICES` times.
+   - Checks if the chat application can correctly identify titles of completed stories from provided Trello data.
+
+3. **Test `test_chat_knows_assistify_product_name`:**
+   - Skipped if `RUN_INTEGRATION` is `False`.
+   - Runs `TESTS_NUMBER_OF_CHOICES` times.
+   - Verifies if the chat application can correctly state the product it works on (`assistify`).
+
+Logs are generated for each test execution and the results are asserted to ensure expected outcomes.
+
+```py
+import os
+
+import pytest
+from ai_assistant_manager.chats.chat import Chat
+from loguru import logger
+
+RUN_INTEGRATION = bool(os.getenv("RUN_INTEGRATION", "true"))
+TESTS_NUMBER_OF_CHOICES = int(os.getenv("TESTS_NUMBER_OF_CHOICES", "1"))
+
+
+@pytest.mark.skipif(not RUN_INTEGRATION, reason="openai integration")
+@pytest.mark.parametrize("execution_number", range(TESTS_NUMBER_OF_CHOICES))
+@pytest.mark.integration
+def test_chat_find_done_story(chat: Chat, trello_data: dict, execution_number: int):
+    logger.info(f"Test chat find done story: {execution_number + 1}")
+    done_titles = [card["title"] for card in trello_data["done"]]
+
+    response = chat.send_user_message("What is the title of a story that is done?")
+    found_titles = [title for title in done_titles if title in response]
+
+    logger.info(f"Response: {response}")
+    logger.info(f"Found Titles: {found_titles}")
+
+    assert any(found_titles)
+
+
+@pytest.mark.skipif(not RUN_INTEGRATION, reason="openai integration")
+@pytest.mark.parametrize("execution_number", range(TESTS_NUMBER_OF_CHOICES))
+@pytest.mark.integration
+def test_chat_knows_assistify_product_name(chat: Chat, execution_number: int):
+    logger.info(f"Test chat knows assistify product name: {execution_number + 1}")
+
+    response = chat.send_user_message("What is the product you work on?")
+
+    logger.info(f"Response: {response}")
+
+    assert "assistify" in response.lower()
+
+```
+
+## ruff_defaults.toml
+
+### Summary
+
+This code is a configuration file that sets up code formatting and linting rules:
+
+1. **General Settings:**
+
+   - Maximum line length: 120 characters.
+
+2. **Docstring Formatting:**
+
+   - Ensure code in docstrings is formatted.
+   - Limit line length in docstrings to 80 characters.
+
+3. **Linting Rules:**
+   - Flake8 Tidy Imports: Disallow all relative imports.
+   - isort: Recognize "src" as a first-party import.
+   - Flake8 Pytest Style: Do not enforce use of parentheses in fixtures and marks.
+
+```toml
+line-length = 120
+
+[format]
+docstring-code-format = true
+docstring-code-line-length = 80
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[lint.isort]
+known-first-party = ["src"]
+
+[lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+```
+
+## run_code_summary.py
+
+### Summary
+
+The code is a Python script that generates markdown documentation from source code. It uses the `argparse` module to handle command-line arguments, allowing the user to specify the source code directory. The `main` function calls `create_markdown_from_code` to perform the documentation generation. If no directory is specified, it defaults to the current directory.
+
+```py
+import argparse
+
+from ai_code_summary.markdown.export import create_markdown_from_code
+
+
+def main(source_path: str) -> None:
+    """
+    Generate markdown documentation from the source code.
+
+    Args:
+        source_path (str): The path to the source code directory.
+    """
+    create_markdown_from_code(source_path)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate markdown documentation from the source code.")
+    parser.add_argument(
+        "source_path", nargs="?", default=".", help="The path to the source code directory (default: current directory)"
+    )
+    args = parser.parse_args()
+    main(args.source_path)
+
+```
+
+## data_exporter.py
+
+### Summary
+
+This code defines a function `export_data()` which uses two exporter classes, `DirectoryExporter` and `FilesExporter`, to export various files and directories related to the "Assistify" project. It exports:
+
+1. A directory named "Assistify Status Trello Board".
+2. Several specific files, including "Assistify Product Definition.txt" and "Assistify Product Owner README.txt".
+3. Multiple files related to code, stored within a subdirectory "files/code".
+
+```py
+from ai_assistant_manager.exporters.directory.directory_exporter import DirectoryExporter
+from ai_assistant_manager.exporters.files.files_exporter import FilesExporter
+
+PROMPT_PATH = "prompts/prompt.md"
+
+
+def export_data():
+    # Assistify Status Trello Board
+    DirectoryExporter("Assistify Status Trello Board").export()
+    # Assistify Files
+    FilesExporter("Assistify Product Definition.txt").export()
+    FilesExporter("Assistify Product Owner README.txt").export()
+    # code
+    FilesExporter("assistify-api.txt", directory="files/code").export()
+    FilesExporter("assistify-github-workflows.txt", directory="files/code").export()
+    FilesExporter("assistify-product-owner.txt", directory="files/code").export()
+    FilesExporter("assistify-ui.txt", directory="files/code").export()
+
+```
+
+## .env.default
+
+### Summary
+
+This code snippet sets up environment variables for an application. It includes API keys for OpenAI and Trello, identifies a Trello board named "Assistify," and defines a project named "Assistify - Product Owner" with a description and data file prefix related to using AI for tech insights.
+
+```default
+OPENAI_API_KEY=${OPENAI_API_KEY}
+
+# Trello
+TRELLO_API_KEY=TRELLO_API_KEY
+TRELLO_API_TOKEN=TRELLO_API_TOKEN
+TRELLO_BOARD_NAME="Assistify"
+
+# Project
+ASSISTANT_DESCRIPTION="Product owner tech insights using AI for Assistify"
+ASSISTANT_NAME="Assistify - Product Owner"
+DATA_FILE_PREFIX="Assistify - Product Owner"
+
+```
+
+## run_end_to_end.py
+
+### Summary
+
+This code defines a script that sets up and interacts with an AI assistant using the OpenAI API. Here’s a summary:
+
+1. **Imports dependencies** including OpenAI API client, assistant services, environment variables, logging, and file manipulation modules.
+2. **Main Function**:
+   - Clears a specified directory.
+   - Initializes the OpenAI client and assistant service.
+   - Deletes any existing assistant data and retrieves a new assistant ID.
+   - Starts a chat interaction by sending an initial message and printing the response.
+   - Optionally deletes the assistant if specified.
+3. **Helper Function**:
+   - `_clear_bin_directory`: Removes and recreates the specified directory.
+4. **Script Entry Point**:
+   - Parses command-line arguments to determine if the assistant should be deleted after the process.
+   - Sets environment variables and runs the main function, logging any errors encountered.
+
+Essentially, this script automates the setup, interaction, and optional cleanup of an AI assistant using a specified configuration and environment.
+
+```py
+import argparse
+import shutil
+from pathlib import Path
+
+from ai_assistant_manager.assistants.assistant_service import (
+    AssistantService,
+)
+from ai_assistant_manager.chats.chat import Chat
+from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
+from ai_assistant_manager.env_variables import ENV_VARIABLES, set_env_variables
+from ai_assistant_manager.prompts.prompt import get_prompt
+from loguru import logger
+
+from data_exporter import PROMPT_PATH, export_data
+
+
+def main(delete_assistant: bool):
+    _clear_bin_directory(f"./{ENV_VARIABLES.bin_dir}")
+    logger.info(f"Building {ENV_VARIABLES.assistant_name}")
+
+    export_data()
+
+    client = OpenAIClient(build_openai_client())
+    service = AssistantService(client, get_prompt(PROMPT_PATH))
+
+    logger.info("Removing existing assistant and category files")
+    service.delete_assistant()
+
+    assistant_id = service.get_assistant_id()
+
+    logger.info(f"Assistant ID: {assistant_id}")
+
+    chat = Chat(
+        client,
+        assistant_id,
+        # thread_id="abc",
+    )
+    chat.start()
+
+    start_message = "Hello, what are we working on today?"
+    print(f"\nMessage:\n{start_message}")
+    start_response = chat.send_user_message(start_message)
+    print(f"\n{service.assistant_name}:\n{start_response}")
+
+    if delete_assistant:
+        service.delete_assistant()
+
+
+def _clear_bin_directory(bin_path: str) -> None:
+    """
+    Remove all files and directories in the specified bin directory.
+
+    Args:
+        bin_path (str): The path to the bin directory.
+    """
+    bin_dir = Path(bin_path)
+    if bin_dir.exists() and bin_dir.is_dir():
+        shutil.rmtree(bin_dir)
+        bin_dir.mkdir()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run the end-to-end assistant process.")
+    parser.add_argument(
+        "--delete-assistant",
+        action="store_true",
+        default=False,
+        help="Flag to delete the assistant at the end of the process.",
+    )
+    args = parser.parse_args()
+
+    try:
+        set_env_variables()
+        main(args.delete_assistant)
+    except Exception as e:
+        logger.info(f"Error: {e}")
+
+```

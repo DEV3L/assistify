@@ -1,0 +1,959 @@
+# assistify-api
+
+## user.py
+
+### Summary
+
+The code defines a `User` class that inherits from `BaseModel` (a part of the Pydantic library). This class serves as a data model with five attributes: `email`, `name_family`, `name_given`, `name`, and `picture`, all of which are expected to be strings.
+
+```py
+from pydantic import BaseModel
+
+
+class User(BaseModel):
+    email: str
+    name_family: str
+    name_given: str
+    name: str
+    picture: str
+
+```
+## conftest.py
+
+### Summary
+
+This code sets up testing infrastructure for a FastAPI application using `pytest` and `unittest.mock`. It introduces a fixture `api_with_mocks` which:
+
+1. Mocks the dependencies `get_chat_service` and `get_openai_client` using `MagicMock`.
+2. Overrides the actual dependencies in the FastAPI application with these mocks.
+3. Provides a `TestClient` to test API endpoints.
+4. Resets the dependencies back to their original implementations after the tests run.
+
+```py
+from unittest.mock import MagicMock
+
+import pytest
+from fastapi.testclient import TestClient
+
+from assistify_api.app.api import api
+from assistify_api.app.dependencies.api_dependencies import get_chat_service, get_openai_client
+
+mock_idinfo = {
+    "iss": "accounts.google.com",
+    "sub": "123456789",
+    "email": "test@example.com",
+    "name": "test name",
+    "given_name": "test given name",
+    "family_name": "test family name",
+    "picture": "test picture",
+}
+
+
+@pytest.fixture
+def api_with_mocks():
+    mock_chat_service = MagicMock()
+    mock_openai_client = MagicMock()
+
+    api.dependency_overrides[get_chat_service] = lambda: mock_chat_service
+    api.dependency_overrides[get_openai_client] = lambda: mock_openai_client
+
+    with TestClient(api) as api_client:
+        yield api_client, mock_chat_service, mock_openai_client
+
+    api.dependency_overrides[get_chat_service] = get_chat_service
+    api.dependency_overrides[get_openai_client] = get_openai_client
+
+```
+## server.py
+
+### Summary
+
+This code runs a web server using Uvicorn, an ASGI server for Python web apps. It launches the application located at "assistify_api.app.api:api" on localhost (127.0.0.1) at port 8000 with auto-reload enabled for development purposes.
+
+```py
+import uvicorn
+
+
+def main():
+    uvicorn.run("assistify_api.app.api:api", host="127.0.0.1", port=8000, reload=True)
+
+
+if __name__ == "__main__":
+    main()
+
+```
+## timer_test.py
+
+### Summary
+
+The code defines a test for a `timer` decorator, which logs the execution time of a function. It patches the logger used in the timer module to track logging calls. The test verifies that the `timer` decorator logs the execution time of a `dummy_function` once and checks that the log message contains the expected text.
+
+```py
+from unittest.mock import patch
+
+from assistify_api.timer.timer import timer
+
+
+def test_timer_decorator():
+    @timer("Test function")
+    def dummy_function():
+        pass
+
+    with patch("assistify_api.timer.timer.logger") as mock_logger:
+        dummy_function()
+
+    mock_logger.debug.assert_called_once()
+    assert "Test function: completed in" in mock_logger.debug.call_args[0][0]
+
+```
+## Dockerfile
+
+### Summary
+
+This Dockerfile sets up a container for a Python application using the `python:3.12-slim` image. It creates a working directory `/app`, copies the local app's code into it, installs the `hatch` tool, creates a virtual environment, and exposes port 8000. It also sets an environment variable `NAME` to "AssistifyAPI" and specifies that the container should run the command `hatch run start-app` when started.
+
+```
+FROM python:3.12-slim
+
+WORKDIR /app
+COPY . /app
+
+RUN pip install hatch
+RUN hatch env create
+
+EXPOSE 8000
+
+# Define environment variable
+ENV NAME AssistifyAPI
+
+CMD ["hatch", "run", "start-app"]
+```
+## send_message.py
+
+### Summary
+
+This code uses the Pydantic library to define two data models: `SendMessageRequest` and `SendMessageResponse`. `SendMessageRequest` expects a `message` string, and `SendMessageResponse` expects a `response` string. These models are useful for data validation and serialization in applications like APIs.
+
+```py
+from pydantic import BaseModel
+
+
+class SendMessageRequest(BaseModel):
+    message: str
+
+
+class SendMessageResponse(BaseModel):
+    response: str
+
+```
+## timer.py
+
+### Summary
+
+This code defines a decorator `timer` that, when applied to a function, logs the time taken to execute that function. The log message includes a custom message and the elapsed time.
+
+```py
+import time
+from functools import wraps
+
+from loguru import logger
+
+
+def timer(message: str):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            start_time = time.time()
+            result = func(*args, **kwargs)
+            end_time = time.time()
+            elapsed_time = round(end_time - start_time, 4)
+            logger.debug(f"{message}: completed in {elapsed_time} seconds")
+            return result
+
+        return wrapper
+
+    return decorator
+
+```
+## verify_token_test.py
+
+### Summary
+
+This code is a set of unit tests for the `verify_token` function using the `pytest` framework and the `unittest.mock` library. Summary of the key components:
+
+1. **Fixtures**: `mock_credentials` generates mock HTTP authorization credentials.
+2. **Tests**:
+   - `test_verify_token_valid`: Tests if `verify_token` successfully verifies a valid token by mocking the Google token verification response.
+   - `test_verify_token_invalid_issuer`: Tests if `verify_token` correctly raises an `HTTPException` for a token with an invalid issuer.
+   - `test_verify_token_value_error`: Tests if `verify_token` raises an `HTTPException` when the token is not valid (triggering a `ValueError`).
+
+In each test, the `verify_oauth2_token` method is mocked to return predefined values or raise exceptions to simulate different scenarios.
+
+```py
+from unittest.mock import patch
+
+import pytest
+from fastapi import HTTPException
+from fastapi.security import HTTPAuthorizationCredentials
+
+from assistify_api.conftest import mock_idinfo
+
+from .verify_token import build_user_from_idinfo, verify_token
+
+
+@pytest.fixture
+def mock_credentials():
+    return HTTPAuthorizationCredentials(scheme="Bearer", credentials="fake_token")
+
+
+def test_verify_token_valid(mock_credentials: HTTPAuthorizationCredentials):
+    with patch("google.oauth2.id_token.verify_oauth2_token", return_value=mock_idinfo):
+        result = verify_token(mock_credentials)
+        assert result == build_user_from_idinfo(mock_idinfo)
+
+
+def test_verify_token_invalid_issuer(mock_credentials: HTTPAuthorizationCredentials):
+    mock_invalid_idinfo = {**mock_idinfo, "iss": "invalid.issuer.com"}
+
+    with patch("google.oauth2.id_token.verify_oauth2_token", return_value=mock_invalid_idinfo):
+        with pytest.raises(HTTPException) as exc_info:
+            verify_token(mock_credentials)
+        assert exc_info.value.status_code == 401
+        assert exc_info.value.detail == "Invalid authentication credentials"
+
+
+def test_verify_token_value_error(mock_credentials: HTTPAuthorizationCredentials):
+    with patch("google.oauth2.id_token.verify_oauth2_token", side_effect=ValueError("Invalid token")):
+        with pytest.raises(HTTPException) as exc_info:
+            verify_token(mock_credentials)
+        assert exc_info.value.status_code == 401
+        assert exc_info.value.detail == "Invalid authentication credentials"
+
+```
+## pyproject.toml
+
+### Summary
+
+This code is a configuration file for setting up a Python project named "assistify-api." It uses `hatchling` as the build system and includes requirements and build settings. Key points:
+
+1. **Project Metadata**: 
+   - Name: `assistify-api`
+   - Description: An API that integrates with OpenAI using FastAPI.
+   - Authors: Justin Beall.
+   - Python Version: >= 3.12
+   - Dependencies: Various libraries like FastAPI, OpenAI, and others.
+
+2. **Build Configuration**:
+   - Uses `hatchling` for building.
+   - Configures source distributions (sdist) and wheels.
+
+3. **Versioning**:
+   - Dynamically gets the version from `setup.cfg`.
+
+4. **Virtual Environment**:
+   - Sets up a default virtual environment with development dependencies (`pyright`, `pytest-cov`, `pytest`).
+
+5. **Scripts**:
+   - Defines scripts for development, starting the app with `uvicorn`, and running tests.
+
+6. **Static Analysis**:
+   - Configuration for static analysis tools (`ruff`) and linting rules.
+
+7. **Test Configuration**:
+   - Configures `pytest` with a specific marker for integration tests.
+
+```toml
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "assistify-api"
+dynamic = ["version"]
+description = "A robust FastAPI application that integrates with OpenAI's API to facilitate seamless conversation capabilities through a RESTful interface."
+readme = "README.md"
+authors = [{ name = "Justin Beall", email = "jus.beall@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = [
+    "ai-assistant-manager",
+    "fastapi",
+    "loguru",
+    "google-auth",
+    "openai",
+    "python-dotenv",
+    "uvicorn",
+    "requests",
+    "authlib",
+]
+
+[tool.hatch.version]
+path = "setup.cfg"
+pattern = "version = (?P<version>\\S+)"
+
+[tool.hatch.build.targets.sdist]
+include = ["/src"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.hatch.envs.default]
+type = "virtual"
+path = ".venv"
+dependencies = ["pyright", "pytest-cov", "pytest"]
+
+[tool.hatch.envs.default.scripts]
+dev = "python server.py"
+start-app = "uvicorn assistify_api.app.api:api --host 0.0.0.0 --port 8000"
+test = "pytest --cache-clear --cov --cov-report lcov --cov-report term"
+
+[tool.hatch.envs.hatch-static-analysis]
+config-path = "ruff_defaults.toml"
+
+[tool.ruff]
+extend = "ruff_defaults.toml"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "parents"
+
+[tool.pytest.ini_options]
+markers = "integration: an integration test that hits external uncontrolled systems"
+
+```
+## api_dependencies.py
+
+### Summary
+
+This code defines two functions to create service instances for an AI assistant:
+
+1. `get_openai_client()`: Returns an instance of `OpenAIClient` by invoking a client-building function.
+2. `get_chat_service()`: Returns an instance of `ChatService`, initialized with a `Chat` object that uses the `OpenAIClient` and a predefined assistant ID.
+
+```py
+from ai_assistant_manager.chats.chat import Chat
+from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_client
+
+from assistify_api.services.chat import ChatService
+
+
+def get_openai_client() -> OpenAIClient:
+    """
+    Provides an instance of the OpenAI API client.
+
+    Returns:
+        An instance of OpenAIClient.
+    """
+    return OpenAIClient(build_openai_client())
+
+
+def get_chat_service() -> ChatService:
+    """
+    Provides an instance of ChatService.
+
+    Returns:
+        An instance of ChatService.
+    """
+    knowledge_bot_assistant_id = "asst_XWLIxFEE3nQUwqTGqOH9sUfY"
+    return ChatService(Chat(get_openai_client(), knowledge_bot_assistant_id))
+
+```
+## api_dependencies_test.py
+
+### Summary
+
+This code is a unit test for the `get_chat_service` function. It uses the `unittest.mock` library to patch the `build_openai_client` dependency. The test ensures that the `chat.client.open_ai` attribute of the service returned by `get_chat_service` is correctly set to the value returned by the mocked `build_openai_client`.
+
+```py
+from unittest.mock import Mock, patch
+
+from .api_dependencies import get_chat_service
+
+
+@patch("assistify_api.app.dependencies.api_dependencies.build_openai_client")
+def test_get_chat_service(mock_build_openai_client: Mock):
+    """
+    Test the get_chat_service function.
+    """
+
+    service = get_chat_service()
+    assert service.chat.client.open_ai == mock_build_openai_client.return_value
+
+```
+## custom_cors_middleware_test.py
+
+### Summary
+
+This code sets up a FastAPI application with a custom CORS (Cross-Origin Resource Sharing) middleware and uses pytest to validate the CORS functionality. Key components are:
+
+1. **FastAPI App**: A simple API with a single endpoint (`/`) that returns a "Hello World" message.
+2. **Custom CORS Middleware**: Integrates custom CORS handling into the FastAPI app.
+3. **TestClient**: Utilizes `starlette.testclient.TestClient` to make requests to the app in tests.
+4. **Tests**:
+   - **Parameterize CORS Tests**: Tests that specific origins are allowed, checking appropriate CORS headers.
+   - **Disallowed Origins Test**: Verifies that non-allowed origins do not receive CORS headers.
+   - **Preflight Request Test**: Ensures correct handling for preflight OPTIONS requests by validating returned CORS headers.
+
+```py
+import pytest
+from fastapi import FastAPI
+from starlette.testclient import TestClient
+
+from .custom_cors_middleware import CustomCORSMiddleware
+
+app = FastAPI()
+
+
+@app.get("/")
+async def read_main():
+    return {"msg": "Hello World"}
+
+
+# Add the custom middleware to the app
+app.add_middleware(CustomCORSMiddleware)
+
+client = TestClient(app)
+
+
+@pytest.mark.parametrize(
+    "origin",
+    [
+        "https://assistify.example.vercel.app",
+        "https://assistify-ui.vercel.app",
+        "https://assistify-ui-ci.vercel.app",
+        "https://assistify-api.fly.dev",
+        "https://assistify-api-ci.fly.dev",
+        "http://localhost:3000",
+    ],
+    ids=["assistify_example", "assistify_ui", "assistify_ui_ci", "assistify_api", "assistify_api_ci", "localhost:3000"],
+)
+def test_cors_allowed_origin(origin: str):
+    response = client.get("/", headers={"origin": origin})
+    assert response.status_code == 200
+    assert response.headers["Access-Control-Allow-Origin"] == origin
+    assert response.headers["Access-Control-Allow-Credentials"] == "true"
+    assert response.headers["Access-Control-Allow-Methods"] == "*"
+    assert response.headers["Access-Control-Allow-Headers"] == "*"
+
+
+def test_cors_disallowed_origin():
+    response = client.get("/", headers={"origin": "https://notallowed.example.com"})
+    assert response.status_code == 200
+    assert "Access-Control-Allow-Origin" not in response.headers
+    assert "Access-Control-Allow-Credentials" not in response.headers
+    assert "Access-Control-Allow-Methods" not in response.headers
+    assert "Access-Control-Allow-Headers" not in response.headers
+
+
+def test_cors_preflight():
+    response = client.options(
+        "/protected",
+        headers={
+            "origin": "https://assistify-ui-ci.vercel.app",
+            "Access-Control-Request-Method": "GET",
+            "Access-Control-Request-Headers": "authorization",
+        },
+    )
+    assert response.status_code == 200
+    assert response.headers["Access-Control-Allow-Origin"] == "https://assistify-ui-ci.vercel.app"
+    assert response.headers["Access-Control-Allow-Credentials"] == "true"
+    assert response.headers["Access-Control-Allow-Methods"] == "GET, POST, OPTIONS"
+    assert response.headers["Access-Control-Allow-Headers"] == "authorization, content-type"
+
+```
+## api.py
+
+### Summary
+
+This code defines a FastAPI application with CORS middleware and several endpoints. Here's a summary:
+
+1. **Root Endpoint**: Returns a welcome message.
+2. **Random Number Endpoint**: Returns a random number between 1 and 100.
+3. **Protected Route**: Requires user authentication; returns a personalized message with user info.
+4. **Send Message Endpoint**: Receives a message and returns a chatbot's response; requires user authentication and uses the chat service.
+5. **Get Assistants Endpoint**: Retrieves a list of available assistants from OpenAI; requires user authentication.
+
+Additionally, dependencies for services like chat and OpenAI client, alongside user authentication via token verification, are managed using FastAPI's dependency injection system.
+
+```py
+import random
+
+from ai_assistant_manager.clients.openai_api import OpenAIClient
+from fastapi import Depends, FastAPI
+
+from assistify_api.app.assistants.available_assistants import assistants_whitelist
+from assistify_api.app.assistants.list_assistants_response import AssistantsResponse, ListAssistantsResponse
+from assistify_api.app.auth.user import User
+from assistify_api.app.chat.send_message import SendMessageRequest, SendMessageResponse
+from assistify_api.app.cors.custom_cors_middleware import CustomCORSMiddleware
+from assistify_api.app.dependencies.api_dependencies import get_chat_service, get_openai_client
+from assistify_api.services.chat import ChatService
+
+from .auth.verify_token import verify_token
+
+api = FastAPI()
+
+api.add_middleware(CustomCORSMiddleware)
+
+
+@api.get("/")
+def read_root():
+    return {"message": "Hello Assistify"}
+
+
+@api.get("/random-number")
+def read_random_number():
+    number = random.randint(1, 100)
+    return {"message": f"Your random number is {number}"}
+
+
+@api.get("/protected")
+def protected_route(user_info: User = Depends(verify_token)):
+    return {"message": f"Hello {user_info.name}, your email is {user_info.email}"}
+
+
+@api.post("/send-message")
+def send_message(
+    message: SendMessageRequest,
+    chat_service: ChatService = Depends(get_chat_service),
+    _: User = Depends(verify_token),
+):
+    """
+    Endpoint to receive a message. Requires authentication.
+
+    Args:
+        message (SendMessageRequest): The send message payload.
+        user_info (User): The authenticated user's information.
+
+    Returns:
+        SendMessageResponse: The chatbot's response.
+    """
+    response = chat_service.send_message(message=message.message)
+
+    return SendMessageResponse(response=response)
+
+
+@api.get("/assistants")
+def get_assistants(
+    open_ai_client: OpenAIClient = Depends(get_openai_client),
+    _: User = Depends(verify_token),
+):
+    response = open_ai_client.assistants_list()
+    return ListAssistantsResponse(
+        assistants=[
+            AssistantsResponse(id=assistant.id, model=assistant.model, name=assistant.name)
+            for assistant in response
+            if assistant.name in assistants_whitelist
+        ]
+    )
+
+```
+## chat.py
+
+### Summary
+
+This code defines a `ChatService` class for handling chat interactions using an OpenAI API. It includes:
+
+- Initialization with a `Chat` instance.
+- A `send_message` method that sends a message to the chat assistant, optionally within a specific conversation thread, and returns the assistant's response.
+
+```py
+from ai_assistant_manager.chats.chat import Chat
+
+
+class ChatService:
+    """
+    Service to handle chat interactions with OpenAI API.
+
+    Attributes:
+        api_client: The OpenAI API client.
+    """
+
+    def __init__(self, chat: Chat):
+        """
+        Initializes the ChatService with an Chat.
+
+        Args:
+            chat: The ai_assistant_manager chat instance.
+        """
+        self.chat = chat
+
+    def send_message(self, message: str, thread_id: str | None = None) -> str:
+        """
+        Sends a message to the assistant and returns the chat completion.
+
+        Args:
+            message: The message to send.
+            thread_id: The optional thread ID for the conversation.
+
+        Returns:
+            The resulting chat completion.
+        """
+        self.chat.thread_id = thread_id if thread_id else self.chat.thread_id
+        self.chat.start()
+        return self.chat.send_user_message(message=message)
+
+```
+## chat_test.py
+
+### Summary
+
+This code defines a unit test for the `ChatService` class's `send_message` method using the `unittest.mock` library. It mocks the chat dependency, sets its return value, and verifies that the method's output and interactions with the mock are as expected.
+
+```py
+from unittest.mock import Mock
+
+from .chat import ChatService
+
+
+def test_chat_service():
+    """
+    Test the ChatService's chat method.
+    """
+    mock_chat = Mock()
+    mock_chat.send_user_message.return_value = "Hello, how can I help you?"
+    service = ChatService(chat=mock_chat)
+
+    message = "Hello"
+    thread_id = "thread_456"
+
+    result = service.send_message(message=message, thread_id=thread_id)
+
+    assert result == "Hello, how can I help you?"
+    mock_chat.send_user_message.assert_called_once_with(message=message)
+    assert mock_chat.thread_id == thread_id
+
+```
+## list_assistants_response.py
+
+### Summary
+
+This code defines two data models using Pydantic. 
+
+- `AssistantsResponse`: Represents an assistant's response with attributes `id`, `model`, and `name`.
+- `ListAssistantsResponse`: Represents a list of such assistant responses, stored in the attribute `assistants`.
+
+```py
+from pydantic import BaseModel
+
+
+class AssistantsResponse(BaseModel):
+    id: str
+    model: str
+    name: str
+
+
+class ListAssistantsResponse(BaseModel):
+    assistants: list[AssistantsResponse]
+
+```
+## fly.toml
+
+### Summary
+
+This configuration file for Fly.io sets up the "assistify-api" application. It specifies the primary region as 'ewr', configures the HTTP service to use port 8000 with HTTPS, and enables automatic start/stop of machines. It also defines a virtual machine with 1GB memory and a single shared CPU.
+
+```toml
+# fly.toml app configuration file generated for fast-chat-api on 2024-07-13T21:38:35-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'assistify-api'
+primary_region = 'ewr'
+
+[build]
+
+[http_service]
+internal_port = 8000
+force_https = true
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ['app']
+
+[[vm]]
+memory = '1gb'
+cpu_kind = 'shared'
+cpus = 1
+
+```
+## verify_token.py
+
+### Summary
+
+The code implements Google OAuth 2.0 authentication for a FastAPI application. It uses environment variables to fetch the Google client ID, and `HTTPBearer` for token-based authentication. The `verify_token` function validates the OAuth token, ensures the issuer is correct, and creates a `User` object from token details. If the token is invalid, an HTTP 401 Unauthorized error is raised. 
+
+Key components include:
+1. Loading environment variables.
+2. Setting up authentication dependencies.
+3. Verifying and decoding the OAuth 2.0 token.
+4. Constructing a user profile from the token information.
+
+```py
+import os
+
+from dotenv import load_dotenv
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from google.auth.transport import requests
+from google.oauth2 import id_token
+
+from assistify_api.app.auth.user import User
+
+load_dotenv()
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+
+security = HTTPBearer()
+
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
+        if idinfo["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
+            raise ValueError("Wrong issuer.")
+        return build_user_from_idinfo(idinfo)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+def build_user_from_idinfo(idinfo: dict) -> User:
+    return User(
+        email=idinfo["email"],
+        name=idinfo["name"],
+        name_given=idinfo["given_name"],
+        name_family=idinfo["family_name"],
+        picture=idinfo["picture"],
+    )
+
+```
+## ruff_defaults.toml
+
+### Summary
+
+This code is a configuration file for code formatting and linting:
+
+- Sets a line length limit of 120 characters.
+- Enables formatting for code within docstrings and limits their line length to 80 characters.
+- Bans all relative imports with flake8-tidy-imports.
+- Specifies "src" as a known first-party import with isort.
+- Configures flake8-pytest-style to not require parentheses for fixtures and marks.
+
+```toml
+line-length = 120
+
+[format]
+docstring-code-format = true
+docstring-code-line-length = 80
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[lint.isort]
+known-first-party = ["src"]
+
+[lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+```
+## custom_cors_middleware.py
+
+### Summary
+
+This code defines a custom CORS (Cross-Origin Resource Sharing) middleware for a FastAPI application. It allows requests from specific origins that match certain patterns (assistify subdomains on Vercel or Fly, or localhost on port 3000). The middleware handles OPTIONS requests by setting the necessary CORS headers and allows credentials, methods, and headers for both preflight and actual requests. If the request’s origin does not match the specified patterns, it is passed through without additional headers.
+
+```py
+import re
+
+from fastapi import Request, Response
+from starlette.middleware.base import BaseHTTPMiddleware
+
+
+# Custom CORS middleware to handle dynamic origins
+class CustomCORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        origin = request.headers.get("origin")
+        if origin and re.match(r"https://assistify.*\.(vercel\.app|fly\.dev)|http://localhost:3000", origin):
+            if request.method == "OPTIONS":
+                response = Response()
+                response.headers["Access-Control-Allow-Origin"] = origin
+                response.headers["Access-Control-Allow-Credentials"] = "true"
+                response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+                response.headers["Access-Control-Allow-Headers"] = "authorization, content-type"
+                return response
+            response = await call_next(request)
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            response.headers["Access-Control-Allow-Methods"] = "*"
+            response.headers["Access-Control-Allow-Headers"] = "*"
+            return response
+        return await call_next(request)
+
+```
+## api_test.py
+
+### Summary
+
+This code contains a series of tests for various routes in an API using FastAPI and pytest, with a focus on unauthorized and authorized access. 
+
+1. **Unauthorized Route Tests**: 
+   - Utilizes `pytest.mark.parametrize` to test different endpoints (`/`, `/protected`, `/send-message`, `/assistants`) with unauthorized access, asserting the expected status codes and responses.
+
+2. **Protected Route Test**: 
+   - Mocks an OAuth2 token verification and tests the `/protected` route, expecting a 200 status code and a personalized message response.
+
+3. **Send Message Test**:
+   - Mocks OAuth2 token verification and a chat service, sending a message to `/send-message` and expecting a valid response.
+
+4. **Get Assistants Test**:
+   - Mocks OAuth2 token verification and an OpenAI client, retrieving a list of assistants from `/assistants` and validating the response. 
+
+The use of `MagicMock` and `patch` helps simulate the behavior of external dependencies to ensure the API responds correctly under various conditions.
+
+```py
+from typing import Literal
+from unittest.mock import MagicMock, patch
+
+import pytest
+from fastapi.testclient import TestClient
+
+from assistify_api.conftest import mock_idinfo
+
+
+@pytest.mark.parametrize(
+    "route, verb, expected_status, expected_response",
+    [
+        ("/", "GET", 200, {"message": "Hello Assistify"}),
+        ("/protected", "GET", 401, None),
+        ("/send-message", "POST", 401, None),
+        ("/assistants", "GET", 401, None),
+    ],
+)
+def test_routes_unauthorized(
+    api_with_mocks: tuple[TestClient, MagicMock, MagicMock],
+    route: str,
+    verb: Literal["GET", "POST"],
+    expected_status: int,
+    expected_response: dict,
+):
+    """
+    Test various routes with unauthorized access.
+    """
+    api_client, _, _ = api_with_mocks
+
+    if verb == "GET":
+        response = api_client.get(route, headers={"Authorization": "Bearer invalid_token"})
+    else:
+        response = api_client.post(route, headers={"Authorization": "Bearer invalid_token"})
+
+    assert response.status_code == expected_status
+    if expected_response:
+        assert response.json() == expected_response
+
+
+@patch("assistify_api.app.auth.verify_token.id_token")
+def test_protected_route(
+    mock_id_token,
+    api_with_mocks: tuple[TestClient, MagicMock, MagicMock],
+):
+    api_client, _, _ = api_with_mocks
+
+    mock_id_token.verify_oauth2_token.return_value = mock_idinfo
+
+    response = api_client.get("/protected", headers={"Authorization": "Bearer fake_token"})
+
+    assert response.status_code == 200
+    assert response.json() == {"message": f"Hello {mock_idinfo['name']}, your email is {mock_idinfo['email']}"}
+
+
+@patch("assistify_api.app.auth.verify_token.id_token")
+def test_send_message(
+    mock_id_token,
+    api_with_mocks: tuple[TestClient, MagicMock, MagicMock],
+):
+    """
+    Test the /send-message endpoint with valid authentication and message payload.
+    """
+
+    api_client, mock_chat_service, _ = api_with_mocks
+
+    mock_chat_service.send_message.return_value = "What can I do for you?"
+    mock_id_token.verify_oauth2_token.return_value = mock_idinfo
+
+    response = api_client.post(
+        "/send-message", headers={"Authorization": "Bearer fake_token"}, json={"message": "Hello world"}
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"response": "What can I do for you?"}
+
+
+@patch("assistify_api.app.auth.verify_token.id_token")
+def test_get_assistants(
+    mock_id_token,
+    api_with_mocks: tuple[TestClient, MagicMock, MagicMock],
+):
+    """
+    Test the /send-message endpoint with valid authentication and message payload.
+    """
+    api_client, _, mock_openai_client = api_with_mocks
+
+    assistant_name_included = "Jasper Bell - Knowledge Bot"
+    assistant_name_not_included = "Assistant 2"
+
+    mock_assistant_included = MagicMock(id="1", model="gpt-4o")
+    mock_assistant_included.name = assistant_name_included
+    mock_assistant_not_included = MagicMock(id="2", model="gpt-4o")
+    mock_assistant_not_included.name = assistant_name_not_included
+    mock_openai_client.assistants_list.return_value = [
+        mock_assistant_included,
+        mock_assistant_not_included,
+    ]
+    mock_id_token.verify_oauth2_token.return_value = mock_idinfo
+
+    response = api_client.get("/assistants", headers={"Authorization": "Bearer fake_token"})
+
+    assert response.status_code == 200
+    assert response.json() == {"assistants": [{"id": "1", "model": "gpt-4o", "name": assistant_name_included}]}
+
+```
+## available_assistants.py
+
+### Summary
+
+The code defines a list named `assistants_whitelist` containing various assistant names and their associated roles or titles.
+
+```py
+assistants_whitelist = [
+    "Jasper Bell - Knowledge Bot",
+    "Assistify - Product Owner",
+    "YouTube Creator",
+    "AiDo - Virtual Head of Product - Alex Parker",
+    "Product Scout - Amazon Treasure Chat",
+    "Dr. Alistair Grey - Arxiv Librarian",
+    "R2-D2",
+    "Alex Mercer - Artium Creator",
+]
+
+```
+## .env.default
+
+### Summary
+
+This code sets up environment variables for an application. It assigns the OpenAI API key, Google client ID, and MongoDB connection string using values from existing environment variables. Note there is an error in the MongoDB connection string assignment as it repeats the Google client ID rather than using a MongoDB-specific variable.
+
+```default
+# OpenAI API Key
+OPENAI_API_KEY=${OPENAI_API_KEY}
+
+# Google Authentication
+GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+
+# MongoDB
+MONGODB_URI=${GOOGLE_CLIENT_ID}
+
+```

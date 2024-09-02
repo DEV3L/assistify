@@ -1,0 +1,521 @@
+# workflows
+
+## fly-deploy.yml
+
+### Summary
+
+This GitHub Actions workflow is triggered after the "End to End Integration" workflow completes successfully. It deploys an application to Fly.io and involves the following steps:
+
+1. Checking out the repository.
+2. Setting up Python 3.x.
+3. Installing dependencies using `hatch`.
+4. Running unit tests.
+5. Setting up Flyctl.
+6. Deploying the application to Fly.io.
+
+The deployment only proceeds if the preceding workflow is successful, using an API token stored in GitHub Secrets.
+
+```yml
+name: Deploy to Fly.io
+
+on:
+  workflow_run:
+    workflows: ["End to End Integration"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+    defaults:
+      run:
+        working-directory: ./assistify-api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install hatch
+          hatch env create
+
+      - name: Unit tests
+        run: |
+          hatch run test
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
+
+```
+## end-to-end-integration.yml
+
+### Summary
+
+This GitHub Actions configuration file named "End to End Integration" performs the following:
+
+1. **Trigger:** Runs on a push to the `main` branch.
+
+2. **Jobs:**
+   - **Deploy to Fly:** 
+     - Runs on `ubuntu-latest`. 
+     - Sets `FLY_API_TOKEN` from repository secrets. 
+     - Checks out the code and sets up Python 3.x.
+     - Installs dependencies (using `hatch`), runs unit tests, and deploys the `assistify-api` directory to Fly.
+
+   - **Deploy to Vercel:**
+     - Runs on `ubuntu-latest`.
+     - Sets Vercel deployment secrets (`VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`) from repository secrets.
+     - Checks out the code and sets up Node.js 18.
+     - Installs dependencies (using `yarn`), builds the project, runs tests, and deploys the `assistify-ui` directory to Vercel.
+
+   - **Run end-to-end tests:**
+     - Runs on `ubuntu-latest`. 
+     - Requires the previous two jobs to be completed.
+     - Sets various environment secrets for Playwright testing.
+     - Checks out the code and sets up Node.js 18.
+     - Installs dependencies, sets up Playwright with Chromium, saves session storage state, and runs end-to-end tests on the `assistify-ui` directory.
+     - Uploads Playwright screenshots if tests fail.
+
+```yml
+name: End to End Integration
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Deploy to Fly
+  deploy-to-fly-ci:
+    runs-on: ubuntu-latest
+    environment: CI
+
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+    defaults:
+      run:
+        working-directory: ./assistify-api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install hatch
+          hatch env create
+
+      - name: Unit tests
+        run: |
+          hatch run test
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only --app assistify-api-ci
+
+  # Deploy to Vercel
+  deploy-to-vercel-ci:
+    runs-on: ubuntu-latest
+    environment: CI
+
+    env:
+      # Vercel Deployment Secrets
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    defaults:
+      run:
+        working-directory: ./assistify-ui
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build project
+        run: yarn build
+
+      - name: Run tests
+        run: |
+          yarn upgrade
+          yarn test:ci
+
+      - name: Deploy to Vercel
+        run: |
+          vercel link --yes --project assistify-ui-ci --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+
+  # Run end-to-end tests
+  run-e2e-tests:
+    runs-on: ubuntu-latest
+    environment: CI
+
+    needs: [deploy-to-fly-ci, deploy-to-vercel-ci]
+
+    env:
+      # Playwright Test Secrets
+      BASE_URL: ${{ secrets.VERCEL_BASE_URL }}
+      GOOGLE_TEST_NAME: ${{ secrets.GOOGLE_TEST_NAME }}
+      GOOGLE_TEST_EMAIL: ${{ secrets.GOOGLE_TEST_EMAIL }}
+      GOOGLE_TEST_PASSWORD: ${{ secrets.GOOGLE_TEST_PASSWORD }}
+    defaults:
+      run:
+        working-directory: ./assistify-ui
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Install Playwright and Chromium
+        run: |
+          yarn add playwright
+          npx playwright install chromium
+
+      - name: Save CI session storage state
+        run: echo "${{ secrets.CI_STORAGE_STATE }}" | base64 --decode > storageState.json
+
+      - name: Run end-to-end tests
+        run: yarn test:e2e
+
+      - name: Upload Playwright screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots
+          path: assistify-ui/test-results/
+
+```
+## vercel-deploy.yml
+
+### Summary
+
+This GitHub Actions workflow, named "Deploy to Vercel," triggers after the "End to End Integration" workflow completes successfully. It sets up an Ubuntu environment, configures necessary secrets, checks out the code, installs dependencies, runs a build, tests the project, and deploys the application to Vercel with a production environment setting.
+
+```yml
+name: Deploy to Vercel
+
+on:
+  workflow_run:
+    workflows: ["End to End Integration"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+      VERCEL_ACCESS_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+
+    defaults:
+      run:
+        working-directory: ./assistify-ui
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build project
+        run: yarn build
+
+      - name: Run tests
+        run: |
+          yarn upgrade
+          yarn test:ci
+
+      - name: Deploy to Vercel
+        run: |
+          vercel pull --yes --environment=production --token=$VERCEL_ACCESS_TOKEN
+          vercel build --prod --token=$VERCEL_ACCESS_TOKEN
+          vercel deploy --prebuilt --prod --token=$VERCEL_ACCESS_TOKEN
+
+```
+## continuous-integration.yml
+
+### Summary
+
+This code is a configuration for a GitHub Actions workflow named "Continuous Integration" that triggers on any branch push.
+
+Three jobs are defined:
+1. **Tests API**
+   - Runs on the latest Ubuntu.
+   - Works within `./assistify-api` directory.
+   - Checks out code, sets up Python 3.12, installs dependencies using `hatch`, and runs unit tests.
+
+2. **Tests UI**
+   - Runs on the latest Ubuntu.
+   - Works within `./assistify-ui` directory.
+   - Checks out code, sets up Node.js 18, installs dependencies using `yarn`, builds the project, and runs UI tests in continuous integration mode.
+
+3. **Tests Agents - Assistify Product Owner**
+   - Runs on the latest Ubuntu.
+   - Works within `./agents/assistify-product-owner` directory.
+   - Similar to Test API: Checks out code, sets up Python 3.12, installs dependencies using `hatch`, and runs unit tests.
+
+```yml
+name: Continuous Integration
+
+on:
+  push:
+    branches: ["**"]
+
+jobs:
+  tests-api:
+    name: "Tests API"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./assistify-api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12.X"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install hatch
+          hatch env create
+
+      - name: Unit tests
+        run: |
+          hatch run test
+
+  tests-ui:
+    name: "Tests UI"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./assistify-ui
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build project
+        run: yarn build
+
+      - name: Run tests
+        run: |
+          yarn upgrade
+          yarn test:ci
+
+  tests-agents-assistify-product-owner:
+    name: "Tests Agents - Assistify Product Owner"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./agents/assistify-product-owner
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12.X"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install hatch
+          hatch env create
+
+      - name: Unit tests
+        run: |
+          hatch run test
+```
+## build-agent-assistify-product-owner.yml
+
+### Summary
+
+This GitHub Actions workflow named "Build Agent - Assistify Product Owner" includes the following steps:
+1. It triggers manually via a `workflow_dispatch` event with inputs for the Trello board name and OpenAI API key.
+2. The job runs on `ubuntu-latest` and sets environment variables from the provided inputs and secrets.
+3. The workflow executes the following steps:
+   - Checks out the repository code.
+   - Sets up a Python environment.
+   - Installs dependencies using `hatch`.
+   - Runs unit tests.
+   - Executes a Trello integration script.
+   - Runs code extraction scripts for various components (Assistify Product Owner, Assistify API, and Assistify UI) and moves the resulting files to specified paths.
+   - Uploads an artifact containing the Trello board's status.
+   - Executes a build step for the head of the product by moving the artifact and running the build process.
+
+Overall, this workflow automates the process of extracting and processing code information, integrating with Trello, and building outputs for the Assistify project.
+
+```yml
+name: Build Agent - Assistify Product Owner
+
+on:
+  workflow_dispatch:
+    inputs:
+      trello_board_name:
+        description: "Name of the Trello board"
+        required: true
+        default: "Assistify"
+      openai_api_key:
+        description: "OpenAI API key"
+        required: true
+        default: ""
+
+jobs:
+  run-build-agent-assistify-product-owner:
+    runs-on: ubuntu-latest
+
+    env:
+      OPENAI_API_KEY: ${{ github.event.inputs.openai_api_key }}
+      TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+      TRELLO_API_TOKEN: ${{ secrets.TRELLO_API_TOKEN }}
+      TRELLO_BOARD_NAME: ${{ github.event.inputs.trello_board_name }}
+
+    defaults:
+      run:
+        working-directory: ./agents/assistify-product-owner
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install hatch
+          hatch env create
+
+      - name: Unit tests
+        run: |
+          hatch run test
+
+      - name: Run Trello Integration
+        run: |
+          hatch run trello-extract
+
+      - name: Run Code Extraction (Agent - Assistify Product Owner)
+        run: |
+          hatch run summary .
+          mv tmp/assistify-product-owner.md data/files/code/assistify-product-owner.txt
+          rm -rf tmp
+
+      - name: Run Code Extraction (Assistify API)
+        run: |
+          hatch run summary "../../assistify-api"
+          mv tmp/assistify-api.md data/files/code/assistify-api.txt
+          rm -rf tmp
+
+      - name: Run Code Extraction (Assistify API)
+        run: |
+          hatch run summary "../../assistify-ui"
+          mv tmp/assistify-ui.md data/files/code/assistify-ui.txt
+          rm -rf tmp
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: trello-markdown-text
+          path: AiDo/Project/trello-extract/bin/${{ github.event.inputs.trello_board_name }} Status Trello Board.txt
+
+      - name: Run Build Head of Product
+        run: |
+          cd AiDo/Project/head-of-product
+          mv "../trello-extract/bin/${{ github.event.inputs.trello_board_name }} Status Trello Board.txt" ./data/Files
+          hatch run build
+
+```
+## assistant-build.yml
+
+### Summary
+
+This GitHub Actions workflow named "Build Assistant - Assistify Product Owner" is triggered manually with an OpenAI API key as an input. It runs on an Ubuntu machine, checks out the repository, sets up Python, installs dependencies using Hatch, runs unit tests, and builds the project while utilizing the provided OpenAI API key.
+
+```yml
+name: Build Assistant - Assistify Product Owner
+
+on:
+  workflow_dispatch:
+    inputs:
+      openai_api_key:
+        description: "OpenAI API key"
+        required: true
+        default: ""
+
+jobs:
+  run-build-assistant-assistify-product-owner:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./agents/assistify-product-owner
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Install Assistant dependencies
+        run: |
+          python -m pip install hatch
+          hatch env create
+      - name: Unit Assistant tests
+        run: |
+          hatch run test
+      - name: Run Build Assistant
+        env:
+          OPENAI_API_KEY: ${{ github.event.inputs.openai_api_key }}
+        run: |
+          hatch run build
+
+```

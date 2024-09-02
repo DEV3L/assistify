@@ -1,4 +1,4 @@
-name: Agent - Build - Assistify Product Owner
+name: Agent - Build - Concierge
 
 on:
   workflow_dispatch:
@@ -9,24 +9,25 @@ on:
         default: ""
 
 jobs:
-  run-agent-assistify-product-owner-build:
+  run-agent-assistify-concierge-build:
     runs-on: ubuntu-latest
 
     env:
       # OpenAI API
       OPENAI_API_KEY: ${{ github.event.inputs.openai_api_key }}
+      OPENAI_MODEL: "gpt-4o-mini"
       # Trello API
       TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
       TRELLO_API_TOKEN: ${{ secrets.TRELLO_API_TOKEN }}
       TRELLO_BOARD_NAME: "Assistify"
       # Agent Project
-      ASSISTANT_DESCRIPTION: "Product owner tech insights using AI for Assistify"
-      ASSISTANT_NAME: "Assistify - Product Owner"
-      DATA_FILE_PREFIX: "Assistify - Product Owner"
+      ASSISTANT_DESCRIPTION: "Concierge AI for Assistify"
+      ASSISTANT_NAME: "Assistify - Concierge"
+      DATA_FILE_PREFIX: "Assistify - Concierge"
 
     defaults:
       run:
-        working-directory: ./agents/assistify-product-owner
+        working-directory: ./agents/assistify-concierge
 
     steps:
       - uses: actions/checkout@v4
@@ -45,10 +46,10 @@ jobs:
         run: |
           hatch run trello-extract
 
-      - name: Run Code Extraction (Agent - Assistify Product Owner)
+      - name: Run Code Extraction (Agent - Assistify Concierge)
         run: |
           hatch run summary .
-          mv tmp/assistify-product-owner.md data/files/code/assistify-product-owner.txt
+          mv tmp/assistify-concierge.md data/files/code/assistify-concierge.txt
 
       - name: Run Code Extraction (Assistify API)
         run: |
@@ -65,6 +66,6 @@ jobs:
           hatch run summary "../../.github/workflows"
           mv tmp/workflows.md data/files/code/assistify-github-workflows.txt
 
-      - name: Run Build Agent Assistify Product Owner
+      - name: Run Build Agent Concierge
         run: |
           hatch run build
