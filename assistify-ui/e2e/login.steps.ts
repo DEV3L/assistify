@@ -28,12 +28,17 @@ export const loginToGoogle = async (page: Page): Promise<void> => {
     await page.waitForSelector('input[type="password"]');
     await page.fill('input[type="password"]', testUserPassword);
     await page.click("text=Next");
-
-    const continueSelector = "text=Continue";
-    await page.waitForSelector(continueSelector, { timeout: 2500 });
-    const continueButton = page.locator(continueSelector);
-    await continueButton.click();
+  } else {
+    await page.waitForTimeout(2500);
+    await page.waitForSelector(`[data-identifier="${testUserEmail}"]`);
+    await page.click(`[data-identifier="${testUserEmail}"]`);
+    await page.waitForTimeout(2500);
   }
+
+  const continueSelector = "text=Continue";
+  await page.waitForSelector(continueSelector, { timeout: 2500 });
+  const continueButton = page.locator(continueSelector);
+  await continueButton.click();
 
   await page.waitForSelector("text=Welcome to Assistify");
 };
