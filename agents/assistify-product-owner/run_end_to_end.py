@@ -11,7 +11,7 @@ from ai_assistant_manager.env_variables import ENV_VARIABLES, set_env_variables
 from ai_assistant_manager.prompts.prompt import get_prompt
 from loguru import logger
 
-from data_exporter import PROMPT_PATH, export_data
+from data_exporter import PROMPT_PATH, export_data, print_response
 
 
 def main(delete_assistant: bool):
@@ -40,7 +40,7 @@ def main(delete_assistant: bool):
     start_message = "Hello, what are we working on today?"
     print(f"\nMessage:\n{start_message}")
     start_response = chat.send_user_message(start_message)
-    print(f"\n{service.assistant_name}:\n{start_response}")
+    print_response(start_response, service.assistant_name)
 
     if delete_assistant:
         service.delete_assistant()
@@ -60,9 +60,7 @@ def _clear_bin_directory(bin_path: str) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Run the end-to-end assistant process."
-    )
+    parser = argparse.ArgumentParser(description="Run the end-to-end assistant process.")
     parser.add_argument(
         "--delete-assistant",
         action="store_true",

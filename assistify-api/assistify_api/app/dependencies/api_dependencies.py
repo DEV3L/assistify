@@ -21,5 +21,5 @@ def get_chat_service() -> ChatService:
     Returns:
         An instance of ChatService.
     """
-    knowledge_bot_assistant_id = "asst_hfWYAf31eJiR3LWa6UCrQNk9"
-    return ChatService(Chat(get_openai_client(), knowledge_bot_assistant_id))
+    hardcoded_assistant_id = "asst_ItUnERqeP6vwJWOU9Khc8g1P"
+    return ChatService(Chat(get_openai_client(), hardcoded_assistant_id))

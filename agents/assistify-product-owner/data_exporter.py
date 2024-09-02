@@ -1,3 +1,4 @@
+from ai_assistant_manager.chats.chat import ChatResponse
 from ai_assistant_manager.exporters.directory.directory_exporter import DirectoryExporter
 from ai_assistant_manager.exporters.files.files_exporter import FilesExporter
 
@@ -16,3 +17,8 @@ def export_data():
     FilesExporter("assistify-github-workflows.txt", directory="files/code").export()
     FilesExporter("assistify-product-owner.txt", directory="files/code").export()
     FilesExporter("assistify-ui.txt", directory="files/code").export()
+
+
+def print_response(response: ChatResponse, name: str):
+    print(f"\n{name}:\n{response.message}")
+    print(f"\nTokens: {response.token_count}")

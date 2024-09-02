@@ -7,7 +7,7 @@ from ai_assistant_manager.env_variables import ENV_VARIABLES, set_env_variables
 from ai_assistant_manager.prompts.prompt import get_prompt
 from loguru import logger
 
-from data_exporter import PROMPT_PATH, export_data
+from data_exporter import PROMPT_PATH, export_data, print_response
 
 SHOULD_DELETE_ASSISTANT = False
 
@@ -39,7 +39,7 @@ def main():
 
     if START_MESSAGE:
         start_response = chat.send_user_message(START_MESSAGE)
-        print(f"\n{service.assistant_name}:\n{start_response}")
+        print_response(start_response, service.assistant_name)
 
     while True:
         user_message = input("\nMessage: ")
@@ -51,7 +51,7 @@ def main():
             break
 
         chat_response = chat.send_user_message(user_message)
-        print(f"\n{service.assistant_name}:\n{chat_response}")
+        print_response(chat_response, service.assistant_name)
 
 
 if __name__ == "__main__":
