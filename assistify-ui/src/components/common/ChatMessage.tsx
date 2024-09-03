@@ -1,39 +1,59 @@
 import { Avatar, Box, Paper, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import React from "react";
+import { LoadingSkeleton } from "./LoadingSkeleton";
+
+interface Message {
+  text: string;
+  sender: "user" | "assistant";
+}
 
 interface ChatMessageProps {
-  userMessage: string;
-  botResponse: string;
+  messages: Message[];
+  isResponseLoading: boolean;
 }
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({
-  userMessage,
-  botResponse,
+  messages,
+  isResponseLoading,
 }) => {
   const { data: session } = useSession();
 
   return (
     <Box flex={1}>
-      <Box display="flex" alignItems="center" mb={2}>
-        <Avatar
-          sx={{ width: 40, height: 40, mr: -0.75, alignSelf: "flex-start" }}
-          src={session?.user?.image ?? ""}
-          alt="User Avatar"
-        />
-        <Paper elevation={3} sx={{ p: 2 }}>
-          <Typography variant="subtitle1">{userMessage}</Typography>
-        </Paper>
-      </Box>
-      <Box display="flex" alignItems="center" mt={2}>
-        <Paper elevation={3} sx={{ p: 2 }}>
-          <Typography variant="body1">{botResponse}</Typography>
-        </Paper>
-        <Avatar
-          src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p0nj1y1c0frdi728486q.png"
-          sx={{ width: 40, height: 40, ml: -0.75, alignSelf: "flex-end" }}
-        />
-      </Box>
+      {messages.map((message, index) => (
+        <Box
+          key={index}
+          display="flex"
+          alignItems="center"
+          mb={2}
+          flexDirection={message.sender === "user" ? "row" : "row-reverse"}
+        >
+          <Avatar
+            sx={{
+              width: 40,
+              height: 40,
+              mr: message.sender === "user" ? -0.75 : 0,
+              ml: message.sender === "assistant" ? -0.75 : 0,
+              alignSelf: message.sender === "user" ? "flex-start" : "flex-end",
+            }}
+            src={
+              message.sender === "user"
+                ? session?.user?.image ?? ""
+                : "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p0nj1y1c0frdi728486q.png"
+            }
+            alt={message.sender === "user" ? "User Avatar" : "Assistant Avatar"}
+          />
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Typography variant="body1">{message.text}</Typography>
+          </Paper>
+        </Box>
+      ))}
+      {isResponseLoading && (
+        <Box data-testid="chat-loading-skeleton">
+          <LoadingSkeleton />
+        </Box>
+      )}
     </Box>
   );
 };

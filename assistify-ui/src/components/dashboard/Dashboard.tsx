@@ -2,11 +2,9 @@ import { StyledCard } from "@/components/common/StyledCard";
 import { WelcomeMessage } from "@/components/common/WelcomeMessage";
 import { Message } from "@/components/Message";
 import { useMobile } from "@/hooks/useMobile";
-import { useSession } from "next-auth/react";
 
 export const DashBoard = () => {
   const mobile = useMobile();
-  const { data: session } = useSession();
 
   return (
     <>

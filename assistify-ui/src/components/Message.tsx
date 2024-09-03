@@ -1,28 +1,50 @@
 import { ChatMessage } from "@/components/common/ChatMessage";
-import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { usePostMessage } from "@/services/messages";
 import { SendMessageResponse } from "@/types/AssistifyTypes";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+export interface Message {
+  text: string;
+  sender: "user" | "assistant";
+}
+
+const welcomeMessage =
+  "Briefly introduce yourself! And give me one idea on what you could help me with today.";
 
 export const Message = () => {
-  const [data, setData] = useState<SendMessageResponse | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [userMessage, setUserMessage] = useState<string>("");
-  const { postMessage, isAuthenticated } = usePostMessage();
+  const [isResponseLoading, setIsResponseLoading] = useState<boolean>(false);
+  const { postMessage } = usePostMessage();
+
+  useEffect(() => {
+    sendMessage(welcomeMessage);
+  }, []);
 
   const handleSendMessage = async () => {
-    if (userMessage.trim() === "") return;
-    try {
-      const result = await postMessage(userMessage);
-      setData(result);
-    } catch (error) {
-      console.error("Failed to send message:", error);
-    }
+    sendMessage(userMessage);
   };
 
-  if (!isAuthenticated) {
-    return <div>Please log in to view this content.</div>;
-  }
+  const sendMessage = async (message: string) => {
+    try {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: message, sender: "user" },
+      ]);
+      setIsResponseLoading(true);
+      const result: SendMessageResponse = await postMessage(message);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: result.response, sender: "assistant" },
+      ]);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    } finally {
+      setIsResponseLoading(false);
+      setUserMessage("");
+    }
+  };
 
   return (
     <>
@@ -30,22 +52,28 @@ export const Message = () => {
         Chat with Assistify
       </Typography>
       <Box display="flex" flexDirection="column" alignItems="center">
-        <TextField
-          label="Type your message"
-          variant="outlined"
-          fullWidth
-          value={userMessage}
-          onChange={(e) => setUserMessage(e.target.value)}
+        <Box display="flex" flexDirection="row" width="100%" mb={2}>
+          <TextField
+            label="Type your message"
+            variant="outlined"
+            fullWidth
+            value={userMessage}
+            onChange={(e) => setUserMessage(e.target.value)}
+          />
+          <Button
+            sx={{ ml: 2 }}
+            variant="contained"
+            color="primary"
+            onClick={handleSendMessage}
+          >
+            Send
+          </Button>
+        </Box>
+        <ChatMessage
+          messages={messages}
+          isResponseLoading={isResponseLoading}
         />
-        <Button variant="contained" color="primary" onClick={handleSendMessage}>
-          Send
-        </Button>
       </Box>
-      {data ? (
-        <ChatMessage userMessage={userMessage} botResponse={data.response} />
-      ) : (
-        <LoadingSkeleton />
-      )}
     </>
   );
 };
