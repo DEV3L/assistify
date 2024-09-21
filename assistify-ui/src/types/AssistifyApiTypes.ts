@@ -11,17 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get Assistants
-         * @description Endpoint to retrieve a list of assistants.
-         *
-         *     Args:
-         *         assistants_service (AssistantsService): The service to handle assistant-related operations.
-         *         _ (User): The authenticated user, verified by the token.
-         *
-         *     Returns:
-         *         ListAssistantsResponse: A response object containing the list of assistants.
-         */
+        /** Get Assistants */
         get: operations["get_assistants_api_assistants_get"];
         put?: never;
         post?: never;
@@ -38,17 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get Assistants
-         * @description Endpoint to retrieve a list of assistants.
-         *
-         *     Args:
-         *         assistants_service (AssistantsService): The service to handle assistant-related operations.
-         *         _ (User): The authenticated user, verified by the token.
-         *
-         *     Returns:
-         *         ListAssistantsResponse: A response object containing the list of assistants.
-         */
+        /** Get Assistants */
         get: operations["get_assistants_api_assistants__get"];
         put?: never;
         post?: never;
@@ -65,21 +45,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get Assistant
-         * @description Endpoint to retrieve a specific assistant by ID.
-         *
-         *     Args:
-         *         assistant_id (int): The ID of the assistant to retrieve.
-         *         assistants_service (AssistantsService): The service to handle assistant-related operations.
-         *         _ (User): The authenticated user, verified by the token.
-         *
-         *     Returns:
-         *         AssistantResponse: A response object containing the assistant details.
-         *
-         *     Raises:
-         *         HTTPException: If no assistant with the given ID is found.
-         */
+        /** Get Assistant */
         get: operations["get_assistant_api_assistants__assistant_id___get"];
         put?: never;
         post?: never;
@@ -96,21 +62,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get Assistant
-         * @description Endpoint to retrieve a specific assistant by ID.
-         *
-         *     Args:
-         *         assistant_id (int): The ID of the assistant to retrieve.
-         *         assistants_service (AssistantsService): The service to handle assistant-related operations.
-         *         _ (User): The authenticated user, verified by the token.
-         *
-         *     Returns:
-         *         AssistantResponse: A response object containing the assistant details.
-         *
-         *     Raises:
-         *         HTTPException: If no assistant with the given ID is found.
-         */
+        /** Get Assistant */
         get: operations["get_assistant_api_assistants__assistant_id__get"];
         put?: never;
         post?: never;
@@ -150,16 +102,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Protected Route
-         * @description Protected endpoint that requires authentication.
-         *
-         *     Args:
-         *         user_info (User): The authenticated user's information.
-         *
-         *     Returns:
-         *         dict: A message containing the user's name and email.
-         */
+        /** Protected Route */
         get: operations["protected_route_protected_get"];
         put?: never;
         post?: never;
@@ -181,14 +124,6 @@ export interface paths {
         /**
          * Send Message
          * @description Endpoint to receive a message. Requires authentication.
-         *
-         *     Args:
-         *         message (SendMessageRequest): The send message payload.
-         *         chat_service (ChatService): The chat service dependency.
-         *         _ (User): The authenticated user's information.
-         *
-         *     Returns:
-         *         SendMessageResponse: The chatbot's response.
          */
         post: operations["send_message_send_message_post"];
         delete?: never;
@@ -203,6 +138,17 @@ export interface components {
     schemas: {
         /** AssistantResponse */
         AssistantResponse: {
+            /**
+             *  Id
+             * Format: uuid
+             */
+            _id?: string;
+            /**
+             * Created
+             * Format: date-time
+             * @default 2024-09-21T19:12:29.323537Z
+             */
+            created: string;
             /** Assistant Id */
             assistant_id: string;
             /** Image */
@@ -212,10 +158,24 @@ export interface components {
             /** Name */
             name: string;
             /**
+             * Provider
+             * @constant
+             * @enum {string}
+             */
+            provider: "OpenAI";
+            /**
              * Status
              * @enum {string}
              */
             status: "Public" | "Market" | "Private";
+            /** Summary Full */
+            summary_full: string;
+            /** Summary Short */
+            summary_short: string;
+            /** Thread Ids */
+            thread_ids: string[];
+            /** Token Count */
+            token_count: number;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -257,7 +217,10 @@ export type $defs = Record<string, never>;
 export interface operations {
     get_assistants_api_assistants_get: {
         parameters: {
-            query?: never;
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -271,13 +234,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListAssistantsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
     get_assistants_api_assistants__get: {
         parameters: {
-            query?: never;
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -293,11 +268,23 @@ export interface operations {
                     "application/json": components["schemas"]["ListAssistantsResponse"];
                 };
             };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
     };
     get_assistant_api_assistants__assistant_id___get: {
         parameters: {
-            query?: never;
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
             header?: never;
             path: {
                 /** @description The ID of the assistant to retrieve */
@@ -329,7 +316,10 @@ export interface operations {
     };
     get_assistant_api_assistants__assistant_id__get: {
         parameters: {
-            query?: never;
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
             header?: never;
             path: {
                 /** @description The ID of the assistant to retrieve */
@@ -413,7 +403,10 @@ export interface operations {
     };
     send_message_send_message_post: {
         parameters: {
-            query?: never;
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;

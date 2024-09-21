@@ -8,11 +8,10 @@ from .models.version import Version
 from .mongodb import MongoDb
 
 
-def update_version_status(version_dao: VersionDao, version: str, status: Literal["Completed", "Failed"]) -> None:
-    """Update the status of a version in the database."""
-    version_model = version_dao.find_one(version, model_class=Version)
+def update_version_status(version_dao: VersionDao, version: Version, status: Literal["Completed", "Failed"]) -> None:
+    version_model = version_dao.find_one(str(version.id), model_class=Version)
     if not version_model:
-        version_model = Version(version=version)
+        version_model = Version(version=version.version)
     version_model.status = status
     version_dao.upsert(version_model)
 
@@ -40,15 +39,14 @@ def version_control(version: str) -> Callable:
                 return
 
             if not version_model:
-                version_model = Version(version=version)
-                version_dao.upsert(version_model)
+                version_model = version_dao.find_one(version_dao.upsert(Version(version=version)), model_class=Version)
 
             try:
                 result = func(db, version_dao, *args, **kwargs)
-                update_version_status(version_dao, version, "Completed")
+                update_version_status(version_dao, version_model, "Completed")
                 return result
             except Exception as e:
-                update_version_status(version_dao, version, "Failed")
+                update_version_status(version_dao, version_model, "Failed")
                 raise e
 
         return wrapper

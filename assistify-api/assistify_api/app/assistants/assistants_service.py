@@ -23,11 +23,18 @@ class AssistantsService:
         return ListAssistantsResponse(
             assistants=[
                 AssistantResponse(
+                    id=assistant.id,
+                    created=assistant.created,
                     assistant_id=assistant.assistant_id,
                     image=assistant.image,
                     model=assistant.model,
                     name=assistant.name,
+                    provider=assistant.provider,
                     status=assistant.status,
+                    summary_full=assistant.summary_full,
+                    summary_short=assistant.summary_short,
+                    thread_ids=assistant.thread_ids,
+                    token_count=assistant.token_count,
                 )
                 for assistant in assistants
             ]
