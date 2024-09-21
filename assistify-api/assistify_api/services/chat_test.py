@@ -4,12 +4,9 @@ from .chat import ChatService
 
 
 def test_chat_service():
-    """
-    Test the ChatService's chat method.
-    """
     mock_chat = Mock()
     mock_chat.send_user_message.return_value = "Hello, how can I help you?"
-    service = ChatService(chat=mock_chat)
+    service = ChatService(chat=mock_chat, threads_dao=Mock())
 
     message = "Hello"
     thread_id = "thread_456"

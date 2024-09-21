@@ -2,6 +2,7 @@ from typing import Literal
 from unittest.mock import MagicMock, patch
 
 import pytest
+from ai_assistant_manager.chats.chat_response import ChatResponse
 from fastapi.testclient import TestClient
 
 from assistify_api.conftest import mock_idinfo
@@ -61,13 +62,9 @@ def test_send_message(
     mock_id_token,
     api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
 ):
-    """
-    Test the /send-message endpoint with valid authentication and message payload.
-    """
-
     api_client, mock_chat_service, _ = api_with_mocks
 
-    mock_chat_service.send_message.return_value = "What can I do for you?"
+    mock_chat_service.send_message.return_value = ChatResponse(message="What can I do for you?", token_count=0)
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 
     response = api_client.post(
