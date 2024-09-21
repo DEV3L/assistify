@@ -6,11 +6,16 @@ from .threads_service import ThreadsService
 
 
 def test_list_threads(mongo_db: Database):
-    """
-    Test the get_assistants method of AssistantsService.
-    """
     service = ThreadsService(mongo_db)
-    thread_id = service.upsert(Thread(user_id="user_id", thread_id="thread_id", assistant_id="assistant_id"))
+    thread_id = service.upsert(
+        Thread(
+            user_id="user_id",
+            assistant_id="assistant_id",
+            assistant_name="assistant_name",
+            model="model",
+            provider_thread_id="provider_thread_id",
+        )
+    )
 
     threads = service.list()
 

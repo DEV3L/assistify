@@ -55,6 +55,6 @@ def send_message(
     """
     Endpoint to receive a message. Requires authentication.
     """
-    thread_id = chat_service.get_or_create_thread(user.email)
-    response = chat_service.send_message(message.message, thread_id=thread_id)
+    thread = chat_service.get_or_create_thread(user.email)
+    response = chat_service.send_message(message.message, thread=thread)
     return SendMessageResponse(response=response.message)
