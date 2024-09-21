@@ -25,7 +25,7 @@ class MongoDb:
             logger.info("Connecting to MongoDb")
             # Use the provided URI or fallback to the environment variable
             mongodb_uri = mongodb_uri or ENV_VARIABLES.mongodb_uri
-            client = pymongo.MongoClient(mongodb_uri, server_api=ServerApi("1"))
+            client = pymongo.MongoClient(mongodb_uri, server_api=ServerApi("1"), uuidRepresentation="standard")
 
             cls.db = client[ENV_VARIABLES.mongodb_db]
 

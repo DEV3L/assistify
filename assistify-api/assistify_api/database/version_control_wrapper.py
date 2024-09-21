@@ -10,7 +10,7 @@ from .mongodb import MongoDb
 
 def update_version_status(version_dao: VersionDao, version: str, status: Literal["Completed", "Failed"]) -> None:
     """Update the status of a version in the database."""
-    version_model = version_dao.find_one(version)
+    version_model = version_dao.find_one(version, model_class=Version)
     if not version_model:
         version_model = Version(version=version)
     version_model.status = status
@@ -31,7 +31,7 @@ def version_control(version: str) -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(db: MongoDb, version_dao: VersionDao, *args: Any, **kwargs: Any) -> Any:
-            version_model = version_dao.find_one(version)
+            version_model = version_dao.find_one(version, model_class=Version)
 
             if version_model and version_model.status == "Completed":
                 logger.info(f"Skipping migration {version} as it has already been completed")

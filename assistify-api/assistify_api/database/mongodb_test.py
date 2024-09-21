@@ -16,7 +16,9 @@ def test_mongodb_instance_only_ever_called_once(
     result_db = MongoDb.instance()  # First call to instance, should create MongoClient
     MongoDb.instance()  # Second call to instance, should reuse the existing MongoClient
 
-    mock_pymongo.MongoClient.assert_called_with(ENV_VARIABLES.mongodb_uri, server_api=mocker_server_api.return_value)
+    mock_pymongo.MongoClient.assert_called_with(
+        ENV_VARIABLES.mongodb_uri, server_api=mocker_server_api.return_value, uuidRepresentation="standard"
+    )
     assert mock_pymongo.MongoClient.call_count == 1
     assert mock_pymongo.MongoClient.return_value[ENV_VARIABLES.mongodb_db] == result_db
     assert mock_logger.info.called

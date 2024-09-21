@@ -1,19 +1,19 @@
+from datetime import UTC, datetime
 from typing import Literal
 from uuid import UUID
 
-from bson import ObjectId
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base import Base
 
 
-class Assistant(BaseModel):
-    id: UUID = Field(None, alias="_id")
-    name: str
+class Assistant(Base):
     assistant_id: str  # ID from OpenAI or other service
-    model: str  # e.g., gpt-4o
-    status: Literal["Public", "Market", "Private"] = Field(default="Private", alias="status")
+    created: datetime = datetime.now(UTC)
+    id: UUID = Field(None, alias="_id")
     image: str = Field(default="")
-
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
+    is_available: bool = True
+    model: str  # e.g., gpt-4o
+    name: str
+    provider: Literal["OpenAI"] = Field(default="OpenAI", alias="provider")
+    status: Literal["Public", "Market", "Private"] = Field(default="Private", alias="status")

@@ -15,11 +15,11 @@ def run(db: MongoDb, *_):
     logger.info(f"Running migration {version}")
 
     assistant = Assistant(
-        name="Assistify - Concierge",
         assistant_id="asst_0sd6SgqvyDhwZW8wuwdoHFQb",
-        model="gpt-4o-mini",
-        status="Public",
         image="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p0nj1y1c0frdi728486q.png",
+        model="gpt-4o-mini",
+        name="Assistify - Concierge",
+        status="Public",
     )
 
     assistants_dao = AssistantsDao(db)

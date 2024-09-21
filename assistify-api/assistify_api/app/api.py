@@ -1,8 +1,7 @@
 from fastapi import Depends, FastAPI
-from pymongo.database import Database
 
 from assistify_api.database.dao.version_dao import VersionDao
-from assistify_api.database.mongodb import MongoDb
+from assistify_api.database.models.version import Version
 from assistify_api.services.chat import ChatService
 
 from .assistants.assistants_router import router as assistants_router
@@ -37,18 +36,8 @@ def read_root() -> dict:
 
 
 @api.get("/protected")
-def protected_route(user_info: User = Depends(verify_token), db: Database = Depends(MongoDb.instance)) -> dict:
-    """
-    Protected endpoint that requires authentication.
-
-    Args:
-        user_info (User): The authenticated user's information.
-
-    Returns:
-        dict: A message containing the user's name and email.
-    """
-    version_dao = VersionDao(db)
-    versions = version_dao.find_all()
+def protected_route(user_info: User = Depends(verify_token), version_dao: VersionDao = Depends(VersionDao)) -> dict:
+    versions = version_dao.find_all(model_class=Version)
     latest_version = versions[-1]
 
     return {
@@ -61,19 +50,11 @@ def protected_route(user_info: User = Depends(verify_token), db: Database = Depe
 def send_message(
     message: SendMessageRequest,
     chat_service: ChatService = Depends(get_chat_service),
-    _: User = Depends(verify_token),
+    user: User = Depends(verify_token),
 ) -> SendMessageResponse:
     """
     Endpoint to receive a message. Requires authentication.
-
-    Args:
-        message (SendMessageRequest): The send message payload.
-        chat_service (ChatService): The chat service dependency.
-        _ (User): The authenticated user's information.
-
-    Returns:
-        SendMessageResponse: The chatbot's response.
     """
-    response = chat_service.send_message(message=message.message)
-
+    thread_id = chat_service.get_or_create_thread(user.email)
+    response = chat_service.send_message(message.message, thread_id=thread_id)
     return SendMessageResponse(response=response)
