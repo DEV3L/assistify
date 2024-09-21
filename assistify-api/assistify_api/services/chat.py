@@ -2,8 +2,8 @@ from ai_assistant_manager.chats.chat import Chat
 
 from assistify_api.database.dao.assistants_dao import AssistantsDao
 from assistify_api.database.dao.threads_dao import ThreadsDao
+from assistify_api.database.models.assistant import Assistant
 from assistify_api.database.models.thread import Thread
-from assistify_api.database.models.user import Assistant
 
 
 class ChatService:

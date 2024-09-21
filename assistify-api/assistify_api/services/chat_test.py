@@ -1,15 +1,15 @@
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 from .chat import ChatService
 
 
 def test_chat_service():
-    mock_chat = Mock()
+    mock_chat = MagicMock()
     mock_chat.send_user_message.return_value = "Hello, how can I help you?"
-    service = ChatService(chat=mock_chat, assistant=Mock(), threads_dao=Mock(), assistants_dao=Mock())
+    service = ChatService(chat=mock_chat, assistant=MagicMock(), threads_dao=MagicMock(), assistants_dao=MagicMock())
 
     message = "Hello"
-    thread = Mock()
+    thread = MagicMock()
 
     result = service.send_message(message=message, thread=thread)
 

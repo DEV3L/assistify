@@ -31,8 +31,10 @@ def version_control(version: str) -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(db: MongoDb, version_dao: VersionDao, *args: Any, **kwargs: Any) -> Any:
-            version_model = version_dao.find_one(version, model_class=Version)
-
+            versions: list[Version] = version_dao.find_all(model_class=Version)
+            version_model = next(
+                (version_model for version_model in versions if version_model.version == version), None
+            )
             if version_model and version_model.status == "Completed":
                 logger.info(f"Skipping migration {version} as it has already been completed")
                 return

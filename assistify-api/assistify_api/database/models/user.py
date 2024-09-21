@@ -6,7 +6,7 @@ from pydantic import Field
 from .base import Base
 
 
-class Assistant(Base):
+class User(Base):
     assistant_id: str  # ID from OpenAI or other service
     created: datetime = datetime.now(UTC)
     image: str = Field(default="")
@@ -20,5 +20,5 @@ class Assistant(Base):
     thread_ids: list[str] = Field(default_factory=list)
     token_count: int = 0
 
-    # families
+    # family
     assistant_ids: list[str] = Field(default_factory=list)

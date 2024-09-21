@@ -37,11 +37,8 @@ def test_update_version_status_updates_existing_version():
 
 
 def test_version_control_decorator_skips_completed_migration():
-    """
-    Test that the version_control decorator skips the migration if the version is already completed.
-    """
     version_dao = MagicMock(spec=VersionDao)
-    version_dao.find_one.return_value = Version(version="1.0.0", status="Completed")
+    version_dao.find_all.return_value = [Version(version="1.0.0", status="Completed")]
     db = MagicMock(spec=MongoDb)
 
     @version_control("1.0.0")
