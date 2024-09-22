@@ -15,5 +15,5 @@ export const AssistantStatusIcon = ({
 
   const IconComponent = statusIconMap[status] || Public;
 
-  return <IconComponent />;
+  return <IconComponent sx={{ fontSize: ".9rem" }} />;
 };
