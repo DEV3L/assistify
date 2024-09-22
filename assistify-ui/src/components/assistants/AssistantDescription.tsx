@@ -13,5 +13,7 @@ interface AssistantDescriptionProps {
 export const AssistantDescription = ({
   summary,
 }: AssistantDescriptionProps): JSX.Element => (
-  <Typography variant="body2">{summary}</Typography>
+  <Typography variant="body2">
+    {summary.length == 0 ? "No summary available" : summary}
+  </Typography>
 );

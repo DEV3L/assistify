@@ -72,7 +72,9 @@ export const AssistantCard = ({
               </IconButton>
             </Tooltip>
           }
-          title={assistant.name}
+          title={
+            assistant.name.length == 0 ? "Unnamed Assistant" : assistant.name
+          }
           subheader={
             <Box display="flex" alignItems="center">
               <AssistantStatus
@@ -89,13 +91,14 @@ export const AssistantCard = ({
           <Box mt={1}>
             <Typography variant="caption">
               Threads: {assistant.thread_ids.length} | Tokens Consumed:{" "}
-              {assistant.token_count}
+              {assistant.token_count ?? 0}
             </Typography>
           </Box>
         </CardContent>
       </Card>
 
       <AssistantDetailsDialog
+        data-testid="assistant-details-dialog"
         open={detailsOpen}
         onClose={handleDetailsClose}
         assistant={assistant}

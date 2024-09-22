@@ -21,7 +21,7 @@ const mockAssistant: Assistant = {
 };
 
 describe("AssistantCard", () => {
-  it("renders assistant name and image", () => {
+  it("renders assistant name and image correctly", () => {
     render(<AssistantCard assistant={mockAssistant} />);
 
     expect(screen.getByText("Test Assistant")).toBeInTheDocument();
@@ -31,31 +31,25 @@ describe("AssistantCard", () => {
     expect(avatarImage.src).toContain("test-image.jpg");
   });
 
-  it("opens details dialog on info icon click", () => {
+  it("opens assistant details dialog when info icon is clicked", () => {
     render(<AssistantCard assistant={mockAssistant} />);
 
-    const infoButton = screen.getByRole("button", {
-      name: /detailed description/i,
-    });
+    const infoButton = screen.getByLabelText("Detailed Description");
     fireEvent.click(infoButton);
 
-    expect(
-      screen.getByText("Detailed description of the test assistant.")
-    ).toBeInTheDocument();
+    expect(screen.getByText(mockAssistant.summary_full)).toBeInTheDocument();
   });
 
-  it("opens image modal on avatar click", () => {
+  it("opens assistant image modal when avatar is clicked", () => {
     render(<AssistantCard assistant={mockAssistant} />);
 
-    const avatar = screen.getByAltText("Test Assistant");
-    fireEvent.click(avatar);
+    const avatarImage = screen.getByAltText("Test Assistant");
+    fireEvent.click(avatarImage);
 
-    expect(
-      screen.getByRole("img", { name: /test assistant/i })
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("assistant-modal-title")).toBeInTheDocument();
   });
 
-  it("displays assistant status, model, and provider", () => {
+  it("displays status, model, and provider correctly", () => {
     render(<AssistantCard assistant={mockAssistant} />);
 
     expect(screen.getByText(new RegExp(status, "i"))).toBeInTheDocument();
@@ -69,5 +63,52 @@ describe("AssistantCard", () => {
     expect(
       screen.getByText(/Threads: 2 \| Tokens Consumed: 1234/i)
     ).toBeInTheDocument();
+  });
+
+  it("handles missing image gracefully", () => {
+    const assistantWithoutImage = { ...mockAssistant, image: "" };
+    render(<AssistantCard assistant={assistantWithoutImage} />);
+
+    expect(screen.getByTestId("PersonIcon")).toBeInTheDocument();
+  });
+
+  it("handles missing summary gracefully", () => {
+    const assistantWithoutSummary = { ...mockAssistant, summary_short: "" };
+    render(<AssistantCard assistant={assistantWithoutSummary} />);
+
+    expect(screen.getByText("No summary available")).toBeInTheDocument();
+  });
+
+  it("handles missing assistant name gracefully", () => {
+    const assistantWithoutName = { ...mockAssistant, name: "" };
+    render(<AssistantCard assistant={assistantWithoutName} />);
+
+    expect(screen.getByText("Unnamed Assistant")).toBeInTheDocument();
+  });
+
+  it("handles missing thread IDs and token count gracefully", () => {
+    const assistantWithoutThreads = {
+      ...mockAssistant,
+      thread_ids: [],
+      token_count: 0,
+    };
+    render(<AssistantCard assistant={assistantWithoutThreads} />);
+
+    expect(
+      screen.getByText(/Threads: 0 \| Tokens Consumed: 0/i)
+    ).toBeInTheDocument();
+  });
+
+  it("displays large images correctly", () => {
+    const assistantWithLargeImage = {
+      ...mockAssistant,
+      image: "large-image.jpg",
+    };
+    render(<AssistantCard assistant={assistantWithLargeImage} />);
+
+    const avatarImage = screen.getByAltText(
+      "Test Assistant"
+    ) as HTMLImageElement;
+    expect(avatarImage.src).toContain("large-image.jpg");
   });
 });

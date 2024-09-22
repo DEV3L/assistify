@@ -32,7 +32,9 @@ export const AssistantImageModal: FC<AssistantImageModalProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{assistantName}</DialogTitle>
+      <DialogTitle data-testid="assistant-modal-title">
+        {assistantName}
+      </DialogTitle>
       <DialogContent>
         <img src={imageUrl} alt={assistantName} style={{ width: "100%" }} />
       </DialogContent>

@@ -24,6 +24,7 @@ export const SideMenuItem = ({
 
   return (
     <Link
+      aria-label={`${text} link`}
       href={href ?? "#"}
       passHref
       onClick={() => {
