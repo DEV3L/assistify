@@ -15,7 +15,7 @@ def test_update_version_status_creates_new_version():
     version_dao = MagicMock(spec=VersionDao)
     version_dao.find_one.return_value = None
 
-    update_version_status(version_dao, "1.0.0", "Completed")
+    update_version_status(version_dao, Version(version="1.0.0"), "Completed")
 
     version_dao.upsert.assert_called_once()
     assert version_dao.upsert.call_args[0][0].version == "1.0.0"
@@ -30,7 +30,7 @@ def test_update_version_status_updates_existing_version():
     version_dao = MagicMock(spec=VersionDao)
     version_dao.find_one.return_value = version
 
-    update_version_status(version_dao, "1.0.0", "Completed")
+    update_version_status(version_dao, Version(version="1.0.0"), "Completed")
 
     version_dao.upsert.assert_called_once()
     assert version_dao.upsert.call_args[0][0].status == "Completed"
@@ -41,7 +41,7 @@ def test_version_control_decorator_skips_completed_migration():
     version_dao.find_all.return_value = [Version(version="1.0.0", status="Completed")]
     db = MagicMock(spec=MongoDb)
 
-    @version_control("1.0.0")
+    @version_control(version="1.0.0")
     def mock_migration(*_):
         return "Migration Executed"
 
@@ -56,7 +56,7 @@ def test_version_control_decorator_executes_and_updates_status():
     Test that the version_control decorator executes the migration and updates the status to completed.
     """
     version_dao = MagicMock(spec=VersionDao)
-    version_dao.find_one.return_value = None
+    version_dao.find_one.return_value = Version(version="1.0.0", status="Pending")
     db = MagicMock(spec=MongoDb)
 
     @version_control("1.0.0")
@@ -75,10 +75,10 @@ def test_version_control_decorator_handles_exception_and_updates_status():
     Test that the version_control decorator handles exceptions during migration and updates the status to failed.
     """
     version_dao = MagicMock(spec=VersionDao)
-    version_dao.find_one.return_value = None
+    version_dao.find_one.return_value = Version(version="1.0.0", status="Completed")
     db = MagicMock(spec=MongoDb)
 
-    @version_control("1.0.0")
+    @version_control(version="1.0.0")
     def mock_migration(*_):
         raise Exception("Migration Failed")
 

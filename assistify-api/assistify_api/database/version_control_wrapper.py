@@ -39,7 +39,9 @@ def version_control(version: str) -> Callable:
                 return
 
             if not version_model:
-                version_model = version_dao.find_one(version_dao.upsert(Version(version=version)), model_class=Version)
+                version_model = version_dao.find_one(
+                    version_dao.upsert(Version(version=version, status="Pending")), model_class=Version
+                )
 
             try:
                 result = func(db, version_dao, *args, **kwargs)

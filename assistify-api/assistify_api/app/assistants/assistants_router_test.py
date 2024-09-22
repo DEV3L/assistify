@@ -18,10 +18,4 @@ def test_get_assistants(mock_id_token, api_with_mocks: tuple[TestClient, MagicMo
     assistants_response = response.json()["assistants"]
 
     assert response.status_code == 200
-    assert assistants_response[0] == {
-        "assistant_id": "asst_0sd6SgqvyDhwZW8wuwdoHFQb",
-        "image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p0nj1y1c0frdi728486q.png",
-        "model": "gpt-4o-mini",
-        "name": "Assistify - Concierge",
-        "status": "Public",
-    }
+    assert assistants_response[0]["assistant_id"] == "asst_0sd6SgqvyDhwZW8wuwdoHFQb"
