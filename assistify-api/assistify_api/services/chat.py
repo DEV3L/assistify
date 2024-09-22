@@ -17,7 +17,15 @@ class ChatService:
         self.chat.thread_id = thread.provider_thread_id
         self.chat.start()
 
-        return self.chat.send_user_message(message=message)
+        response = self.chat.send_user_message(message=message)
+
+        thread.token_count = thread.token_count + response.token_count
+        self.threads_dao.upsert(thread)
+
+        self.assistant.token_count = self.assistant.token_count + response.token_count
+        self.assistants_dao.upsert(self.assistant)
+
+        return response
 
     def get_or_create_thread(self, user_id: str, thread_id: str = None) -> Thread:
         if not thread_id:
