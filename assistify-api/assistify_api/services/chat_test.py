@@ -8,7 +8,12 @@ from .chat import ChatService
 def test_chat_service():
     mock_chat = MagicMock()
     mock_chat.send_user_message.return_value = ChatResponse(message="Hello, how can I help you?", token_count=10)
-    service = ChatService(chat=mock_chat, assistant=MagicMock(), threads_dao=MagicMock(), assistants_dao=MagicMock())
+    service = ChatService(
+        chat=mock_chat,
+        assistant=MagicMock(),
+        assistants_dao=MagicMock(),
+        threads_dao=MagicMock(),
+    )
 
     message = "Hello"
     thread = MagicMock(token_count=0)

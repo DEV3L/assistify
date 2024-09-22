@@ -3,15 +3,22 @@ from ai_assistant_manager.chats.chat import Chat
 from assistify_api.database.dao.assistants_dao import AssistantsDao
 from assistify_api.database.dao.threads_dao import ThreadsDao
 from assistify_api.database.models.assistant import Assistant
+from assistify_api.database.models.message import Message
 from assistify_api.database.models.thread import Thread
 
 
 class ChatService:
-    def __init__(self, chat: Chat, assistant: Assistant, threads_dao: ThreadsDao, assistants_dao: AssistantsDao):
+    def __init__(
+        self,
+        chat: Chat,
+        assistant: Assistant,
+        assistants_dao: AssistantsDao,
+        threads_dao: ThreadsDao,
+    ):
         self.chat = chat
         self.assistant = assistant
-        self.threads_dao = threads_dao
         self.assistants_dao = assistants_dao
+        self.threads_dao = threads_dao
 
     def send_message(self, message: str, *, thread: Thread):
         self.chat.thread_id = thread.provider_thread_id
@@ -19,6 +26,23 @@ class ChatService:
 
         response = self.chat.send_user_message(message=message)
 
+        user_message = Message(
+            thread_id=str(thread.id),
+            message=message,
+            role="user",
+            status="Complete",
+            token_count=0,
+        )
+        assistant_response = Message(
+            thread_id=str(thread.id),
+            message=response.message,
+            role="assistant",
+            status="Complete",
+            token_count=response.token_count,
+        )
+
+        thread.messages.append(user_message)
+        thread.messages.append(assistant_response)
         thread.token_count = thread.token_count + response.token_count
         self.threads_dao.upsert(thread)
 

@@ -13,7 +13,8 @@ def get_openai_client() -> OpenAIClient:
 
 
 def get_chat_service(
-    threads_dao: ThreadsDao = Depends(ThreadsDao), assistants_dao: AssistantsDao = Depends(AssistantsDao)
+    assistants_dao: AssistantsDao = Depends(AssistantsDao),
+    threads_dao: ThreadsDao = Depends(ThreadsDao),
 ) -> ChatService:
     assistants: Assistant = [
         assistant
@@ -25,7 +26,7 @@ def get_chat_service(
         raise ValueError("Assistant not found")
 
     return ChatService(
-        Chat(get_openai_client(), assistants[0].assistant_id), assistants[0], threads_dao, assistants_dao
+        Chat(get_openai_client(), assistants[0].assistant_id), assistants[0], assistants_dao, threads_dao
     )
 
 
