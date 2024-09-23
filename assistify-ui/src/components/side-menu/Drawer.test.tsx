@@ -56,4 +56,17 @@ describe("Drawer", () => {
     );
     expect(screen.getAllByText("Assistants").length).toBeGreaterThan(0);
   });
+
+  it("renders the user details link correctly", () => {
+    renderWithProviders(
+      <Drawer
+        drawerOpen={false}
+        handleDisplayToggle={() => {}}
+        drawerWidth={240}
+        drawerExpanded={true}
+        currentPath="/user"
+      />
+    );
+    expect(screen.getByText("User Details")).toBeInTheDocument();
+  });
 });

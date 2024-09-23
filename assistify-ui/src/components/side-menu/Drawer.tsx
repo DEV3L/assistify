@@ -1,9 +1,10 @@
 import { SideMenuItem } from "@/components/side-menu/SideMenuItem";
 import { useMobile } from "@/hooks/useMobile";
 import {
+  AccountCircle as AccountCircleIcon,
   Dashboard as DashboardIcon,
   ExitToApp as ExitToAppIcon,
-  Person as PersonIcon,
+  SmartToy as SmartToyIcon,
 } from "@mui/icons-material";
 import { Box, List, Drawer as MuiDrawer } from "@mui/material";
 import { signOut } from "next-auth/react";
@@ -51,10 +52,17 @@ export const Drawer = ({
         />
         <SideMenuItem
           href="/assistants"
-          icon={PersonIcon}
+          icon={SmartToyIcon}
           text="Assistants"
           drawerExpanded={drawerExpanded}
           active={currentPath === "/assistants"}
+        />
+        <SideMenuItem
+          href="/user"
+          icon={AccountCircleIcon}
+          text="User Details"
+          drawerExpanded={drawerExpanded}
+          active={currentPath === "/user"}
         />
       </List>
       <List sx={{ mb: mobile ? "92px" : "0px" }}>
