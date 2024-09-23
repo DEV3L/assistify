@@ -6,7 +6,7 @@ from pymongo.database import Database
 
 from .app.api import api
 from .app.assistants.assistants_service import AssistantsService
-from .app.dependencies.api_dependencies import get_chat_service, get_openai_client
+from .app.dependencies.api_dependencies import get_messages_service, get_openai_client
 from .database.handle_migrations import run_migrations
 from .database.mongodb import MongoDb
 from .env_variables import set_env_variables
@@ -36,7 +36,7 @@ def api_with_mocks():
     mock_chat_service = MagicMock()
     mock_openai_client = MagicMock()
 
-    api.dependency_overrides[get_chat_service] = lambda: mock_chat_service
+    api.dependency_overrides[get_messages_service] = lambda: mock_chat_service
     api.dependency_overrides[get_openai_client] = lambda: mock_openai_client
 
     set_env_variables(".env.test")
@@ -44,7 +44,7 @@ def api_with_mocks():
     with TestClient(api) as api_client:
         yield api_client, mock_chat_service, mock_openai_client
 
-    api.dependency_overrides[get_chat_service] = get_chat_service
+    api.dependency_overrides[get_messages_service] = get_messages_service
     api.dependency_overrides[get_openai_client] = get_openai_client
 
 

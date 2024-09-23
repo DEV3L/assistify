@@ -7,7 +7,7 @@ from assistify_api.database.models.message import Message
 from assistify_api.database.models.thread import Thread
 
 
-class ChatService:
+class MessagesService:
     def __init__(
         self,
         chat: Chat,

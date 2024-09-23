@@ -5,27 +5,28 @@ from fastapi import Depends
 from assistify_api.database.dao.assistants_dao import AssistantsDao
 from assistify_api.database.dao.threads_dao import ThreadsDao
 from assistify_api.database.models.assistant import Assistant
-from assistify_api.services.chat import ChatService
+
+from ..messages.messages_service import MessagesService
 
 
 def get_openai_client() -> OpenAIClient:
     return OpenAIClient(build_openai_client())
 
 
-def get_chat_service(
+def get_messages_service(
     assistants_dao: AssistantsDao = Depends(AssistantsDao),
     threads_dao: ThreadsDao = Depends(ThreadsDao),
-) -> ChatService:
+) -> MessagesService:
     assistants: Assistant = [
         assistant
         for assistant in assistants_dao.find_all(model_class=Assistant)
         if assistant.assistant_id == hardcoded_assistant_id
     ]
 
-    if not assistants:
+    if len(assistants) == 0:
         raise ValueError("Assistant not found")
 
-    return ChatService(
+    return MessagesService(
         Chat(get_openai_client(), assistants[0].assistant_id), assistants[0], assistants_dao, threads_dao
     )
 

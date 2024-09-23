@@ -2,15 +2,13 @@ from fastapi import Depends, FastAPI
 
 from assistify_api.database.dao.version_dao import VersionDao
 from assistify_api.database.models.version import Version
-from assistify_api.services.chat import ChatService
 
 from .assistants.assistants_router import router as assistants_router
 from .auth.user import User
 from .auth.verify_token import verify_token
-from .chat.send_message import SendMessageRequest, SendMessageResponse
 from .cors.custom_cors_middleware import CustomCORSMiddleware
-from .dependencies.api_dependencies import get_chat_service
 from .lifespan import lifespan
+from .messages.messages_router import router as messages_router
 
 api = FastAPI(
     lifespan=lifespan,
@@ -22,6 +20,7 @@ api = FastAPI(
 api.add_middleware(CustomCORSMiddleware)
 
 api.include_router(assistants_router)
+api.include_router(messages_router)
 
 
 @api.get("/")
@@ -44,17 +43,3 @@ def protected_route(user_info: User = Depends(verify_token), version_dao: Versio
         "message": f"Hello {user_info.name}, your email is {user_info.email}",
         "latest_version": f"The latest database migration version is {latest_version.version}",
     }
-
-
-@api.post("/send-message")
-def send_message(
-    message: SendMessageRequest,
-    chat_service: ChatService = Depends(get_chat_service),
-    user: User = Depends(verify_token),
-) -> SendMessageResponse:
-    """
-    Endpoint to receive a message. Requires authentication.
-    """
-    thread = chat_service.get_or_create_thread(user.email)
-    response = chat_service.send_message(message.message, thread=thread)
-    return SendMessageResponse(response=response.message)

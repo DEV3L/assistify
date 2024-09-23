@@ -2,13 +2,13 @@ from unittest.mock import MagicMock
 
 from ai_assistant_manager.chats.chat import ChatResponse
 
-from .chat import ChatService
+from .messages_service import MessagesService
 
 
-def test_chat_service():
+def test_message_service():
     mock_chat = MagicMock()
     mock_chat.send_user_message.return_value = ChatResponse(message="Hello, how can I help you?", token_count=10)
-    service = ChatService(
+    service = MessagesService(
         chat=mock_chat,
         assistant=MagicMock(),
         assistants_dao=MagicMock(),

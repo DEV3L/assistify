@@ -149,10 +149,6 @@ ai_concept_to_code_summary_full = f"""
 
 ---
 
-**AI Concept To Code Presenter:** 
-
----
-
 **Detailed Summary:**
 
 **Overview:**
