@@ -18,9 +18,10 @@ def test_verify_token_valid(mock_credentials: HTTPAuthorizationCredentials):
     with patch("google.oauth2.id_token.verify_oauth2_token", return_value=mock_idinfo):
         mock_users_dao = MagicMock()
         mock_users_dao.find_by.return_value = None
+        mock_assistants_dao = MagicMock()
 
-        result = verify_token(mock_credentials, mock_users_dao)
-        assert result == build_user_from_idinfo(mock_idinfo, mock_users_dao)
+        result = verify_token(mock_credentials, mock_users_dao, mock_assistants_dao)
+        assert result == build_user_from_idinfo(mock_idinfo, mock_users_dao, mock_assistants_dao)
 
 
 def test_verify_token_invalid_issuer(mock_credentials: HTTPAuthorizationCredentials):

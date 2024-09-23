@@ -40,7 +40,8 @@ class Dao(Generic[T]):
         return [model_class.model_validate(result) for result in results]
 
     def find_one_by(self, query: dict, *, model_class: T) -> T | None:
-        return self.find_by(query, model_class=model_class)[0]
+        results = self.find_by(query, model_class=model_class)
+        return results[0] if results else None
 
     def delete_one(self, item_id: str) -> int:
         query = {"_id": item_id}

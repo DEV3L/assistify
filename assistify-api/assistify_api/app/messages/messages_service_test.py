@@ -13,12 +13,14 @@ def test_message_service():
         assistant=MagicMock(),
         assistants_dao=MagicMock(),
         threads_dao=MagicMock(),
+        users_dao=MagicMock(),
     )
 
     message = "Hello"
     thread = MagicMock(token_count=0)
+    user = MagicMock()
 
-    result = service.send_message(message=message, thread=thread)
+    result = service.send_message(message=message, thread=thread, user=user)
 
     assert result.message == "Hello, how can I help you?"
     mock_chat.send_user_message.assert_called_once_with(message=message)
