@@ -27,13 +27,20 @@ class Dao(Generic[T]):
         results = self.collection.find()
         return [model_class.model_validate(result) for result in results]
 
-    def find_one(self, item_id: str, *, model_class: T) -> T:
-        query = {"_id": item_id}
-        result = self.collection.find_one(query)
-        if result is None:
+    def find_one(self, item_id: str, *, model_class: T) -> T | None:
+        result = self.find_by({"_id": item_id}, model_class=model_class)
+        return result[0] if result else None
+
+    def find_by(self, query: dict, *, model_class: T) -> list[T] | None:
+        results = [item for item in self.collection.find(query)]
+
+        if results is None or len(results) == 0:
             return None
 
-        return model_class.model_validate(result)
+        return [model_class.model_validate(result) for result in results]
+
+    def find_one_by(self, query: dict, *, model_class: T) -> T | None:
+        return self.find_by(query, model_class=model_class)[0]
 
     def delete_one(self, item_id: str) -> int:
         query = {"_id": item_id}

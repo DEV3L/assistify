@@ -33,16 +33,16 @@ def api_with_mocks():
     Yields:
         Tuple[TestClient, MagicMock, MagicMock]: The TestClient instance, mock chat service, and mock OpenAI client.
     """
-    mock_chat_service = MagicMock()
+    mock_messages_service = MagicMock()
     mock_openai_client = MagicMock()
 
-    api.dependency_overrides[get_messages_service] = lambda: mock_chat_service
+    api.dependency_overrides[get_messages_service] = lambda: mock_messages_service
     api.dependency_overrides[get_openai_client] = lambda: mock_openai_client
 
     set_env_variables(".env.test")
 
     with TestClient(api) as api_client:
-        yield api_client, mock_chat_service, mock_openai_client
+        yield api_client, mock_messages_service, mock_openai_client
 
     api.dependency_overrides[get_messages_service] = get_messages_service
     api.dependency_overrides[get_openai_client] = get_openai_client

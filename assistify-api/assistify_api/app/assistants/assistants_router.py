@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 
-from ..auth.user import User
+from assistify_api.database.models.user import User
+
 from ..auth.verify_token import verify_token
 from .assistants_service import AssistantsService
 from .list_assistants_response import AssistantResponse, ListAssistantsResponse

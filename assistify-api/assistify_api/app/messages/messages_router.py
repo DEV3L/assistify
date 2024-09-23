@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 
 from assistify_api.app.dependencies.api_dependencies import get_messages_service
 from assistify_api.app.messages.messages_service import MessagesService
+from assistify_api.database.models.user import User
 
-from ..auth.user import User
 from ..auth.verify_token import verify_token
 from .send_message import SendMessageRequest, SendMessageResponse
 

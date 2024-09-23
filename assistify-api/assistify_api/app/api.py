@@ -1,10 +1,10 @@
 from fastapi import Depends, FastAPI
 
 from assistify_api.database.dao.version_dao import VersionDao
+from assistify_api.database.models.user import User
 from assistify_api.database.models.version import Version
 
 from .assistants.assistants_router import router as assistants_router
-from .auth.user import User
 from .auth.verify_token import verify_token
 from .cors.custom_cors_middleware import CustomCORSMiddleware
 from .lifespan import lifespan
