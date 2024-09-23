@@ -13,7 +13,7 @@ export const usePostMessage = () => {
 
     try {
       const response = await axiosInstance.post<SendMessageResponse>(
-        "/send-message",
+        "/api/messages/send-message",
         { message }
       );
       return response.data;
