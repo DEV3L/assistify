@@ -72,6 +72,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/messages/send-message/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Message
+         * @description Endpoint to receive a message. Requires authentication.
+         */
+        post: operations["send_message_api_messages_send_message__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/messages/send-message": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Message
+         * @description Endpoint to receive a message. Requires authentication.
+         */
+        post: operations["send_message_api_messages_send_message_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -112,26 +152,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/send-message": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Send Message
-         * @description Endpoint to receive a message. Requires authentication.
-         */
-        post: operations["send_message_send_message_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -146,7 +166,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-09-21T19:12:29.323537Z
+             * @default 2024-09-23T16:17:29.449832Z
              */
             created: string;
             /** Assistant Id */
@@ -191,11 +211,15 @@ export interface components {
         SendMessageRequest: {
             /** Message */
             message: string;
+            /** Thread Id */
+            thread_id?: string | null;
         };
         /** SendMessageResponse */
         SendMessageResponse: {
             /** Response */
             response: string;
+            /** Thread Id */
+            thread_id: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -349,6 +373,78 @@ export interface operations {
             };
         };
     };
+    send_message_api_messages_send_message__post: {
+        parameters: {
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SendMessageRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SendMessageResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_message_api_messages_send_message_post: {
+        parameters: {
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SendMessageRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SendMessageResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     read_root__get: {
         parameters: {
             query?: never;
@@ -388,42 +484,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": Record<string, never>;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    send_message_send_message_post: {
-        parameters: {
-            query?: {
-                force?: boolean;
-                mongodb_uri?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SendMessageRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SendMessageResponse"];
                 };
             };
             /** @description Validation Error */

@@ -14,12 +14,12 @@ router = APIRouter(prefix="/api/messages")
 @router.post("/send-message/")
 def send_message(
     message: SendMessageRequest,
-    chat_service: MessagesService = Depends(get_messages_service),
+    message_service: MessagesService = Depends(get_messages_service),
     user: User = Depends(verify_token),
 ) -> SendMessageResponse:
     """
     Endpoint to receive a message. Requires authentication.
     """
-    thread = chat_service.get_or_create_thread(user.email)
-    response = chat_service.send_message(message.message, thread=thread)
-    return SendMessageResponse(response=response.message)
+    thread = message_service.get_or_create_thread(user.email, message.thread_id)
+    response = message_service.send_message(message.message, thread=thread)
+    return SendMessageResponse(response=response.message, thread_id=str(thread.id))

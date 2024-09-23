@@ -1,3 +1,5 @@
+import uuid
+
 from ai_assistant_manager.chats.chat import Chat
 
 from assistify_api.database.dao.assistants_dao import AssistantsDao
@@ -27,6 +29,7 @@ class MessagesService:
         response = self.chat.send_user_message(message=message)
 
         user_message = Message(
+            id=str(uuid.uuid4()),
             thread_id=str(thread.id),
             message=message,
             role="user",
@@ -34,6 +37,7 @@ class MessagesService:
             token_count=0,
         )
         assistant_response = Message(
+            id=str(uuid.uuid4()),
             thread_id=str(thread.id),
             message=response.message,
             role="assistant",
@@ -55,8 +59,8 @@ class MessagesService:
         if not thread_id:
             return self._create_thread(user_id)
 
-        threads = self.threads_dao.find_all()  # will be user threads
-        return [thread for thread in threads if thread.id == thread_id][0]
+        threads = self.threads_dao.find_all(model_class=Thread)  # will be user threads
+        return [thread for thread in threads if str(thread.id) == thread_id][0]
 
     def get_messages(self, thread_id: str) -> list[str]:
         return self.chat.list_messages(thread_id=thread_id)

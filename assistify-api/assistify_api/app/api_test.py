@@ -52,5 +52,5 @@ def test_protected_route(
     assert response.status_code == 200
     assert response.json() == {
         "message": f"Hello {mock_idinfo['name']}, your email is {mock_idinfo['email']}",
-        "latest_version": "The latest database migration version is v002_add_assistants",
+        "latest_version": "The latest database migration version is v001_add_assistants",
     }

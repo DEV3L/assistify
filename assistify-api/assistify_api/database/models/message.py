@@ -2,10 +2,10 @@ from typing import Literal
 
 from pydantic import Field
 
-from .base import Base
+from .model import Model
 
 
-class Message(Base):
+class Message(Model):
     thread_id: str
 
     message: str
