@@ -49,7 +49,7 @@ export const Message = () => {
   return (
     <>
       <Typography mb={2} variant="subtitle2">
-        Chat with Assistify
+      Chat with Assistify - Product Owner
       </Typography>
       <Box display="flex" flexDirection="column" alignItems="center">
         <Box display="flex" flexDirection="row" width="100%" mb={2}>

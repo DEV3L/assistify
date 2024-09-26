@@ -44,7 +44,7 @@ describe("ChatMessage", () => {
     );
     expect(screen.getByAltText("Assistant Avatar")).toHaveAttribute(
       "src",
-      "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p0nj1y1c0frdi728486q.png"
+      "https://i.postimg.cc/gLZrnC6d/assistify-product-owner.png"
     );
   });
 
