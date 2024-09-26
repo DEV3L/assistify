@@ -47,33 +47,33 @@ export const Message = () => {
   };
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" height="100%">
       <Typography mb={2} variant="subtitle2">
-      Chat with Assistify - Product Owner
+        Chat with Assistify - Product Owner
       </Typography>
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <Box display="flex" flexDirection="row" width="100%" mb={2}>
-          <TextField
-            label="Type your message"
-            variant="outlined"
-            fullWidth
-            value={userMessage}
-            onChange={(e) => setUserMessage(e.target.value)}
-          />
-          <Button
-            sx={{ ml: 2 }}
-            variant="contained"
-            color="primary"
-            onClick={handleSendMessage}
-          >
-            Send
-          </Button>
-        </Box>
+      <Box flex={1} overflow="auto" mb={2}>
         <ChatMessage
           messages={messages}
           isResponseLoading={isResponseLoading}
         />
       </Box>
-    </>
+      <Box display="flex" flexDirection="row" width="100%" mt="auto">
+        <TextField
+          label="Type your message"
+          variant="outlined"
+          fullWidth
+          value={userMessage}
+          onChange={(e) => setUserMessage(e.target.value)}
+        />
+        <Button
+          sx={{ ml: 2 }}
+          variant="contained"
+          color="primary"
+          onClick={handleSendMessage}
+        >
+          Send
+        </Button>
+      </Box>
+    </Box>
   );
 };
