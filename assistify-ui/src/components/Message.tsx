@@ -49,7 +49,7 @@ export const Message = () => {
   return (
     <Box display="flex" flexDirection="column" height="100%">
       <Typography mb={2} variant="subtitle2">
-        Chat with Assistify - Product Owner
+        Chat with Assistify - Concierge
       </Typography>
       <Box flex={1} overflow="auto" mb={2}>
         <ChatMessage

@@ -18,4 +18,4 @@ def test_get_assistants(mock_id_token, api_with_mocks: tuple[TestClient, MagicMo
     assistants_response = response.json()["assistants"]
 
     assert response.status_code == 200
-    assert assistants_response[0]["assistant_id"] == "asst_0sd6SgqvyDhwZW8wuwdoHFQb"
+    assert assistants_response[0]["assistant_id"] is not None

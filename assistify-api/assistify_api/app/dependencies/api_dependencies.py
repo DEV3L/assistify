@@ -33,5 +33,5 @@ def get_messages_service(
     )
 
 
-# temporary hardcoded assistant id - Assistant Product Owner
-hardcoded_assistant_id = "asst_8gUldikcrGKYjJLCIjWhXVZB"
+# temporary hardcoded assistant id - Assistant Concierge
+hardcoded_assistant_id = "asst_LwF3CGKjDJK0IMWRWHyE4w6w"

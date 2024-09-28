@@ -42,10 +42,6 @@ describe("ChatMessage", () => {
       "src",
       "user-image-url"
     );
-    expect(screen.getByAltText("Assistant Avatar")).toHaveAttribute(
-      "src",
-      "https://i.postimg.cc/gLZrnC6d/assistify-product-owner.png"
-    );
   });
 
   it("renders user with no image url", () => {

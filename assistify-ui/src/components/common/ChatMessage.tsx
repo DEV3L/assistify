@@ -40,7 +40,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
             src={
               message.sender === "user"
                 ? session?.user?.image ?? ""
-                : "https://i.postimg.cc/gLZrnC6d/assistify-product-owner.png"
+                : "https://i.postimg.cc/mzqtZLk8/assistify-concierge.png"
             }
             alt={message.sender === "user" ? "User Avatar" : "Assistant Avatar"}
           />
