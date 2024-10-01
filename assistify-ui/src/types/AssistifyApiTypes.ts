@@ -112,6 +112,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get User */
+        get: operations["get_user_api_users_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/users/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get User */
+        get: operations["get_user_api_users__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -166,7 +200,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-09-23T16:17:29.449832Z
+             * @default 2024-10-01T13:57:59.180354Z
              */
             created: string;
             /** Assistant Id */
@@ -220,6 +254,93 @@ export interface components {
             response: string;
             /** Thread Id */
             thread_id: string;
+        };
+        /** UserAssistant */
+        UserAssistant: {
+            /** Id */
+            id: string;
+            /**
+             * Created
+             * Format: date-time
+             * @default 2024-10-01T13:57:59.180354Z
+             */
+            created: string;
+            /** Image */
+            image: string;
+            /** Model */
+            model: string;
+            /** Name */
+            name: string;
+            /**
+             * Provider
+             * @constant
+             * @enum {string}
+             */
+            provider: "OpenAI";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "Public" | "Market" | "Private";
+            /** Summary Full */
+            summary_full: string;
+            /** Summary Short */
+            summary_short: string;
+            /** Token Count */
+            token_count: number;
+        };
+        /** UserResponse */
+        UserResponse: {
+            /** Id */
+            id: string;
+            /**
+             * Created
+             * Format: date-time
+             * @default 2024-10-01T13:57:59.180354Z
+             */
+            created: string;
+            /** Email */
+            email: string;
+            /** Image */
+            image: string;
+            /** Name */
+            name: string;
+            /** Assistants */
+            assistants: components["schemas"]["UserAssistant"][];
+            /** Threads */
+            threads: components["schemas"]["UserThread"][];
+            /**
+             * Token Count
+             * @default 0
+             */
+            token_count: number;
+        };
+        /** UserThread */
+        UserThread: {
+            /** Id */
+            id: string;
+            /**
+             * Created
+             * Format: date-time
+             * @default 2024-10-01T13:57:59.180354Z
+             */
+            created: string;
+            /** Assistant Name */
+            assistant_name: string;
+            /** Model */
+            model: string;
+            /** Provider Thread Id */
+            provider_thread_id: string;
+            /**
+             * Provider
+             * @constant
+             * @enum {string}
+             */
+            provider: "OpenAI";
+            /** Summary */
+            summary: string;
+            /** Token Count */
+            token_count: number;
         };
         /** ValidationError */
         ValidationError: {
@@ -432,6 +553,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SendMessageResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_user_api_users_get: {
+        parameters: {
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_user_api_users__get: {
+        parameters: {
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponse"];
                 };
             };
             /** @description Validation Error */

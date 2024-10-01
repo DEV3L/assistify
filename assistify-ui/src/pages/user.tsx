@@ -1,7 +1,12 @@
+import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { StyledCard } from "@/components/common/StyledCard";
 import { withDashboardLayout } from "@/components/layouts/withDashboardLayout";
-import { Avatar, Box, Typography } from "@mui/material";
-import { useSession } from "next-auth/react";
+import { UserAssistants } from "@/components/user/UserAssistants";
+import { UserInfoCard } from "@/components/user/UserInfoCard";
+import { useFetchUser } from "@/services/users";
+import { UserResponse } from "@/types/AssistifyTypes";
+import { Typography } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * UserDetails component displays the authenticated user's information.
@@ -9,36 +14,46 @@ import { useSession } from "next-auth/react";
  * @returns {JSX.Element} The UserDetails component.
  */
 const UserDetails = (): JSX.Element => {
-  const { data: session, status } = useSession();
+  const [user, setUser] = useState<UserResponse>();
+  const [loading, setLoading] = useState(true);
 
-  if (status !== "authenticated" || !session?.user) {
-    return <Typography variant="h6">Loading...</Typography>;
-  }
+  const { fetchUser, isAuthenticated } = useFetchUser();
 
-  const { name, email, image } = session.user;
+  const fetchData = useCallback(async () => {
+    if (isAuthenticated) {
+      try {
+        const data = await fetchUser();
+        setUser(data);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
-    <StyledCard sx={{ maxWidth: 600, margin: "auto", p: 4 }}>
-      <Box display="flex" flexDirection="column" alignItems="center">
-        {image ? (
-          <Avatar
-            src={image}
-            alt={name ?? "User Avatar"}
-            sx={{ width: 100, height: 100 }}
-          />
-        ) : (
-          <Avatar sx={{ width: 100, height: 100 }}>
-            <Typography variant="h1">{name?.charAt(0)}</Typography>
-          </Avatar>
-        )}
-        <Typography variant="h4" component="h1" mt={2}>
-          {name}
-        </Typography>
-        <Typography variant="body1" mt={1}>
-          {email}
-        </Typography>
-      </Box>
-    </StyledCard>
+    <>
+      <Typography variant="h4" gutterBottom>
+        User Details
+      </Typography>
+      {loading ? (
+        <LoadingSkeleton />
+      ) : (
+        <>
+          <StyledCard sx={{ maxWidth: 600, margin: "auto", p: 4 }}>
+            {user && <UserInfoCard user={user} />}
+          </StyledCard>
+          {user && user.assistants && (
+            <UserAssistants assistants={user.assistants} />
+          )}
+        </>
+      )}
+    </>
   );
 };
 

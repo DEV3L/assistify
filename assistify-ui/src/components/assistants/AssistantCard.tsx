@@ -1,4 +1,4 @@
-import { Assistant } from "@/types/AssistifyTypes";
+import { AssistantResponse, UserAssistant } from "@/types/AssistifyTypes";
 import InfoIcon from "@mui/icons-material/Info";
 import {
   Avatar,
@@ -24,8 +24,20 @@ import { AssistantStatus } from "./AssistantStatus";
  * @returns The AssistantCard component.
  */
 interface AssistantCardProps {
-  assistant: Assistant;
+  assistant: AssistantResponse | UserAssistant;
 }
+
+/**
+ * Type guard to check if assistant is of type AssistantResponse
+ *
+ * @param assistant - The assistant data to check.
+ * @returns True if assistant is of type AssistantResponse, otherwise false.
+ */
+const isAssistantResponse = (
+  assistant: AssistantResponse | UserAssistant
+): assistant is AssistantResponse => {
+  return (assistant as AssistantResponse).thread_ids !== undefined;
+};
 
 export const AssistantCard = ({
   assistant,
@@ -90,8 +102,9 @@ export const AssistantCard = ({
           <AssistantDescription summary={assistant.summary_short} />
           <Box mt={1}>
             <Typography variant="caption">
-              Threads: {assistant.thread_ids.length} | Tokens Consumed:{" "}
-              {assistant.token_count ?? 0}
+              {isAssistantResponse(assistant) &&
+                `Threads: ${assistant.thread_ids.length} | `}
+              Tokens Consumed: {assistant.token_count ?? 0}
             </Typography>
           </Box>
         </CardContent>

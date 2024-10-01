@@ -8,4 +8,5 @@ export const validateUserDetails = async (page: Page): Promise<void> => {
   await page.click(iconSelector);
 
   await page.waitForSelector(`text=${testUserEmail}`);
+  await page.waitForSelector(`text=Assistify - Concierge`);
 };

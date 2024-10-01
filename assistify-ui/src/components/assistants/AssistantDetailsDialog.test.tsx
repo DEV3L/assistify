@@ -1,9 +1,9 @@
-import { Assistant } from "@/types/AssistifyTypes";
+import { AssistantResponse } from "@/types/AssistifyTypes";
 import { render, screen } from "@testing-library/react";
 import { AssistantDetailsDialog } from "./AssistantDetailsDialog";
 
 describe("AssistantDetailsDialog", () => {
-  const assistant: Assistant = {
+  const assistant: AssistantResponse = {
     assistant_id: "assistant_id",
     created: "2024-09-21T19:12:29.323537Z",
     image: "image.png",

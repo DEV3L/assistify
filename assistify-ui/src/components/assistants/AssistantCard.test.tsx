@@ -1,4 +1,4 @@
-import { Assistant } from "@/types/AssistifyTypes";
+import { AssistantResponse } from "@/types/AssistifyTypes";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { AssistantCard } from "./AssistantCard";
 
@@ -6,7 +6,7 @@ const status = "Public";
 const model = "GPT-4";
 const provider = "OpenAI";
 
-const mockAssistant: Assistant = {
+const mockAssistant: AssistantResponse = {
   assistant_id: "1",
   created: "2024-09-21T19:12:29.323537Z",
   image: "test-image.jpg",

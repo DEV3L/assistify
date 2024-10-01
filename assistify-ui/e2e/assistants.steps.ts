@@ -7,6 +7,6 @@ export const validateAssistants = async (page: Page): Promise<void> => {
   await page.waitForSelector(iconSelector);
   await page.click(iconSelector);
 
-  await page.waitForSelector("text=Your Assistants");
+  await page.waitForSelector("text=All Assistants");
   await page.waitForSelector(`text=${expectedAssistantName}`);
 };

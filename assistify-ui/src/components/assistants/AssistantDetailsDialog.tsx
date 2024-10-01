@@ -1,4 +1,4 @@
-import { Assistant } from "@/types/AssistifyTypes";
+import { AssistantResponse, UserAssistant } from "@/types/AssistifyTypes";
 import {
   Avatar,
   Button,
@@ -14,7 +14,7 @@ import Markdown from "markdown-to-jsx";
 interface AssistantDetailsDialogProps {
   open: boolean;
   onClose: () => void;
-  assistant: Assistant;
+  assistant: AssistantResponse | UserAssistant;
 }
 
 /**

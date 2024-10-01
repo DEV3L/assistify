@@ -2,12 +2,12 @@ import { AssistantCard } from "@/components/assistants/AssistantCard";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { withDashboardLayout } from "@/components/layouts/withDashboardLayout";
 import { useFetchAssistants } from "@/services/assistants";
-import { Assistant } from "@/types/AssistifyTypes";
+import { AssistantResponse } from "@/types/AssistifyTypes";
 import { Grid, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 
 const AssistantsPage = (): JSX.Element => {
-  const [assistants, setAssistants] = useState<Assistant[]>([]);
+  const [assistants, setAssistants] = useState<AssistantResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const { fetchAssistants, isAuthenticated } = useFetchAssistants();
 
@@ -31,7 +31,7 @@ const AssistantsPage = (): JSX.Element => {
   return (
     <>
       <Typography variant="h4" gutterBottom>
-        Your Assistants
+        All Assistants
       </Typography>
       {loading ? (
         <LoadingSkeleton />

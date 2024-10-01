@@ -13,7 +13,7 @@ GOOGLE_CLIENT_ID = ENV_VARIABLES.google_client_id
 
 security = HTTPBearer()
 
-CONCIERGE_ASSISTANT_ID = "asst_0sd6SgqvyDhwZW8wuwdoHFQb"
+CONCIERGE_ASSISTANT_NAME = "Assistify - Concierge"
 
 
 def verify_token(
@@ -39,7 +39,7 @@ def build_user_from_idinfo(idinfo: dict, users_dao: UsersDao, assistants_dao: As
     user = users_dao.find_one_by({"email": idinfo["email"]}, model_class=User)
 
     if user is None:
-        assistant = assistants_dao.find_one_by({"assistant_id": CONCIERGE_ASSISTANT_ID}, model_class=Assistant)
+        assistant = assistants_dao.find_one_by({"name": CONCIERGE_ASSISTANT_NAME}, model_class=Assistant)
 
         user = User(
             email=idinfo["email"],
