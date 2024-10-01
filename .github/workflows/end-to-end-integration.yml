@@ -20,6 +20,8 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
 
     env:
+      # OpenAI API
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       MONGODB_URI: ${{ secrets.MONGODB_URI }}
       MONGODB_DB: assistify-api
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
