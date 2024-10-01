@@ -4,6 +4,8 @@ import pytest
 from fastapi.testclient import TestClient
 from pymongo.database import Database
 
+from assistify_api.app.users.users_service import UsersService
+
 from .app.api import api
 from .app.assistants.assistants_service import AssistantsService
 from .app.dependencies.api_dependencies import get_messages_service, get_openai_client
@@ -80,3 +82,12 @@ def assistants_service(
     mock_openai_client,
 ):
     return AssistantsService(open_ai_client=mock_openai_client, assistants_dao=MagicMock())
+
+
+@pytest.fixture
+def users_service():
+    return UsersService(
+        assistants_dao=MagicMock(),
+        threads_dao=MagicMock(),
+        users_dao=MagicMock(),
+    )
