@@ -21,14 +21,34 @@ const theme = createTheme({
   typography: {
     fontFamily: "Dank Mono, Arial, sans-serif",
     h1: {
-      fontFamily: "Dank Mono Bold",
+      fontFamily: "Dank Mono",
       fontSize: "2rem",
       fontWeight: "bold",
     },
     h2: {
-      fontFamily: "Dank Mono Bold",
+      fontFamily: "Dank Mono",
       fontSize: "1.75rem",
       fontWeight: "bold",
+    },
+    h3: {
+      fontFamily: "Dank Mono",
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+    },
+    h4: {
+      fontFamily: "Dank Mono",
+      fontSize: "1.25rem",
+      fontWeight: "bold",
+    },
+    h5: {
+      fontFamily: "Dank Mono",
+      fontSize: "1.15rem",
+      fontWeight: 400,
+    },
+    h6: {
+      fontFamily: "Dank Mono",
+      fontSize: "1.05rem",
+      fontWeight: 400,
     },
     body1: {
       fontSize: "1rem",

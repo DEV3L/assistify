@@ -200,7 +200,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-01T13:57:59.180354Z
+             * @default 2024-10-01T18:54:44.919898Z
              */
             created: string;
             /** Assistant Id */
@@ -262,7 +262,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-01T13:57:59.180354Z
+             * @default 2024-10-01T18:54:44.919898Z
              */
             created: string;
             /** Image */
@@ -289,6 +289,34 @@ export interface components {
             /** Token Count */
             token_count: number;
         };
+        /** UserMessage */
+        UserMessage: {
+            /**
+             *  Id
+             * Format: uuid
+             */
+            _id?: string;
+            /**
+             * Created
+             * Format: date-time
+             * @default 2024-10-01T18:54:44.919898Z
+             */
+            created: string;
+            /** Message */
+            message: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "assistant";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "Pending" | "Complete" | "Error";
+            /** Token Count */
+            token_count: number;
+        };
         /** UserResponse */
         UserResponse: {
             /** Id */
@@ -296,7 +324,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-01T13:57:59.180354Z
+             * @default 2024-10-01T18:54:44.919898Z
              */
             created: string;
             /** Email */
@@ -322,7 +350,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-01T13:57:59.180354Z
+             * @default 2024-10-01T18:54:44.919898Z
              */
             created: string;
             /** Assistant Name */
@@ -339,6 +367,8 @@ export interface components {
             provider: "OpenAI";
             /** Summary */
             summary: string;
+            /** Messages */
+            messages: components["schemas"]["UserMessage"][];
             /** Token Count */
             token_count: number;
         };

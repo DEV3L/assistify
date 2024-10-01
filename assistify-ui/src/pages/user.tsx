@@ -3,6 +3,7 @@ import { StyledCard } from "@/components/common/StyledCard";
 import { withDashboardLayout } from "@/components/layouts/withDashboardLayout";
 import { UserAssistants } from "@/components/user/UserAssistants";
 import { UserInfoCard } from "@/components/user/UserInfoCard";
+import { UserThreads } from "@/components/user/UserThreads";
 import { useFetchUser } from "@/services/users";
 import { UserResponse } from "@/types/AssistifyTypes";
 import { Typography } from "@mui/material";
@@ -50,6 +51,9 @@ const UserDetails = (): JSX.Element => {
           </StyledCard>
           {user && user.assistants && (
             <UserAssistants assistants={user.assistants} />
+          )}
+          {user && user.threads && (
+            <UserThreads assistants={user.assistants} threads={user.threads} />
           )}
         </>
       )}

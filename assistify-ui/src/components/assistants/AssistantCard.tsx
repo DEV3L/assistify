@@ -98,7 +98,7 @@ export const AssistantCard = ({
           }
           sx={{ paddingBottom: 0 }}
         />
-        <CardContent>
+        <CardContent sx={{ paddingBottom: "16px !important" }}>
           <AssistantDescription summary={assistant.summary_short} />
           <Box mt={1}>
             <Typography variant="caption">

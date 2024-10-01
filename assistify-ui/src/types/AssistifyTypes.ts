@@ -8,3 +8,5 @@ export type SendMessageResponse = components["schemas"]["SendMessageResponse"];
 
 export type UserResponse = components["schemas"]["UserResponse"];
 export type UserAssistant = components["schemas"]["UserAssistant"];
+export type UserMessage = components["schemas"]["UserMessage"];
+export type UserThread = components["schemas"]["UserThread"];
