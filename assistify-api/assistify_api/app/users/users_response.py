@@ -5,6 +5,13 @@ from pydantic import BaseModel
 from assistify_api.database.models.base import Base
 
 
+class UserMessage(Base):
+    message: str
+    role: Literal["user", "assistant"]
+    status: Literal["Pending", "Complete", "Error"]
+    token_count: int
+
+
 class UserThread(Base):
     id: str
     assistant_name: str
@@ -12,6 +19,8 @@ class UserThread(Base):
     provider_thread_id: str
     provider: Literal["OpenAI"]
     summary: str
+
+    messages: list[UserMessage]
 
     token_count: int
 

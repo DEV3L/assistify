@@ -4,11 +4,13 @@ from assistify_api.database.dao.assistants_dao import AssistantsDao
 from assistify_api.database.dao.threads_dao import ThreadsDao
 from assistify_api.database.dao.users_dao import UsersDao
 from assistify_api.database.models.assistant import Assistant
+from assistify_api.database.models.message import Message
 from assistify_api.database.models.thread import Thread
 from assistify_api.database.models.user import User
 
 from .users_response import (
     UserAssistant,
+    UserMessage,
     UserResponse,
     UsersResponse,
     UserThread,
@@ -86,5 +88,14 @@ class UsersService:
             provider_thread_id=thread.provider_thread_id,
             provider=thread.provider,
             summary=thread.summary,
+            messages=[self._build_user_message(message) for message in thread.messages],
             token_count=thread.token_count,
+        )
+
+    def _build_user_message(self, message: Message) -> UserMessage:
+        return UserMessage(
+            message=message.message,
+            role=message.role,
+            status=message.status,
+            token_count=message.token_count,
         )

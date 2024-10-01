@@ -1,4 +1,5 @@
 from assistify_api.database.models.assistant import Assistant
+from assistify_api.database.models.message import Message
 from assistify_api.database.models.thread import Thread
 from assistify_api.database.models.user import User
 
@@ -19,6 +20,7 @@ thread = Thread(
     model=assistant.model,
     provider=assistant.provider,
     provider_thread_id="xyz",
+    messages=[Message(thread_id="qrs", message="test message", role="user", token_count=100)],
     token_count=100,
 )
 thread.id = "qrs"
@@ -56,3 +58,4 @@ def test_get_assistant(users_service: UsersService):
     assert user_response.id == user.id
     assert user_response.assistants[0].id == assistant.id
     assert user_response.threads[0].id == thread.id
+    assert user_response.threads[0].messages[0].message == thread.messages[0].message
