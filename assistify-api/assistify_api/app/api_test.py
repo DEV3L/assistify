@@ -17,7 +17,7 @@ from assistify_api.conftest import mock_idinfo
     ],
 )
 def test_routes_unauthorized(
-    api_with_mocks: tuple[TestClient, MagicMock, MagicMock],
+    api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
     route: str,
     verb: Literal["GET", "POST"],
     expected_status: int,
@@ -26,7 +26,7 @@ def test_routes_unauthorized(
     """
     Test various routes with unauthorized access.
     """
-    api_client, _, _ = api_with_mocks
+    api_client, _, _, _ = api_with_mocks
 
     if verb == "GET":
         response = api_client.get(route, headers={"Authorization": "Bearer invalid_token"})
@@ -43,7 +43,7 @@ def test_protected_route(
     mock_id_token,
     api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
 ):
-    api_client, _, _ = api_with_mocks
+    api_client, _, _, _ = api_with_mocks
 
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 

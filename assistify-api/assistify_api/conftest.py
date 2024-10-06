@@ -5,13 +5,16 @@ from fastapi.testclient import TestClient
 from pymongo.database import Database
 
 from assistify_api.app.users.users_service import UsersService
+from assistify_api.database.models.thread import Thread
 
 from .app.api import api
 from .app.assistants.assistants_service import AssistantsService
-from .app.dependencies.api_dependencies import get_messages_service, get_openai_client
+from .app.dependencies.api_dependencies import get_messages_service, get_openai_client, get_threads_service
 from .database.handle_migrations import run_migrations
 from .database.mongodb import MongoDb
 from .env_variables import set_env_variables
+
+default_user_id = "test_user_id"
 
 mock_idinfo = {
     "iss": "accounts.google.com",
@@ -21,6 +24,14 @@ mock_idinfo = {
     "given_name": "test given name",
     "family_name": "test family name",
     "picture": "test picture",
+}
+
+default_assistant_dict = {
+    "name": "test_assistant_name",
+    "assistant_id": "default_id",
+    "model": "gpt-4o",
+    "status": "Private",
+    "image": "",
 }
 
 
@@ -36,17 +47,20 @@ def api_with_mocks():
         Tuple[TestClient, MagicMock, MagicMock]: The TestClient instance, mock chat service, and mock OpenAI client.
     """
     mock_messages_service = MagicMock()
+    mock_threads_service = MagicMock()
     mock_openai_client = MagicMock()
 
     api.dependency_overrides[get_messages_service] = lambda: mock_messages_service
+    api.dependency_overrides[get_threads_service] = lambda: mock_threads_service
     api.dependency_overrides[get_openai_client] = lambda: mock_openai_client
 
     set_env_variables(".env.test")
 
     with TestClient(api) as api_client:
-        yield api_client, mock_messages_service, mock_openai_client
+        yield api_client, mock_messages_service, mock_threads_service, mock_openai_client
 
     api.dependency_overrides[get_messages_service] = get_messages_service
+    api.dependency_overrides[get_threads_service] = get_threads_service
     api.dependency_overrides[get_openai_client] = get_openai_client
 
 
@@ -90,4 +104,19 @@ def users_service():
         assistants_dao=MagicMock(),
         threads_dao=MagicMock(),
         users_dao=MagicMock(),
+    )
+
+
+@pytest.fixture
+def default_thread() -> Thread:
+    """
+    Fixture to provide a default Thread model instance.
+    """
+    return Thread(
+        user_id=default_user_id,
+        assistant_id=default_assistant_dict["assistant_id"],
+        assistant_name=default_assistant_dict["name"],
+        model=default_assistant_dict["model"],
+        provider="OpenAI",
+        provider_thread_id="test_provider_thread_id",
     )

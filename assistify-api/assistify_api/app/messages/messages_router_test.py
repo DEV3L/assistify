@@ -11,7 +11,7 @@ def test_send_message(
     mock_id_token,
     api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
 ):
-    api_client, mock_chat_service, _ = api_with_mocks
+    api_client, mock_chat_service, _, _ = api_with_mocks
 
     mock_chat_service.get_or_create_thread.return_value = MagicMock(id="thread_id")
     mock_chat_service.send_message.return_value = ChatResponse(message="What can I do for you?", token_count=0)

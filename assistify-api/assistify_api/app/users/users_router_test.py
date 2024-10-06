@@ -6,8 +6,11 @@ from assistify_api.conftest import mock_idinfo
 
 
 @patch("assistify_api.app.auth.verify_token.id_token")
-def test_get_user(mock_id_token, api_with_mocks: tuple[TestClient, MagicMock, MagicMock]):
-    api_client, _, _ = api_with_mocks
+def test_get_user(
+    mock_id_token,
+    api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
+):
+    api_client, _, _, _ = api_with_mocks
 
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 

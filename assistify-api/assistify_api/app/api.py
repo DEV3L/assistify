@@ -9,6 +9,7 @@ from .auth.verify_token import verify_token
 from .cors.custom_cors_middleware import CustomCORSMiddleware
 from .lifespan import lifespan
 from .messages.messages_router import router as messages_router
+from .threads.threads_router import router as threads_router
 from .users.users_router import router as users_router
 
 api = FastAPI(
@@ -22,6 +23,7 @@ api.add_middleware(CustomCORSMiddleware)
 
 api.include_router(assistants_router)
 api.include_router(messages_router)
+api.include_router(threads_router)
 api.include_router(users_router)
 
 

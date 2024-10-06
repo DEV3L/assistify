@@ -3,16 +3,10 @@ from uuid import uuid4
 import pytest
 from pymongo.database import Database
 
+from assistify_api.conftest import default_assistant_dict
+
 from ..models.assistant import Assistant
 from .dao import Dao
-
-default_assistant_dict = {
-    "name": "v001_data_init",
-    "assistant_id": "default_id",
-    "model": "gpt-4o",
-    "status": "Private",
-    "image": "",
-}
 
 dao_collection = "dao-test"
 
