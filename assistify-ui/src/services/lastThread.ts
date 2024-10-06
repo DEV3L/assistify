@@ -1,24 +1,21 @@
-import { SendMessageResponse } from "@/types/AssistifyTypes";
+import { ThreadResponse } from "@/types/AssistifyTypes";
 import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import axiosInstance from "./axiosInstance";
 
-export const usePostMessage = () => {
+export const useLastThread = () => {
   const { data: session, status } = useSession();
 
-  const postMessage = async (
-    message: string,
-    thread_id: string
-  ): Promise<SendMessageResponse> => {
+  const getLastThread = async (): Promise<ThreadResponse> => {
     if (status !== "authenticated" || !session?.idToken) {
       throw new Error("User is not authenticated");
     }
 
     try {
-      const response = await axiosInstance.post<SendMessageResponse>(
-        "/api/messages/send-message",
-        { message, thread_id }
+      const response = await axiosInstance.post<ThreadResponse>(
+        "/api/threads/last-thread"
       );
+
       return response.data;
     } catch (error) {
       if (error) {
@@ -32,7 +29,7 @@ export const usePostMessage = () => {
   };
 
   return {
-    postMessage,
+    getLastThread,
     isAuthenticated: status === "authenticated",
   };
 };

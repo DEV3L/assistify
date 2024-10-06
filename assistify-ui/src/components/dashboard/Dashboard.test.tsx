@@ -26,7 +26,6 @@ describe("DashBoard", () => {
     renderWithSessionProvider();
 
     expect(screen.getByText(/Welcome to Assistify/i)).toBeInTheDocument();
-    expect(screen.getByText(/Chat with Assistify/i)).toBeInTheDocument();
   });
 
   it("applies correct styles for mobile view", () => {

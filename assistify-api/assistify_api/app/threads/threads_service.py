@@ -14,6 +14,10 @@ class ThreadsService:
     def upsert(self, thread: Thread):
         return self.threads_dao.upsert(thread)
 
+    def find_one(self, thread_id: str):
+        thread = self.threads_dao.find_one(item_id=thread_id, model_class=Thread)
+        return ThreadResponse(**{**thread.model_dump(), "id": str(thread.id)}) if thread else None
+
     def list(self):
         return self.threads_dao.find_all(model_class=Thread)
 

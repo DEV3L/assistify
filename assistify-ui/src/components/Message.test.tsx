@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { Message } from "./Message";
 
 import { usePostMessage } from "@/services/messages";
+import { ThreadResponse } from "@/types/AssistifyTypes";
 import { fireEvent, waitFor } from "@testing-library/react";
 
 jest.mock("../services/messages");
@@ -16,6 +17,17 @@ describe("Message", () => {
     user: { name: "Test User", image: "user-image-url" },
   };
   const assistantResponse = "Hello world from the assistant!";
+  const thread = {
+    id: "123",
+    user_id: "456",
+    assistant_id: "789",
+    assistant_name: "Test Assistant",
+    model: "gpt-3.5",
+    provider: "OpenAI",
+    provider_thread_id: "123",
+    summary: "Test summary",
+    messages: [],
+  } as ThreadResponse;
 
   beforeEach(() => {
     mockPostMessage.mockReturnValue({
@@ -29,7 +41,7 @@ describe("Message", () => {
   ) => {
     return render(
       <SessionProvider session={session as any}>
-        <Message />
+        <Message thread={thread} />
       </SessionProvider>
     );
   };

@@ -112,6 +112,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/threads/last-thread/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Last Thread */
+        post: operations["last_thread_api_threads_last_thread__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/threads/last-thread": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Last Thread */
+        post: operations["last_thread_api_threads_last_thread_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/users": {
         parameters: {
             query?: never;
@@ -200,7 +234,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-01T18:54:44.919898Z
+             * @default 2024-10-06T20:56:14.733707Z
              */
             created: string;
             /** Assistant Id */
@@ -241,6 +275,32 @@ export interface components {
             /** Assistants */
             assistants: components["schemas"]["AssistantResponse"][];
         };
+        /** Message */
+        Message: {
+            /**
+             * Created
+             * Format: date-time
+             * @default 2024-10-06T20:56:14.954322Z
+             */
+            created: string;
+            /** Thread Id */
+            thread_id: string;
+            /** Message */
+            message: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "assistant";
+            /**
+             * Status
+             * @default Pending
+             * @enum {string}
+             */
+            status: "Pending" | "Complete" | "Error";
+            /** Token Count */
+            token_count: number;
+        };
         /** SendMessageRequest */
         SendMessageRequest: {
             /** Message */
@@ -255,6 +315,31 @@ export interface components {
             /** Thread Id */
             thread_id: string;
         };
+        /** ThreadResponse */
+        ThreadResponse: {
+            /** Id */
+            id: string;
+            /** User Id */
+            user_id: string;
+            /** Assistant Id */
+            assistant_id: string;
+            /** Assistant Name */
+            assistant_name: string;
+            /** Model */
+            model: string;
+            /**
+             * Provider
+             * @constant
+             * @enum {string}
+             */
+            provider: "OpenAI";
+            /** Provider Thread Id */
+            provider_thread_id: string;
+            /** Summary */
+            summary: string;
+            /** Messages */
+            messages: components["schemas"]["Message"][];
+        };
         /** UserAssistant */
         UserAssistant: {
             /** Id */
@@ -262,7 +347,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-01T18:54:44.919898Z
+             * @default 2024-10-06T20:56:14.733707Z
              */
             created: string;
             /** Image */
@@ -299,7 +384,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-01T18:54:44.919898Z
+             * @default 2024-10-06T20:56:14.733707Z
              */
             created: string;
             /** Message */
@@ -324,7 +409,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-01T18:54:44.919898Z
+             * @default 2024-10-06T20:56:14.733707Z
              */
             created: string;
             /** Email */
@@ -350,7 +435,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-01T18:54:44.919898Z
+             * @default 2024-10-06T20:56:14.733707Z
              */
             created: string;
             /** Assistant Name */
@@ -583,6 +668,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SendMessageResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    last_thread_api_threads_last_thread__post: {
+        parameters: {
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadResponse"] | null;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    last_thread_api_threads_last_thread_post: {
+        parameters: {
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadResponse"] | null;
                 };
             };
             /** @description Validation Error */
