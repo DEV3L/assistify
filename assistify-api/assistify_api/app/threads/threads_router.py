@@ -22,16 +22,17 @@ def last_thread(
     last_thread = threads_service.get_last_thread(str(user.email))
 
     if not last_thread:
-        last_thread = threads_service.find_one(
+        thread = threads_service.find_one(
             threads_service.upsert(
                 Thread(
                     user_id=str(user.email),
                     assistant_id=messages_service.assistant.assistant_id,
-                    assistant_name=messages_service.assistant.assistant_name,
+                    assistant_name=messages_service.assistant.name,
                     model=messages_service.assistant.model,
-                    provider_thread_id=messages_service.chat.thread_id,
+                    provider_thread_id=messages_service.chat.create_thread(),
                 )
             )
         )
+        last_thread = ThreadResponse(**{**thread.model_dump(), "id": str(thread.id)})
 
     return last_thread

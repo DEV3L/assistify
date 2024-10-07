@@ -11,10 +11,10 @@ def test_send_message(
     mock_id_token,
     api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
 ):
-    api_client, mock_chat_service, _, _ = api_with_mocks
+    api_client, mock_messages_service, _, _ = api_with_mocks
 
-    mock_chat_service.get_or_create_thread.return_value = MagicMock(id="thread_id")
-    mock_chat_service.send_message.return_value = ChatResponse(message="What can I do for you?", token_count=0)
+    mock_messages_service.get_or_create_thread.return_value = MagicMock(id="thread_id")
+    mock_messages_service.send_message.return_value = ChatResponse(message="What can I do for you?", token_count=0)
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 
     response = api_client.post(

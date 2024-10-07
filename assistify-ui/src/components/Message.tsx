@@ -20,7 +20,17 @@ export const Message = ({ thread }: { thread: ThreadResponse }) => {
   const { postMessage } = usePostMessage();
 
   useEffect(() => {
-    sendMessage(welcomeMessage);
+    if (thread.messages.length === 0) {
+      sendMessage(welcomeMessage);
+    } else {
+      setMessages(
+        thread.messages.map((message) => ({
+          text: message.message,
+          sender: message.role,
+          thread,
+        }))
+      );
+    }
   }, []);
 
   const handleSendMessage = async () => {

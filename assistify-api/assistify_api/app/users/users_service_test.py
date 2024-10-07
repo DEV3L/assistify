@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+import pytest
 from assistify_api.database.models.assistant import Assistant
 from assistify_api.database.models.message import Message
 from assistify_api.database.models.thread import Thread
@@ -59,3 +61,10 @@ def test_get_assistant(users_service: UsersService):
     assert user_response.assistants[0].id == assistant.id
     assert user_response.threads[0].id == thread.id
     assert user_response.threads[0].messages[0].message == thread.messages[0].message
+
+
+def test_get_user_not_found(users_service: UsersService):
+    with pytest.raises(HTTPException) as exc_info:
+        users_service.get_user("abc")
+
+    assert exc_info.value.status_code == 404

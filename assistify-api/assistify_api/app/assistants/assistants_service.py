@@ -20,22 +20,21 @@ class AssistantsService:
     def get_assistants(self) -> ListAssistantsResponse:
         assistants = self.assistants_dao.find_all(model_class=Assistant)
 
-        return ListAssistantsResponse(
-            assistants=[
-                AssistantResponse(
-                    id=assistant.id,
-                    created=assistant.created,
-                    assistant_id=assistant.assistant_id,
-                    image=assistant.image,
-                    model=assistant.model,
-                    name=assistant.name,
-                    provider=assistant.provider,
-                    status=assistant.status,
-                    summary_full=assistant.summary_full,
-                    summary_short=assistant.summary_short,
-                    thread_ids=assistant.thread_ids,
-                    token_count=assistant.token_count,
-                )
-                for assistant in assistants
-            ]
+        return ListAssistantsResponse(assistants=[self.build_assistant_response(assistant) for assistant in assistants])
+
+    def build_assistant_response(self, assistant: Assistant) -> AssistantResponse:
+        assistant_response = AssistantResponse(
+            created=assistant.created,
+            assistant_id=assistant.assistant_id,
+            image=assistant.image,
+            model=assistant.model,
+            name=assistant.name,
+            provider=assistant.provider,
+            status=assistant.status,
+            summary_full=assistant.summary_full,
+            summary_short=assistant.summary_short,
+            thread_ids=assistant.thread_ids,
+            token_count=assistant.token_count,
         )
+        assistant_response.id = str(assistant.id)  # pydantic not letting me set this directly in constructor
+        return assistant_response
