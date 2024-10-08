@@ -1,19 +1,15 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
-from fastapi.testclient import TestClient
 
-from assistify_api.conftest import mock_idinfo
+from assistify_api.conftest import TestClientWithMocks, mock_idinfo
 
 
 @patch("assistify_api.app.auth.verify_token.id_token")
 def test_get_assistant(
     mock_id_token,
-    api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
+    test_client_with_mocks: TestClientWithMocks,
 ):
-    """
-    Test the /assistants endpoint with valid authentication.
-    """
-    api_client, _, _, _ = api_with_mocks
+    api_client = test_client_with_mocks.api_client
 
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 
@@ -34,9 +30,9 @@ def test_get_assistant(
 @patch("assistify_api.app.auth.verify_token.id_token")
 def test_get_assistant_not_found(
     mock_id_token,
-    api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
+    test_client_with_mocks: TestClientWithMocks,
 ):
-    api_client, _, _, _ = api_with_mocks
+    api_client = test_client_with_mocks.api_client
 
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 

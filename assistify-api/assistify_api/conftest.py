@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from unittest.mock import MagicMock
 
 import pytest
@@ -35,16 +36,24 @@ default_assistant_dict = {
 }
 
 
+@dataclass
+class TestClientWithMocks:
+    api_client: TestClient
+    mock_messages_service: MagicMock
+    mock_threads_service: MagicMock
+    mock_openai_client: MagicMock
+
+
 @pytest.fixture
-def api_with_mocks():
+def test_client_with_mocks():
     """
     Fixture to provide a TestClient instance with mocked dependencies for the API.
 
     Mocks the chat service and OpenAI client dependencies, sets environment variables
-    from a test-specific .env file, and yields a TestClient instance along with the mocks.
+    from a test-specific .env file, and yields a TestClientWithMocks instance.
 
     Yields:
-        Tuple[TestClient, MagicMock, MagicMock]: The TestClient instance, mock chat service, and mock OpenAI client.
+        TestClientWithMocks: The TestClient instance and its associated mocks.
     """
     mock_messages_service = MagicMock()
     mock_threads_service = MagicMock()
@@ -57,7 +66,12 @@ def api_with_mocks():
     set_env_variables(".env.test")
 
     with TestClient(api) as api_client:
-        yield api_client, mock_messages_service, mock_threads_service, mock_openai_client
+        yield TestClientWithMocks(
+            api_client=api_client,
+            mock_messages_service=mock_messages_service,
+            mock_threads_service=mock_threads_service,
+            mock_openai_client=mock_openai_client,
+        )
 
     api.dependency_overrides[get_messages_service] = get_messages_service
     api.dependency_overrides[get_threads_service] = get_threads_service

@@ -1,17 +1,17 @@
 from unittest.mock import MagicMock, patch
 
 from ai_assistant_manager.chats.chat_response import ChatResponse
-from fastapi.testclient import TestClient
 
-from assistify_api.conftest import mock_idinfo
+from assistify_api.conftest import TestClientWithMocks, mock_idinfo
 
 
 @patch("assistify_api.app.auth.verify_token.id_token")
 def test_send_message(
     mock_id_token,
-    api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
+    test_client_with_mocks: TestClientWithMocks,
 ):
-    api_client, mock_messages_service, _, _ = api_with_mocks
+    api_client = test_client_with_mocks.api_client
+    mock_messages_service = test_client_with_mocks.mock_messages_service
 
     mock_messages_service.get_or_create_thread.return_value = MagicMock(id="thread_id")
     mock_messages_service.send_message.return_value = ChatResponse(message="What can I do for you?", token_count=0)

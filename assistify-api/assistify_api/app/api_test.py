@@ -1,10 +1,9 @@
 from typing import Literal
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
-from fastapi.testclient import TestClient
 
-from assistify_api.conftest import mock_idinfo
+from assistify_api.conftest import TestClientWithMocks, mock_idinfo
 
 
 @pytest.mark.parametrize(
@@ -17,16 +16,13 @@ from assistify_api.conftest import mock_idinfo
     ],
 )
 def test_routes_unauthorized(
-    api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
+    test_client_with_mocks: TestClientWithMocks,
     route: str,
     verb: Literal["GET", "POST"],
     expected_status: int,
     expected_response: dict,
 ):
-    """
-    Test various routes with unauthorized access.
-    """
-    api_client, _, _, _ = api_with_mocks
+    api_client = test_client_with_mocks.api_client
 
     if verb == "GET":
         response = api_client.get(route, headers={"Authorization": "Bearer invalid_token"})
@@ -41,9 +37,9 @@ def test_routes_unauthorized(
 @patch("assistify_api.app.auth.verify_token.id_token")
 def test_protected_route(
     mock_id_token,
-    api_with_mocks: tuple[TestClient, MagicMock, MagicMock, MagicMock],
+    test_client_with_mocks: TestClientWithMocks,
 ):
-    api_client, _, _, _ = api_with_mocks
+    api_client = test_client_with_mocks.api_client
 
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 

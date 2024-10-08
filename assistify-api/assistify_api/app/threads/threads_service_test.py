@@ -11,11 +11,11 @@ def test_get_last_thread(mongo_db: MongoDb, default_thread: Thread):
         threads_dao=ThreadsDao(mongo_db),
     )
 
-    thread_id = service.upsert(Thread(**{**default_thread.model_dump(), "id": str(default_thread.id)}))
+    thread_response = service.upsert(Thread(**{**default_thread.model_dump(), "id": str(default_thread.id)}))
 
     result = service.get_last_thread(default_user_id)
 
-    assert result.id == thread_id
+    assert result.id == thread_response.id
 
 
 def test_find_one(mongo_db: MongoDb):
@@ -23,7 +23,7 @@ def test_find_one(mongo_db: MongoDb):
         threads_dao=ThreadsDao(mongo_db),
     )
 
-    thread_id = service.upsert(
+    thread_response = service.upsert(
         Thread(
             user_id="user_id",
             assistant_id="assistant_id",
@@ -33,9 +33,9 @@ def test_find_one(mongo_db: MongoDb):
         )
     )
 
-    thread = service.find_one(thread_id)
+    thread = service.find_one(thread_response.id)
 
-    assert thread.id == thread_id
+    assert thread.id == thread_response.id
 
 
 def test_list_threads(mongo_db: MongoDb):
@@ -43,7 +43,7 @@ def test_list_threads(mongo_db: MongoDb):
         threads_dao=ThreadsDao(mongo_db),
     )
 
-    thread_id = service.upsert(
+    thread_response = service.upsert(
         Thread(
             user_id="user_id",
             assistant_id="assistant_id",
@@ -55,4 +55,4 @@ def test_list_threads(mongo_db: MongoDb):
 
     threads = service.list()
 
-    assert any(thread for thread in threads if str(thread.id) == thread_id)
+    assert any(thread for thread in threads if str(thread.id) == thread_response.id)
