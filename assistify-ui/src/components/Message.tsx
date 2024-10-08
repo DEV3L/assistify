@@ -20,7 +20,7 @@ export const Message = ({ thread }: { thread: ThreadResponse }) => {
   const { postMessage } = usePostMessage();
 
   useEffect(() => {
-    if (thread.messages.length === 0) {
+    if (thread.is_welcome_thread) {
       sendMessage(welcomeMessage);
     } else {
       setMessages(
@@ -31,7 +31,7 @@ export const Message = ({ thread }: { thread: ThreadResponse }) => {
         }))
       );
     }
-  }, []);
+  }, [thread]);
 
   const handleSendMessage = async () => {
     sendMessage(userMessage);

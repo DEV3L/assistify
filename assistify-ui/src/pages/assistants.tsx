@@ -1,7 +1,7 @@
 import { AssistantCard } from "@/components/assistants/AssistantCard";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { withDashboardLayout } from "@/components/layouts/withDashboardLayout";
-import { useFetchAssistants } from "@/services/assistants";
+import { useFetchAssistants } from "@/services/useFetchAssistants";
 import { AssistantResponse } from "@/types/AssistifyTypes";
 import { Grid, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";

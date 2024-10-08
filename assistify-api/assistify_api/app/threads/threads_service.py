@@ -13,11 +13,15 @@ class ThreadsService:
 
     def upsert(self, thread: Thread) -> ThreadResponse:
         thread = self.find_one(self.threads_dao.upsert(thread))
-        return ThreadResponse(**{**thread.model_dump(), "id": str(thread.id)})
+        return ThreadResponse(**{**thread.model_dump(), "id": str(thread.id), "is_welcome_thread": False})
 
     def find_one(self, thread_id: str) -> ThreadResponse | None:
         thread = self.threads_dao.find_one(item_id=thread_id, model_class=Thread)
-        return ThreadResponse(**{**thread.model_dump(), "id": str(thread.id)}) if thread else None
+        return (
+            ThreadResponse(**{**thread.model_dump(), "id": str(thread.id), "is_welcome_thread": False})
+            if thread
+            else None
+        )
 
     def list(self):
         return self.threads_dao.find_all(model_class=Thread)
@@ -25,4 +29,8 @@ class ThreadsService:
     def get_last_thread(self, user_id: str) -> ThreadResponse | None:
         last_thread = self.threads_dao.get_last_thread(user_id)
 
-        return ThreadResponse(**{**last_thread.model_dump(), "id": str(last_thread.id)}) if last_thread else None
+        return (
+            ThreadResponse(**{**last_thread.model_dump(), "id": str(last_thread.id), "is_welcome_thread": False})
+            if last_thread
+            else None
+        )

@@ -10,6 +10,8 @@ from .messages_service import MessagesService
 def test_message_service():
     mock_chat = MagicMock()
     mock_chat.send_user_message.return_value = ChatResponse(message="Hello, how can I help you?", token_count=10)
+    user = MagicMock()
+
     service = MessagesService(
         chat=mock_chat,
         assistant=MagicMock(),
@@ -20,7 +22,6 @@ def test_message_service():
 
     message = "Hello"
     thread = MagicMock(token_count=0)
-    user = MagicMock()
 
     result = service.send_message(message=message, thread=thread, user=user)
 
@@ -29,36 +30,28 @@ def test_message_service():
     assert mock_chat.thread_id == thread.provider_thread_id
 
 
-def test_get_or_create_thread_creates_new_thread():
-    expected_provider_thread_id = "new_provider_thread_id"
+def test_get_thread_does_not_find_thread():
     mock_chat = MagicMock()
-    mock_chat.create_thread.return_value = expected_provider_thread_id
     mock_assistant = MagicMock(id="abc", model="gpt-4o")
-    mock_assistant.name = "assistant name"
+    user = MagicMock(email="user@example.com")
 
     service = MessagesService(
         chat=mock_chat,
         assistant=mock_assistant,
         assistants_dao=MagicMock(),
-        threads_dao=MagicMock(
-            find_one=MagicMock(return_value=MagicMock(provider_thread_id=expected_provider_thread_id))
-        ),
+        threads_dao=MagicMock(find_all=MagicMock(return_value=[])),
         users_dao=MagicMock(),
     )
 
-    user = MagicMock(email="user@example.com")
-    service.threads_dao.find_all.return_value = []
+    thread = service.get_thread(user=user, thread_id="new_thread_id")
 
-    new_thread = service.get_or_create_thread(user=user)
-
-    assert new_thread.provider_thread_id == expected_provider_thread_id
-    service.threads_dao.upsert.assert_called_once()
-    service.assistants_dao.upsert.assert_called_once()
-    service.users_dao.upsert.assert_called_once()
+    assert thread is None
 
 
-def test_get_or_create_thread_finds_existing_thread():
+def test_get_thread_finds_existing_thread():
     mock_chat = MagicMock()
+    user = MagicMock(email="user@example.com")
+
     service = MessagesService(
         chat=mock_chat,
         assistant=MagicMock(),
@@ -67,17 +60,18 @@ def test_get_or_create_thread_finds_existing_thread():
         users_dao=MagicMock(),
     )
 
+    existing_thread_id = "existing_thread_id"
     existing_thread = Thread(
-        user_id="user_id",
+        user_id=user.email,
         assistant_id="assistant_id",
         assistant_name="assistant name",
         model="gpt-4o",
         provider_thread_id="provider_thread_id",
     )
-    existing_thread.id = "existing_thread_id"
+    existing_thread.id = existing_thread_id
     service.threads_dao.find_all.return_value = [existing_thread]
 
-    found_thread = service.get_or_create_thread(user=MagicMock(), thread_id="existing_thread_id")
+    found_thread = service.get_thread(user=user, thread_id=existing_thread_id)
 
     assert found_thread == existing_thread
 

@@ -31,6 +31,7 @@ def last_thread(
                 provider_thread_id=messages_service.chat.create_thread(),
             )
         )
+        last_thread.is_welcome_thread = True
 
     return last_thread
 

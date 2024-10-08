@@ -55,6 +55,8 @@ class MessagesService:
         self.threads_dao.upsert(thread)
 
         self.assistant.token_count = self.assistant.token_count + response.token_count
+        self.assistant.thread_ids = list(set(self.assistant.thread_ids + [str(thread.id)]))
+
         self.assistants_dao.upsert(self.assistant)
 
         user.token_count = user.token_count + response.token_count
@@ -62,12 +64,10 @@ class MessagesService:
 
         return response
 
-    def get_or_create_thread(self, user: User, thread_id: str = None) -> Thread:
-        if not thread_id:
-            return self._create_thread(user)
-
-        threads = self.threads_dao.find_all(model_class=Thread)  # will be user threads
-        return [thread for thread in threads if str(thread.id) == thread_id][0]
+    def get_thread(self, user: User, thread_id: str = None) -> Thread:
+        threads = self.threads_dao.find_all(model_class=Thread)
+        user_threads = [thread for thread in threads if str(thread.id) == thread_id and thread.user_id == user.email]
+        return user_threads[0] if user_threads else None
 
     def get_messages(self, thread_id: str) -> list[str]:
         return self.chat.list_messages(thread_id=thread_id)

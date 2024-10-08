@@ -18,6 +18,7 @@ class ThreadResponse(BaseModel):
 
     assistant_id: str
     assistant_name: str
+    is_welcome_thread: bool
     model: str
     provider: Literal["OpenAI"]
     provider_thread_id: str

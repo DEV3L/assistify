@@ -146,6 +146,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/threads/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** New Thread */
+        post: operations["new_thread_api_threads__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/threads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** New Thread */
+        post: operations["new_thread_api_threads_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/users": {
         parameters: {
             query?: never;
@@ -234,7 +268,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-06T20:56:14.733707Z
+             * @default 2024-10-08T15:25:49.358057Z
              */
             created: string;
             /** Assistant Id */
@@ -280,7 +314,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-06T20:56:14.954322Z
+             * @default 2024-10-08T15:25:49.638767Z
              */
             created: string;
             /** Thread Id */
@@ -315,6 +349,21 @@ export interface components {
             /** Thread Id */
             thread_id: string;
         };
+        /** ThreadRequest */
+        ThreadRequest: {
+            /** Assistant Id */
+            assistant_id: string;
+            /** Assistant Name */
+            assistant_name: string;
+            /** Model */
+            model: string;
+            /**
+             * Provider
+             * @constant
+             * @enum {string}
+             */
+            provider: "OpenAI";
+        };
         /** ThreadResponse */
         ThreadResponse: {
             /** Id */
@@ -325,6 +374,8 @@ export interface components {
             assistant_id: string;
             /** Assistant Name */
             assistant_name: string;
+            /** Is Welcome Thread */
+            is_welcome_thread: boolean;
             /** Model */
             model: string;
             /**
@@ -347,7 +398,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-06T20:56:14.733707Z
+             * @default 2024-10-08T15:25:49.358057Z
              */
             created: string;
             /** Image */
@@ -384,7 +435,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-06T20:56:14.733707Z
+             * @default 2024-10-08T15:25:49.358057Z
              */
             created: string;
             /** Message */
@@ -409,7 +460,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-06T20:56:14.733707Z
+             * @default 2024-10-08T15:25:49.358057Z
              */
             created: string;
             /** Email */
@@ -435,7 +486,7 @@ export interface components {
             /**
              * Created
              * Format: date-time
-             * @default 2024-10-06T20:56:14.733707Z
+             * @default 2024-10-08T15:25:49.358057Z
              */
             created: string;
             /** Assistant Name */
@@ -548,7 +599,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The ID of the assistant to retrieve */
-                assistant_id: number;
+                assistant_id: string;
             };
             cookie?: never;
         };
@@ -583,7 +634,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The ID of the assistant to retrieve */
-                assistant_id: number;
+                assistant_id: string;
             };
             cookie?: never;
         };
@@ -699,7 +750,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ThreadResponse"] | null;
+                    "application/json": components["schemas"]["ThreadResponse"];
                 };
             };
             /** @description Validation Error */
@@ -731,7 +782,79 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ThreadResponse"] | null;
+                    "application/json": components["schemas"]["ThreadResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    new_thread_api_threads__post: {
+        parameters: {
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ThreadRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    new_thread_api_threads_post: {
+        parameters: {
+            query?: {
+                force?: boolean;
+                mongodb_uri?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ThreadRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadResponse"];
                 };
             };
             /** @description Validation Error */

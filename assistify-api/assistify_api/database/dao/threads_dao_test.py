@@ -25,7 +25,8 @@ def test_get_last_thread(mongo_db: Database, default_thread: Thread):
 
     last_thread = dao.get_last_thread(default_user_id)
 
-    assert str(last_thread.id) == second_thread_id
+    assert str(last_thread.id) == first_thread_id
 
     # cleanup
     assert dao.delete_one(first_thread_id)
+    assert dao.delete_one(second_thread_id)

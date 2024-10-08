@@ -14,7 +14,7 @@ def test_get_last_thread(
     api_client = test_client_with_mocks.api_client
     mock_threads_service = test_client_with_mocks.mock_threads_service
 
-    thread_response = {**default_thread.model_dump(), "id": str(default_thread.id)}
+    thread_response = {**default_thread.model_dump(), "id": str(default_thread.id), "is_welcome_thread": False}
     mock_threads_service.get_last_thread.return_value = ThreadResponse(**thread_response)
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 
@@ -41,7 +41,7 @@ def test_get_last_thread_returns_new_thread_if_none_found(
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
     mock_threads_service.get_last_thread.return_value = None
     mock_threads_service.upsert.return_value = ThreadResponse(
-        **{**default_thread.model_dump(), "id": str(default_thread.id)}
+        **{**default_thread.model_dump(), "id": str(default_thread.id), "is_welcome_thread": True}
     )
     mock_messages_service.assistant = mock_assistant
     mock_messages_service.chat.create_thread.return_value = "provider_thread_id"
@@ -50,6 +50,7 @@ def test_get_last_thread_returns_new_thread_if_none_found(
 
     assert response.status_code == 200
     assert response.json()["id"] is not None
+    assert response.json()["is_welcome_thread"] is True
 
 
 @patch("assistify_api.app.auth.verify_token.id_token")
@@ -64,7 +65,7 @@ def test_new_thread(
 
     mock_messages_service.chat.create_thread.return_value = default_thread.provider_thread_id
 
-    thread_response = {**default_thread.model_dump(), "id": str(default_thread.id)}
+    thread_response = {**default_thread.model_dump(), "id": str(default_thread.id), "is_welcome_thread": False}
     mock_threads_service.upsert.return_value = ThreadResponse(**thread_response)
     mock_id_token.verify_oauth2_token.return_value = mock_idinfo
 
@@ -82,3 +83,4 @@ def test_new_thread(
     assert response.status_code == 200
     assert response.json()["assistant_id"] == default_thread.assistant_id
     assert response.json()["provider_thread_id"] == default_thread.provider_thread_id
+    assert response.json()["is_welcome_thread"] is False

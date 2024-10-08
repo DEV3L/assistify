@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react-hooks";
 import { useSession } from "next-auth/react";
-import { useFetchAssistants } from "./assistants";
+import { useFetchAssistants } from "./useFetchAssistants";
 import axiosInstance from "./axiosInstance";
 
 jest.mock("next-auth/react");

@@ -17,9 +17,6 @@ def send_message(
     message_service: MessagesService = Depends(get_messages_service),
     user: User = Depends(verify_token),
 ) -> SendMessageResponse:
-    """
-    Endpoint to receive a message. Requires authentication.
-    """
-    thread = message_service.get_or_create_thread(user, message.thread_id)
+    thread = message_service.get_thread(user, message.thread_id)
     response = message_service.send_message(message.message, thread=thread, user=user)
     return SendMessageResponse(response=response.message, thread_id=str(thread.id))

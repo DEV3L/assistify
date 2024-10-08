@@ -17,7 +17,7 @@ describe("Message", () => {
     user: { name: "Test User", image: "user-image-url" },
   };
   const assistantResponse = "Hello world from the assistant!";
-  const thread = {
+  const defaultThread = {
     id: "123",
     user_id: "456",
     assistant_id: "789",
@@ -26,6 +26,7 @@ describe("Message", () => {
     provider: "OpenAI",
     provider_thread_id: "123",
     summary: "Test summary",
+    is_welcome_thread: true,
     messages: [],
   } as ThreadResponse;
 
@@ -37,6 +38,7 @@ describe("Message", () => {
   });
 
   const renderWithSessionProvider = (
+    thread: ThreadResponse = defaultThread,
     session: { user: { name: string; image?: string } } | null = userSession
   ) => {
     return render(
@@ -45,6 +47,18 @@ describe("Message", () => {
       </SessionProvider>
     );
   };
+
+  it("renders the welcome message on mount", () => {
+    renderWithSessionProvider();
+    expect(
+      screen.getByText(/Briefly introduce yourself!/i)
+    ).toBeInTheDocument();
+  });
+
+  it("renders the previous messages on mount", () => {
+    renderWithSessionProvider({ ...defaultThread, is_welcome_thread: false });
+    expect(screen.queryByText(/Briefly introduce yourself!/i)).toBeNull();
+  });
 
   it("renders the welcome message on mount", () => {
     renderWithSessionProvider();
