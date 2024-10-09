@@ -36,8 +36,10 @@ def get_messages_service(
 
 def get_threads_service(
     threads_dao: ThreadsDao = Depends(ThreadsDao),
+    assistants_dao: AssistantsDao = Depends(AssistantsDao),
+    users_dao: UsersDao = Depends(UsersDao),
 ) -> ThreadsService:
-    return ThreadsService(threads_dao)
+    return ThreadsService(threads_dao, assistants_dao, users_dao)
 
 
 # temporary hardcoded assistant id - Assistant Concierge

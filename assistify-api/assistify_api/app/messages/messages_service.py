@@ -71,24 +71,3 @@ class MessagesService:
 
     def get_messages(self, thread_id: str) -> list[str]:
         return self.chat.list_messages(thread_id=thread_id)
-
-    def _create_thread(self, user: User) -> Thread:
-        provider_thread_id = self.chat.create_thread()
-
-        thread_id = self.threads_dao.upsert(
-            Thread(
-                assistant_id=str(self.assistant.id),
-                assistant_name=self.assistant.name,
-                model=self.assistant.model,
-                provider_thread_id=provider_thread_id,
-                user_id=user.email,
-            )
-        )
-
-        self.assistant.thread_ids.append(thread_id)
-        self.assistants_dao.upsert(self.assistant)
-
-        user.thread_ids.append(thread_id)
-        self.users_dao.upsert(user)
-
-        return self.threads_dao.find_one(thread_id, model_class=Thread)

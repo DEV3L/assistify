@@ -6,7 +6,11 @@ from fastapi.testclient import TestClient
 from pymongo.database import Database
 
 from assistify_api.app.users.users_service import UsersService
+from assistify_api.database.dao.assistants_dao import AssistantsDao
+from assistify_api.database.dao.users_dao import UsersDao
+from assistify_api.database.models.assistant import Assistant
 from assistify_api.database.models.thread import Thread
+from assistify_api.database.models.user import User
 
 from .app.api import api
 from .app.assistants.assistants_service import AssistantsService
@@ -122,15 +126,18 @@ def users_service():
 
 
 @pytest.fixture
-def default_thread() -> Thread:
-    """
-    Fixture to provide a default Thread model instance.
-    """
+def default_thread(mongo_db: MongoDb) -> Thread:
+    users_dao = UsersDao(mongo_db)
+    users_dao.upsert(User(email=default_user_id, name="user name"))
+
+    assistants_dao = AssistantsDao(mongo_db)
+    assistant = assistants_dao.find_all(model_class=Assistant)[0]
+
     return Thread(
         user_id=default_user_id,
-        assistant_id=default_assistant_dict["assistant_id"],
-        assistant_name=default_assistant_dict["name"],
-        model=default_assistant_dict["model"],
-        provider="OpenAI",
+        assistant_id=str(assistant.id),
+        assistant_name=assistant.name,
+        model=assistant.model,
+        provider=assistant.provider,
         provider_thread_id="test_provider_thread_id",
     )
