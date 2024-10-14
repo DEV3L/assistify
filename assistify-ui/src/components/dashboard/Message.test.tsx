@@ -58,7 +58,11 @@ describe("Message", () => {
   ) => {
     return render(
       <SessionProvider session={session as any}>
-        <Message assistant={mockAssistant} thread={thread} />
+        <Message
+          assistant={mockAssistant}
+          thread={thread}
+          handleDetailsOpen={() => {}}
+        />
       </SessionProvider>
     );
   };

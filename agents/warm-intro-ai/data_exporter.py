@@ -5,7 +5,7 @@ PROMPT_PATH = "prompts/prompt.md"
 
 
 def export_data():
-    # Assistify Files
+    # Warm Intro AI Files
     FilesExporter("Warm Intro AI Product Definition.txt").export()
     FilesExporter("Warm Intro AI README.txt").export()
 

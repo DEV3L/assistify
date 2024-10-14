@@ -20,9 +20,11 @@ const welcomeMessage =
 export const Message = ({
   thread,
   assistant,
+  handleDetailsOpen,
 }: {
   thread: ThreadResponse;
   assistant: AssistantResponse;
+  handleDetailsOpen: () => void;
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userMessage, setUserMessage] = useState<string>("");
@@ -77,6 +79,7 @@ export const Message = ({
           messages={messages}
           isResponseLoading={isResponseLoading}
           assistant={assistant}
+          handleDetailsOpen={handleDetailsOpen}
         />
       </Box>
       <Box display="flex" flexDirection="row" width="100%" mt="auto">

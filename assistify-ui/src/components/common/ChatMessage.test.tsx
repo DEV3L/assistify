@@ -45,6 +45,7 @@ describe("ChatMessage", () => {
           assistant={mockAssistant}
           messages={messages}
           isResponseLoading={isResponseLoading}
+          handleDetailsOpen={() => {}}
         />
       </SessionProvider>
     );

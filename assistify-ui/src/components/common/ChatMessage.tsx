@@ -13,45 +13,50 @@ interface ChatMessageProps {
   messages: Message[];
   isResponseLoading: boolean;
   assistant: AssistantResponse;
+  handleDetailsOpen: () => void;
 }
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({
   messages,
   isResponseLoading,
   assistant,
+  handleDetailsOpen,
 }) => {
   const { data: session } = useSession();
 
   return (
     <Box flex={1}>
-      {messages.map((message, index) => (
-        <Box
-          key={index}
-          display="flex"
-          alignItems="center"
-          mb={2}
-          flexDirection={message.sender === "user" ? "row" : "row-reverse"}
-        >
-          <Avatar
-            sx={{
-              width: 40,
-              height: 40,
-              mr: message.sender === "user" ? -0.75 : 0,
-              ml: message.sender === "assistant" ? -0.75 : 0,
-              alignSelf: message.sender === "user" ? "flex-start" : "flex-end",
-            }}
-            src={
-              message.sender === "user"
-                ? session?.user?.image ?? ""
-                : assistant.image
-            }
-            alt={message.sender === "user" ? "User Avatar" : "Assistant Avatar"}
-          />
-          <Paper elevation={3} sx={{ p: 2 }}>
-            <Typography variant="body1">{message.text}</Typography>
-          </Paper>
-        </Box>
-      ))}
+      {messages.map((message, index) => {
+        const isUser = message.sender === "user";
+        return (
+          <Box
+            key={index}
+            display="flex"
+            alignItems="center"
+            mb={2}
+            flexDirection={isUser ? "row" : "row-reverse"}
+          >
+            <Avatar
+              sx={{
+                width: 40,
+                height: 40,
+                cursor: isUser ? "default" : "pointer",
+                mr: isUser ? -0.75 : 0,
+                ml: !isUser ? -0.75 : 0,
+                alignSelf: isUser ? "flex-start" : "flex-end",
+              }}
+              onClick={() => {
+                !isUser && handleDetailsOpen();
+              }}
+              src={isUser ? session?.user?.image ?? "" : assistant.image}
+              alt={isUser ? "User Avatar" : "Assistant Avatar"}
+            />
+            <Paper elevation={3} sx={{ p: 2 }}>
+              <Typography variant="body1">{message.text}</Typography>
+            </Paper>
+          </Box>
+        );
+      })}
       {isResponseLoading && (
         <Box data-testid="chat-loading-skeleton">
           <LoadingSkeleton />
