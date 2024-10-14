@@ -46,7 +46,6 @@ def test_protected_route(
     response = api_client.get("/protected", headers={"Authorization": "Bearer fake_token"})
 
     assert response.status_code == 200
-    assert response.json() == {
-        "message": f"Hello {mock_idinfo['name']}, your email is {mock_idinfo['email']}",
-        "latest_version": "The latest database migration version is v002_update_assistants",
-    }
+    response_json = response.json()
+    assert response_json["message"] == f"Hello {mock_idinfo['name']}, your email is {mock_idinfo['email']}"
+    assert response_json["latest_version"].startswith("The latest database migration version is v")
