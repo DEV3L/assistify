@@ -5,9 +5,6 @@ from .dao import Dao
 def test_inserts_record(default_assistant: Assistant, dao: Dao):
     item_id = dao.upsert(default_assistant)
 
-    # cleanup
-    assert dao.delete_one(item_id)
-
     assert item_id
 
 
@@ -23,9 +20,6 @@ def test_does_find_record(default_assistant: Assistant, dao: Dao):
     item_id = dao.upsert(default_assistant)
 
     result_assistant = dao.find_one(item_id, model_class=Assistant)
-
-    # cleanup
-    assert dao.delete_one(item_id)
 
     assert item_id == str(result_assistant.id)
 

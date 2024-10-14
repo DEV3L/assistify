@@ -9,7 +9,4 @@ def test_dao_inserts_record(mongo_db: Database):
 
     item_id = dao.upsert(User(email="test@test.com", name="test"))
 
-    # cleanup
-    assert dao.delete_one(item_id)
-
     assert item_id

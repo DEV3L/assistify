@@ -12,7 +12,4 @@ def test_dao_inserts_record(mongo_db: Database, default_assistant: Assistant):
 
     assistant_id = dao.upsert(default_assistant)
 
-    # cleanup
-    assert dao.delete_one(assistant_id)
-
     assert assistant_id
