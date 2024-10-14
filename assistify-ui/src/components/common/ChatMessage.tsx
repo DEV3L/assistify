@@ -1,3 +1,4 @@
+import { AssistantResponse } from "@/types/AssistifyTypes";
 import { Avatar, Box, Paper, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import React from "react";
@@ -11,11 +12,13 @@ interface Message {
 interface ChatMessageProps {
   messages: Message[];
   isResponseLoading: boolean;
+  assistant: AssistantResponse;
 }
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({
   messages,
   isResponseLoading,
+  assistant,
 }) => {
   const { data: session } = useSession();
 
@@ -40,7 +43,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
             src={
               message.sender === "user"
                 ? session?.user?.image ?? ""
-                : "https://i.postimg.cc/mzqtZLk8/assistify-concierge.png"
+                : assistant.image
             }
             alt={message.sender === "user" ? "User Avatar" : "Assistant Avatar"}
           />

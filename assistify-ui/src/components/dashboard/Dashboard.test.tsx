@@ -5,6 +5,14 @@ import { DashBoard } from "./Dashboard";
 
 jest.mock("../../hooks/useMobile");
 
+jest.mock("next/router", () => ({
+  useRouter: () => ({
+    query: {
+      assistantId: "123",
+    },
+  }),
+}));
+
 const userSession = {
   user: { name: "Test User" },
 };

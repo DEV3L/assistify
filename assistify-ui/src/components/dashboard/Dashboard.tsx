@@ -1,14 +1,19 @@
 import { StyledCard } from "@/components/common/StyledCard";
 import { WelcomeMessage } from "@/components/common/WelcomeMessage";
-import { Message } from "@/components/Message";
 import { useMobile } from "@/hooks/useMobile";
 import { useLastThread } from "@/services/lastThread";
 import { useFetchAssistants } from "@/services/useFetchAssistants";
 import { AssistantResponse, ThreadResponse } from "@/types/AssistifyTypes";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { LoadingSkeleton } from "../common/LoadingSkeleton";
+import { Message } from "./Message";
 import StartNewConversationButton from "./StartNewConversationButton";
+
 export const DashBoard = () => {
+  const router = useRouter();
+  const { assistantId } = router.query;
+
   const mobile = useMobile();
 
   const [thread, setThread] = useState<ThreadResponse | null>(null);
@@ -28,10 +33,15 @@ export const DashBoard = () => {
     };
     const fetchConciergeAssistant = async () => {
       try {
-        const assistant = (await fetchAssistants()).assistants.find(
-          (assistant) => assistant.name === "Assistify - Concierge"
-        );
-        setAssistant(assistant || null);
+        const assistants = await fetchAssistants();
+        const selectedAssistant = assistantId
+          ? assistants.assistants.find(
+              (assistant) => assistant._id === assistantId
+            )
+          : assistants.assistants.find(
+              (assistant) => assistant.name === "Assistify - Concierge"
+            );
+        setAssistant(selectedAssistant || null);
       } catch (error) {
         console.error("Error fetching last thread:", error);
       }
@@ -39,10 +49,9 @@ export const DashBoard = () => {
 
     fetchLastThread();
     fetchConciergeAssistant();
-  }, []);
+  }, [assistantId]);
 
   const handleNewThread = (newThread: ThreadResponse) => {
-    console.log("newThread", newThread);
     setThread(newThread);
   };
 
@@ -75,7 +84,11 @@ export const DashBoard = () => {
           p: mobile ? 0 : 2,
         }}
       >
-        {thread ? <Message thread={thread} /> : <LoadingSkeleton />}
+        {thread && assistant ? (
+          <Message assistant={assistant} thread={thread} />
+        ) : (
+          <LoadingSkeleton />
+        )}
       </StyledCard>
     </>
   );

@@ -1,16 +1,32 @@
 import { render, screen } from "@testing-library/react";
 
+import { AssistantResponse, ThreadResponse } from "@/types/AssistifyTypes";
 import { SessionProvider } from "next-auth/react";
-import { Message } from "../Message";
+import { Message } from "../dashboard/Message";
 import { ChatMessage } from "./ChatMessage";
+
+const mockAssistant = {
+  _id: "123",
+  created: "2024-10-08T15:25:49.358057Z",
+  assistant_id: "789",
+  image: "assistant-image-url",
+  model: "gpt-3.5",
+  name: "Test Assistant",
+  provider: "OpenAI",
+  status: "Public",
+  summary_full: "Test summary",
+  summary_short: "Test summary",
+  thread_ids: ["123"],
+  token_count: 100,
+} as AssistantResponse;
 
 jest.mock("next/router", () => ({
   useRouter: jest.fn(),
 }));
 
 const messages: Message[] = [
-  { text: "Hello", sender: "user" },
-  { text: "Hi there!", sender: "assistant" },
+  { text: "Hello", sender: "user", thread: {} as ThreadResponse },
+  { text: "Hi there!", sender: "assistant", thread: {} as ThreadResponse },
 ];
 
 const userSession = {
@@ -26,6 +42,7 @@ describe("ChatMessage", () => {
     return render(
       <SessionProvider session={session as any}>
         <ChatMessage
+          assistant={mockAssistant}
           messages={messages}
           isResponseLoading={isResponseLoading}
         />

@@ -1,6 +1,10 @@
 import { ChatMessage } from "@/components/common/ChatMessage";
 import { usePostMessage } from "@/services/messages";
-import { SendMessageResponse, ThreadResponse } from "@/types/AssistifyTypes";
+import {
+  AssistantResponse,
+  SendMessageResponse,
+  ThreadResponse,
+} from "@/types/AssistifyTypes";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -13,7 +17,13 @@ export interface Message {
 const welcomeMessage =
   "Briefly introduce yourself! And give me one idea on what you could help me with today.";
 
-export const Message = ({ thread }: { thread: ThreadResponse }) => {
+export const Message = ({
+  thread,
+  assistant,
+}: {
+  thread: ThreadResponse;
+  assistant: AssistantResponse;
+}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userMessage, setUserMessage] = useState<string>("");
   const [isResponseLoading, setIsResponseLoading] = useState<boolean>(false);
@@ -60,12 +70,13 @@ export const Message = ({ thread }: { thread: ThreadResponse }) => {
   return (
     <Box display="flex" flexDirection="column" height="100%">
       <Typography mb={2} variant="subtitle2">
-        Chat with Assistify - Concierge
+        Chat with {assistant.name}
       </Typography>
       <Box flex={1} overflow="auto" mb={2}>
         <ChatMessage
           messages={messages}
           isResponseLoading={isResponseLoading}
+          assistant={assistant}
         />
       </Box>
       <Box display="flex" flexDirection="row" width="100%" mt="auto">
