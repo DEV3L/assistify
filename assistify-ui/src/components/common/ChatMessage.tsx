@@ -1,5 +1,6 @@
 import { AssistantResponse } from "@/types/AssistifyTypes";
 import { Avatar, Box, Paper, Typography } from "@mui/material";
+import Markdown from "markdown-to-jsx";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { LoadingSkeleton } from "./LoadingSkeleton";
@@ -52,7 +53,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
               alt={isUser ? "User Avatar" : "Assistant Avatar"}
             />
             <Paper elevation={3} sx={{ p: 2 }}>
-              <Typography variant="body1">{message.text}</Typography>
+              <Typography variant="body1">
+                <Markdown>{message.text}</Markdown>
+              </Typography>
             </Paper>
           </Box>
         );
