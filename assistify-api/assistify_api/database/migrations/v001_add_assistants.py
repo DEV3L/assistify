@@ -67,8 +67,7 @@ model_gpt_4o_mini = "gpt-4o-mini"
 
 assistify_concierge_name = "Assistify - Concierge"
 assistify_concierge_summary_short = "Your friendly virtual guide to Assistify, helping you connect with specialized AI assistants to enhance and streamline your professional workflows."
-assistify_concierge_summary_full = f"""
-**{assistify_concierge_name}:** {assistify_concierge_summary_short}
+assistify_concierge_summary_full = f"""**{assistify_concierge_name}:** {assistify_concierge_summary_short}
 
 ---
 
@@ -102,8 +101,7 @@ Assistify - Concierge is here to make your journey with Assistify smooth and pro
 
 assistify_product_owner_name = "Assistify - Product Owner"
 assistify_product_owner_summary_short = "Your expert guide to agile product development, assisting you in refining product vision, gathering requirements, and ensuring your projects exceed user expectations through effective strategies and user stories."
-assistify_product_owner_summary_full = f"""
-**{assistify_product_owner_name}:** {assistify_product_owner_summary_short}
+assistify_product_owner_summary_full = f"""**{assistify_product_owner_name}:** {assistify_product_owner_summary_short}
 
 ---
 
@@ -145,8 +143,7 @@ Assistify - Product Owner is dedicated to helping you drive your projects to suc
 
 ai_concept_to_code_name = "AI Concept To Code Presenter"
 ai_concept_to_code_summary_short = "Your expert guide to integrating AI and Large Language Models (LLMs) into agile software development, helping you revolutionize your practices from concept to code."
-ai_concept_to_code_summary_full = f"""
-**{ai_concept_to_code_name}:** {assistify_product_owner_summary_short}
+ai_concept_to_code_summary_full = f"""**{ai_concept_to_code_name}:** {assistify_product_owner_summary_short}
 
 ---
 
@@ -188,8 +185,7 @@ The AI Concept To Code Presenter is dedicated to helping you embrace the future 
 
 dev3loper_ai_youtube_assistant_name = "Dev3loper.ai YouTube Assistant"
 dev3loper_ai_youtube_assistant_summary_short = "Your expert guide to crafting engaging YouTube video descriptions, metadata, and social media posts tailored for software developers interested in AI and generative AI."
-dev3loper_ai_youtube_assistant_summary_full = f"""
-**{dev3loper_ai_youtube_assistant_name}:** {dev3loper_ai_youtube_assistant_summary_short}
+dev3loper_ai_youtube_assistant_summary_full = f"""**{dev3loper_ai_youtube_assistant_name}:** {dev3loper_ai_youtube_assistant_summary_short}
 
 ---
 
