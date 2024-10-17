@@ -43,4 +43,4 @@ def get_threads_service(
 
 
 # temporary hardcoded assistant id - Assistant Concierge
-hardcoded_assistant_id = "asst_LwF3CGKjDJK0IMWRWHyE4w6w"
+hardcoded_assistant_id = "asst_1covfp75taVovUbQpoiOyMEL"
