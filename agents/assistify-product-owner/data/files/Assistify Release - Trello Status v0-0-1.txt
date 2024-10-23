@@ -1,0 +1,1098 @@
+10-23-2024
+
+All these items have been completed and are deployed to the production version of the Assistify application.
+
+---
+---
+
+# DONE
+This is a list of cards, work items, user stories, and tasks that are in the done category.
+
+## Title: Implement Markdown Formatting in Message Text Component
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- Chat
+
+### Done Date: 2024-10-18 13:23:00+00:00
+
+### Description
+
+**Business Value**: Enhancing the user experience by presenting messages with rich-text formatting will allow for clearer communication and more visually engaging interactions within the chat interface.
+
+**Problem**: Currently, the message text displayed in the UI is raw text without formatting, which leads to a suboptimal user experience, especially when interacting with detailed responses that could benefit from structured formatting (bold, italics, lists, etc.).
+
+**Job-to-Be-Done**: As a user, I want the messages in the chat interface to be displayed with markdown formatting so that I can easily read and interpret the information provided.
+
+**Description**: Modify the existing message text component used in the chat interface to interpret and display markdown syntax. This will involve integrating a markdown parser in the component, thus leveraging existing markdown capabilities seen in other areas of the app (like in the `AssistantDetailsDialog`).
+
+**Acceptance Criteria**:
+
+- Given an assistant response containing markdown syntax,
+- When the response is rendered in the message text component,
+- Then the message should be displayed with the appropriate markdown formatting applied.
+
+**Mockup/References**: Review the implementation in `AssistantDetailsDialog.tsx` where markdown formatting is applied to assistant summaries. Use a similar approach to ensure consistency across the application.
+
+## Title: Manage and Initiate Chat Threads
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- assistify-api
+- assistants
+
+### Done Date: 2024-10-09 13:03:00+00:00
+
+### Description
+
+**Business Value**: Enhance user experience by providing a seamless continuity of conversations and giving users the flexibility to manage their chat interactions effectively.
+
+**Problem**: Currently, each page reload initiates a new chat thread, disrupting the continuity of conversations. Users need a persistent experience and the ability to start new threads when desired.
+
+**Job-to-Be-Done**: As a user, I want the dashboard to remember the last conversation thread when I log in, and I also want the option to start a new chat for a different discussion.
+
+**Description**:
+
+- The Dashboard should check for the existence of a previous thread upon user login.
+- Implement a user interface element for users to start a new chat thread.
+
+**Acceptance Criteria**:
+
+1. **Load Existing Thread if Available**:
+   ```
+   Given the user has previously created a chat thread,
+   When the user logs into Assistify and accesses the chat dashboard,
+   Then the system should load the last active chat thread for the user.
+   ```
+2. **Create New Thread if No Previous Thread Exists**:
+   ```
+   Given that the user has not previously created a chat thread,
+   When the user logs into Assistify and accesses the chat dashboard,
+   Then the system should automatically initiate a new chat thread.
+   ```
+3. **User-Initiated New Conversation**:
+   ```
+   Given the user is on the chat dashboard,
+   When the user clicks on the "Start New Conversation" button,
+   Then a new chat thread should be initiated regardless of existing threads.
+   ```
+4. **Interface for Starting New Conversation**:
+   ```
+   Given that the user is logged into Assistify,
+   When the user views the chat dashboard,
+   Then a visible and accessible "Start New Conversation" button should be present on the interface.
+   ```
+
+## Title: Display Threads and Messages
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- persistence-nosql
+- assistify-api
+
+### Done Date: 2024-10-06 13:03:00+00:00
+
+### Description
+
+**Business Value:** Allowing users to view their interaction history aids in picking up conversations and tracking past communications.
+
+**Problem:** Users require a log of past interactions to continue conversations seamlessly and for reference.
+
+**Job-to-Be-Done:** As a user, I want to see all my related threads and messages, so I can review past interactions and continue ongoing conversations.
+
+**Description:** Create a view that displays all threads and messages associated with the user, allowing both review and continuation of chats.
+
+**Acceptance Criteria:**
+
+```
+Given the user is logged in
+When they navigate to their message history
+Then they should see a list of all threads along with messages in each thread
+```
+
+## Title: Display List of Subscribed Assistants
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- assistify-api
+- persistence-nosql
+- assistants
+
+### Done Date: 2024-10-06 13:03:00+00:00
+
+### Description
+
+**Business Value:** Viewing subscribed assistants empowers users to manage their subscriptions and interactions with AI tools effectively.
+
+**Problem:** Users need to see which assistants they're subscribed to, fostering better management and usage.
+
+**Job-to-Be-Done:** As a user, I want to view the assistants I'm subscribed to, so I can interact with the appropriate AI tools.
+
+**Description:** Implement a feature that lists all assistants a user is subscribed to on their profile.
+
+**Acceptance Criteria:**
+
+```
+Given the user is logged in
+When they access the subscribed assistants section
+Then they should see a list of their current subscriptions
+```
+
+## Title: Move Chat Input to Bottom
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-09-30 14:20:00+00:00
+
+### Description
+
+**Business Value**: Enhancing user experience by aligning with common chat application layouts, making interactions more intuitive and familiar.
+
+**Problem**: The current position of the chat input and send button at the top of the chat interface is non-standard and may confuse users.
+
+**Job-to-Be-Done**: As a user, I want to have the chat input and send button at the bottom of the chat window so that I can easily and quickly send messages without looking around.
+
+**Description**: Adjust the chat interface's layout to display the input text field and send button at the bottom of the chat window. This will mimic the commonly accepted design seen in most messaging apps, reducing user friction and improving message flow.
+
+**Acceptance Criteria**:
+
+```
+Given the user is interacting with the chat interface,
+When they view the chat window,
+Then the message input field and send button should be located at the bottom.
+```
+
+## Title: Enable User-Inputted Chat Message Functionality
+
+### List Name: Done
+
+### Labels
+
+- AI
+- assistify-ui
+
+### Done Date: 2024-09-23 13:03:00+00:00
+
+### Description
+
+**Business Value**: By allowing users to input their own messages and receive responses, we enhance the platform's interactivity and usability, leading to greater user engagement and satisfaction.
+
+**Problem**: Currently, users cannot input their own messages; responses are hardcoded.
+
+**Job-to-Be-Done**: As a user, I want to be able to type a message into the chat so that I can interact dynamically with the system.
+
+**Description**: Modify the existing chat setup to accept user input. The user should be able to open the chat interface, type a message, and see a response generated by the AI assistant.
+
+**Acceptance Criteria**:
+
+- **Given** the chat interface,
+- **When** the user types a message and hits send,
+- **Then** the system should display the user's message and respond with a message from the AI assistant.
+
+You can leverage the existing `Chat` class to manage chat interactions with OpenAI's API . Here’s a high-level approach based on this setup:
+
+1. **Initialize the Chat Session**: Use the `Chat` class to start a session if no existing thread is present.
+2. **Handle User Input**: Capture input from the user via a simple input field.
+3. **Send Message**: Use the `send_user_message` method of the `Chat` class to send this inputted message to the AI.
+4. **Return Response**: Display the response received from the AI back to the user on the interface .
+
+## Title: Display User Details
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- assistify-api
+- persistence-nosql
+
+### Done Date: 2024-09-23 13:33:00+00:00
+
+### Description
+
+**Business Value:** Providing a clear view of user details enhances user experience by allowing quick identification and personalization.
+
+**Problem:** Users need a way to view their personal information within the app for verification and customization purposes.
+
+**Job-to-Be-Done:** As a user, I want to see my basic information so I can confirm the details stored in the application are accurate.
+
+**Description:** Create a screen that lists the user details such as name, email, and profile icon fetched from Google authentication.
+
+**Acceptance Criteria:**
+
+```
+Given the user is logged in via Google
+When they navigate to the user management section
+Then they should see their name, email, and profile icon displayed
+```
+
+## Title: Persist Thread Messages and Display Hello Message
+
+### List Name: Done
+
+### Labels
+
+- persistence-nosql
+- assistify-ui
+- assistify-api
+
+### Done Date: 2024-09-23 13:33:00+00:00
+
+### Description
+
+**Business Value**: Enhancing user engagement by providing a personalized experience where users can continue their conversations and instantly recognize the assistant's interface upon logging in.
+
+**Problem**: Users need a consistent interaction environment where they can pick up conversations from previous sessions, ensuring continuity and enhancing user experience.
+
+**Job-to-Be-Done**: When users log in, they need to see a welcome message in a new thread or continue seamlessly from where they left off.
+
+**Description**: Implement a feature that persists user's messages in a conversation thread. When the user logs into Assistify, if no previous thread exists, display a "Hello" message in a new thread. If a thread exists, load it to allow users to view past interactions instantly.
+
+**Acceptance Criteria**:
+
+```
+Given the user has logged into Assistify
+When the user accesses the chat dashboard
+Then the system should check if a thread exists for the user
+And if a thread exists, load the messages from that thread
+And if no thread exists, create a new thread
+And display a "Hello" message in the new thread.
+```
+
+###### Implementation Context
+
+Based on the capability of `OpenAIClient` to manage threads and messages, you can utilize the methods for creating threads, listing messages, and creating messages. This approach allows you to initialize a new chat session with a "Hello" message or restore previous session messages by fetching them from the API.
+
+Would you like to refine this user story, or is there anything else you need help with?
+
+## Title: Display Static Assistant Information for Logged-in User
+
+### List Name: Done
+
+### Labels
+
+- assistify-api
+- persistence-nosql
+- assistify-ui
+
+### Done Date: 2024-09-23 13:33:00+00:00
+
+### Description
+
+**Business Value**: Providing a static list of assistants from the database serves as a foundation to build upon, ensuring that users can see relevant assistant information in all environments.
+
+**Problem**: Users cannot see any assistant information, and access needs to be initially set up.
+
+**Description:** As a user, your role is crucial. You want to see a static list of assistants assigned to you from the database when you log in to access information about available assistants. Your input and feedback are valuable in this process.
+
+The tasks involved include:
+
+1. **Setting up MongoDB with Docker for easy deployment**:
+   - Create a `docker-compose.yml` file to set up MongoDB.
+   - Ensure the MongoDB service can be brought up with `docker-compose up`.
+2. **Storing static assistant information in MongoDB**:
+   - Populate the database with a static list of assistant entries.
+   - Include sample data that assigns assistants to user emails (e.g., `jus.beall@gmail.com` and `assistify.test@gmail.com`).
+3. **Creating an authorized backend endpoint to fetch this static information**:
+   - Implement an endpoint (e.g., `/api/assistants`) that retrieves assistant data based on the logged-in user's email.
+   - Ensure the endpoint requires user authentication.
+   - Return the list of assistants assigned to the authenticated user.
+4. **Displaying the static list of assistants on the frontend dashboard for logged-in users**:
+   - Set up the frontend to call the backend endpoint.
+   - Fetch and display the assistant data on the user dashboard.
+   - Ensure the dashboard shows the list of assistants once the user is logged in.
+
+**Acceptance Criteria**:
+
+_Given_ the MongoDB setup and static data
+_When_ the user logs in and accesses the dashboard
+_Then_ they should see the list of static assistants assigned to them fetched from the database
+
+## Title: Enhance Assistant List to Card View
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- assistants
+
+### Done Date: 2024-09-23 13:33:00+00:00
+
+### Description
+
+**Business Value**: By transforming the assistant list into a more engaging and informative card display, users will have a visually appealing and easily navigable interface. This will not only improve user experience but also allow users to access detailed information quickly.
+
+**Problem**: The current static table format of displaying assistant information lacks interactivity and visual appeal. It doesn't provide quick, easy access to additional details about using each assistant or their status.
+
+**Job-to-Be-Done**: As a user, I want to view the assistant list in a card format with detailed information accessible directly from the interface. This will help me better understand and manage the tools without leaving the page.
+
+**Description**: Replace the static table of assistant data with interactive cards. Each card should prominently display the assistant's name, a short description, and a profile image. Include the AI model and provider, along with icons representing the status (public, market, private). Provide usage statistics, such as the number of threads and tokens consumed. Each card should have an info icon that, when activated, presents a complete detailed description rendered from markdown to rich text.
+
+**Acceptance Criteria**:
+
+```
+Given an authenticated user on the Assistify platform
+When the user navigates to the assistant list page
+Then they should see the assistants displayed as cards
+  And each card displays the assistant's name, short description, profile image, model, provider, status icon, and usage stats
+  And an info icon which, when clicked, shows the full detailed description in
+```
+
+## Title: Track and Display Token Usage per Assistant
+
+### List Name: Done
+
+### Labels
+
+- assistify-api
+- assistify-ui
+- AI
+- openai-assistants
+- persistence-nosql
+
+### Done Date: 2024-09-23 13:33:00+00:00
+
+### Description
+
+**Business Value**: Tracking token usage provides insights into resource consumption and helps manage assistant usage effectively.
+
+**Problem**: Currently, there is a need for a system that can accurately track and display the token usage for each assistant per user, to ensure efficient resource management.
+
+**Description**: As a user, I want to be able to see my token usage for each assistant. This will allow me to manage and monitor my interactions effectively, ensuring I use my resources efficiently.
+
+The tasks involved include:
+
+1. **Creating a mechanism to track token usage per interaction with assistants**:
+   - Implement backend logic to count tokens used during each interaction.
+   - Ensure token usage is recorded for each user interaction with an assistant.
+2. **Storing token usage data in MongoDB**:
+   - Update the database schema to store token usage per user and assistant.
+   - Log each interaction with details such as the number of tokens consumed, the assistant used, and the timestamp.
+3. **Adding an endpoint to fetch token usage data**:
+   - Create a backend endpoint (e.g., `/api/token-usage`) that allows users to fetch their token usage data.
+   - Ensure the endpoint is secure and only returns data for the authenticated user.
+4. **Displaying token usage information on the frontend dashboard**:
+   - Fetch token usage data from the backend endpoint.
+   - Display a summary of token usage on the user dashboard, including details for each assistant.
+   - Ensure the display is user-friendly and provides actionable insights.
+
+**Acceptance Criteria**:
+
+_Given_ the token usage tracking setup
+_When_ the user interacts with an assistant
+_Then_ the application should track the tokens used
+And display the token usage on the dashboard for the user
+
+## Title: Assistify Concierge Assistant
+
+### List Name: Done
+
+### Labels
+
+- assistants
+- AI
+
+### Done Date: 2024-09-02 20:49:00+00:00
+
+### Description
+
+**Title**: Enhance User Interaction with Assistify Concierge Assistant
+
+**Business Value**: The Concierge Assistant enriches user interaction by providing guidance and personalized support, thereby enhancing user satisfaction and engagement.
+
+**Problem**: New and existing users need assistance in navigating the features of Assistify efficiently, ensuring they can maximize the benefits of the platform without confusion.
+
+**Job-to-Be-Done**: As a user, I want to have a constant helper available that can guide me through using Assistify's features efficiently via chat, ensuring I receive immediate and relevant assistance to enhance my productivity.
+
+**Description**: Introduce an always-on interactive chat assistant powered by the "gpt-4o-mini" model. This assistant is accessible to any user on the platform without affecting their token usage limits, ensuring continuous access to support. The assistant will help users by answering questions, guiding them through the functionalities of Assistify, and providing tips tailored to their activities within the platform.
+
+**Acceptance Criteria**:
+
+```
+Given that a user is logged into the Assistify platform,
+When they engage with the chat interface,
+Then the "Assistify Concierge Assistant" should respond to queries using the "gpt-4o-mini" model,
+And provide user-focused guidance without affecting token usage limits.
+```
+
+## Title: Dynamic Example Conversation on Dashboard
+
+### List Name: Done
+
+### Labels
+
+- assistify-api
+- assistify-ui
+- AI
+- openai-assistants
+
+### Done Date: 2024-08-31 13:45:00+00:00
+
+### Description
+
+**Business Value**: This feature provides users with a clear and practical example of interacting with the AI assistant from the moment they log in, improving onboarding and the quality of user interactions.
+
+**Problem**: Users, especially new ones, need a tangible example of how to start a conversation with the AI assistant, making the interaction more intuitive and engaging.
+
+**Job-to-Be-Done**: When users first log in to Assistify, they want to quickly understand how to use and interact with the AI assistant, so that they can immediately start leveraging its capabilities to improve their productivity and workflow.
+
+**Description**: As a user, I want to see a dynamic example conversation on the dashboard when I log in so that I understand how to start interacting with the AI assistant and know what to expect regarding responses. The example should dynamically refresh with each login, providing contextual guidance.
+
+**Acceptance Criteria**:
+
+```
+Given that a user logs into the Assistify platform
+When they view the dashboard
+Then they should see a mock chat history example that says "Briefly introduce yourself! And give me one idea on what you could help me with today."
+And the example conversation should show:
+  - The user's icon and the message
+  - Below it, the bot's response with its own icon
+And the example should dynamically update each time they log in.
+```
+
+## Title: Mobile-First UI Enhancements
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-08-31 13:45:00+00:00
+
+### Description
+
+**Business Value**: The enhancements improve the user experience on mobile devices, making Assistify more accessible and user-friendly. This can increase user engagement and satisfaction.
+
+**Problem**: The previous UI layout needed to be optimized for mobile devices, which led to a suboptimal user experience, poor navigation, and potential frustration for on-the-go users.
+
+**Description**: As a user, I want the Assistify platform optimized for mobile use so I can navigate easily and use all features seamlessly on my mobile device. This includes improvements to menu displays, padding adjustments, and other various enhancements to ensure a smooth and user-friendly experience.
+
+**Acceptance Criteria**:
+
+```
+Given the mobile-first UI enhancements
+When a user accesses the Assistify platform via a mobile device
+Then they should experience optimized layouts which include:
+  - Improved menu display that adapts to mobile screens.
+  - Adjusted padding and spacing that caters to touch interactions.
+  - General clean-up of the UI to remove any elements that disrupt the mobile experience.
+```
+
+## Title: Users Need Automatic Token Refresh to Maintain Session
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- google-authentication
+
+### Done Date: 2024-08-31 13:45:00+00:00
+
+### Description
+
+###### Business Value
+
+Ensure users remain authenticated seamlessly without manual intervention, enhancing user experience and preventing unauthorized request errors.
+
+###### Problem
+
+When users return to the application after a session expiration, their API requests are unauthorized because no refreshed token is sent to the API. This results in an interrupted experience and forced re-authentication.
+
+###### Description
+
+As a user, I need my session to persist correctly when I revisit the application after my token has expired, so that I don't encounter unauthorized request errors and can continue my tasks uninterrupted.
+
+###### Acceptance Criteria
+
+```
+Given that the user's session has expired,
+When the user revisits the application,
+Then the application should automatically refresh the token,
+And the user's API requests should be authorized without manual intervention.
+```
+
+###### Technical Tips for Implementation
+
+The provided code snippets and context indicate that the application uses Next.js with `next-auth` for session management and `axios` as an HTTP client. Here are some technical tips to help resolve the issue:
+
+1. **Enable Token Refresh in** `axios`:
+   - Make sure the interceptor in `axiosInstance` handles token refresh. You can add a mechanism to retry the request once the token is refreshed.
+   ```
+   import axios from "axios";
+   import { getSession, signIn } from "next-auth/react";
+
+   const axiosInstance = axios.create({
+     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+   });
+
+   axiosInstance.interceptors.request.use(
+     async (config) => {
+       const session = await getSession();
+       if (session?.idToken) {
+         config.headers.Authorization = `Bearer ${session.idToken}`;
+       }
+       return config;
+     },
+     (error) => {
+       return Promise.reject(error);
+     }
+   );
+
+   axiosInstance.interceptors.response.use(
+     response => response,
+     async (error) => {
+       if (error.response?.status === 401) {
+         await signIn('google');
+         const newSession = await getSession();
+         error.config.headers.Authorization = `Bearer ${newSession.idToken}`;
+         return axiosInstance(error.config);
+       }
+       return Promise.reject(error);
+     }
+   );
+
+   export default axiosInstance;
+   ```
+2. **Hook for Handling Token Refresh**:
+   - Create a custom hook to handle token refreshes and reauthenticate the user if necessary.
+   ```
+   import { useEffect } from 'react';
+   import { signIn, useSession } from 'next-auth/react';
+
+   const useTokenRefresh = () => {
+     const { data: session, status } = useSession();
+
+     useEffect(() => {
+       const refresh = async () => {
+         if (status === 'authenticated' && session) {
+           const expires = new Date(session.expires).getTime();
+           if (expires - Date.now() < 5 * 60 * 1000) { // Refresh the token 5 minutes before it expires
+             await signIn('google');
+           }
+         }
+       };
+       refresh();
+     }, [status, session]);
+
+     return null;
+   };
+
+   export default useTokenRefresh;
+   ```
+3. **Integration in the Application**:
+   - Integrate the custom hook in your main component or `_app.js`.
+   ```
+   import useTokenRefresh from '@/hooks/useTokenRefresh';
+
+   const MyApp = ({ Component, pageProps }) => {
+     useTokenRefresh(); // Add this line to ensure the hook is used.
+
+     return <Component {...pageProps} />;
+   };
+
+   export default MyApp;
+   ```
+
+These steps will help ensure that when the token expires, it is automatically refreshed, and the user’s session is maintained without manual re-authentication.
+
+## Title: List Available Assistants Assigned to the User
+
+### List Name: Done
+
+### Labels
+
+- assistify-api
+- openai-assistants
+- AI
+- assistify-ui
+
+### Done Date: 2024-08-30 13:45:00+00:00
+
+### Description
+
+**Business Value**: By providing users with a comprehensive list of available Assistants assigned to them, we are enhancing the accessibility and usability of our system. This will enable users to quickly identify the support they have at their disposal, thereby significantly improving their workflow and productivity.
+
+**Problem**: Currently, users are facing a significant challenge as they do not have a clear way to view the Assistants assigned to them. This limitation is hindering their ability to fully utilize the potential of AI-powered Assistants.
+
+**Description**: As a development team, we want to implement a page that lists the Assistants assigned to the user by hooking up the AI Dev3loper assistant management libraries and creating an authorized endpoint to fetch and display this information so that users can easily see and access their assigned Assistants.
+
+The tasks involved include:
+
+1. Integrating the AI Dev3loper assistant management libraries into the running application.
+2. Creating an authorized backend endpoint that:
+   - Reads the Assistants from the system.
+   - Maps Assistants to the user based on assignment/authorization.
+   - Returns this information from the endpoint.
+3. Creating a new page on the frontend that:
+   - Fetches the list of Assistants for the authenticated user from the authorized endpoint.
+   - Displays the Assistants in a user-friendly manner.
+4. Adding an icon to the dashboard that links to the Assistants page and shows the list when clicked.
+
+**Acceptance Criteria**:
+_Given_ the integration with AI Dev3loper assistant management libraries
+_When_ a user accesses the Assistants page from the dashboard
+_Then_ they should see a list of Assistants assigned to them, with each Assistant displayed in a user-friendly manner.
+
+## Title: Polish the Login Page
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-08-30 13:45:00+00:00
+
+### Description
+
+**Business Value**: Enhancing the login page aesthetics creates a better first impression, improves user satisfaction, and potentially increases user retention.
+
+**Issue:** The current login page lacks visual appeal, which can affect user engagement.
+
+**Description**: As a design and development team, we want to style the login page and create a genuine icon to greet users with an appealing and professional entrance to the application.
+
+The tasks involved include:
+
+1. Enhancing the login page styling using MUI components and custom designs.
+2. Creating a real icon/logo to represent Assistify on the login page.
+
+**Acceptance Criteria**:
+_Given_ the login page and design elements
+_When_ a user visits the login page
+_Then_ they should see a visually appealing layout with a professional Assistify icon/logo
+
+## Title: Clickable Header Navigation to Root Index with Branding Logo
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-08-29 13:45:00+00:00
+
+### Description
+
+###### Business Value
+
+Enhances user navigation and fosters brand identity, improving the overall user experience.
+
+###### Problem
+
+Users currently have no intuitive way to return to the home/login page from the "About Assistify" page. Additionally, the branding is inconsistent as the logo is only visible on the Welcome page.
+
+###### Description
+
+As a user, I want to click the header to navigate back to the root index page and see the Assistify logo repositioned from the Welcome page to the left of the header. This provides a seamless navigation experience and strengthens brand visibility.
+
+###### Acceptance Criteria
+
+**Given** the "About Assistify" page,
+**When** a user clicks on the header,
+**Then** they should be redirected to the root index page.
+
+**Given** the Welcome page logo,
+**When** a user views the header of any page,
+**Then** they should see the logo consistently placed to the left, forming a branding title bar.
+
+## Title: Create the About Assistify Page
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-08-24 17:50:00+00:00
+
+### Description
+
+**Business Value**: Providing users with clear and engaging information about the Assistify product vision can enhance understanding, improve user engagement, and build trust.
+
+**Problem**: Currently, users need more comprehensive information about the product vision, goals, and values of Assistify, which underscores the necessity of a dedicated About Assistify page.
+
+**Description**: As a design and development team, we want to create a dedicated About Assistify page that shares the app's vision in a friendly and engaging manner so that users can understand the goals and values of Assistify.
+
+The tasks involved include:
+
+1. Developing a component that shares the vision of Assistify in a friendly and engaging manner.
+2. Integrating this component into a dedicated About Assistify page.
+3. Adding a link to the About page from the login page and other relevant application parts.
+
+**Acceptance Criteria**:
+
+_Given_ the dedicated About Assistify page
+_When_ a user navigates to this page
+_Then_ they should see a friendly and engaging component that shares the product vision, goals, and values of Assistify
+
+- - -
+
+###### Draft Content for About Assistify Page Component
+
+Here’s the refined draft text for the About Assistify page:
+
+“Welcome to Assistify! At Assistify, our mission is to revolutionize professional workflows through the power of AI. Our platform connects you with specialized OpenAI Assistants to enhance programming, product management, and content creation productivity. By integrating secure and user-friendly tools, we aim to democratize AI access, making it an indispensable tool for professionals across various fields. Explore seamless collaboration and innovative solutions with Assistify—where AI meets productivity.”
+
+## Title: Implement Loading Skeleton or Animation
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-08-23 17:50:00+00:00
+
+### Description
+
+**Business Value**: Enhancing the user experience by visually indicating that content is loading improves perceived performance and makes the application feel more responsive and polished.
+
+**Problem**: Currently, a brief flash of 'Loading...' is shown during content load, which falls short of providing the best user experience. There is an urgent need for a more visually appealing loading indicator to address this issue.
+
+**Description**: From a user's perspective, a visually appealing loading skeleton or animation is desired while the application content is loading. This will provide a better visual indication that the content is being fetched and the application is responsive, enhancing the overall user experience.
+
+The tasks involved include:
+
+1. Researching and selecting appropriate loading skeletons or animation components provided by MUI and React.
+2. Implementing the chosen loading indicator in areas where content loading occurs.
+3. Replacing the current "Loading..." message with the new loading skeleton or animation.
+
+**Acceptance Criteria**:
+
+_Given_ the application is loading content
+_When_ a user initiates an action that requires data fetching (e.g., logging in, navigating to a new page)
+_Then_ a visually appealing loading skeleton or animation should be displayed until the content is fully loaded.
+
+## Title: Display "Hello from Mongo" Message on Dashboard
+
+### List Name: Done
+
+### Labels
+
+- assistify-api
+- assistify-ui
+- persistence-nosql
+
+### Done Date: 2024-08-23 17:50:00+00:00
+
+### Description
+
+**Business Value:** Ensures that the MongoDB setup is correctly configured in local, CI, and production environments, providing confidence in the database connectivity.
+
+**Problem:** Our task is to ensure that the MongoDB setup seamlessly operates across various environments and that the application can effortlessly retrieve data from the database, highlighting the challenge and the importance of our work.
+
+**Description:** Our goal is to guarantee that our MongoDB setup is correctly configured and integrated across local, CI, and production environments. To achieve this, we will create or modify an existing backend endpoint to fetch and display a simple 'Hello from Mongo' message from the MongoDB database and present it on the dashboard. This task will include creating the necessary MongoDB collection and inserting a test record, updating the backend to retrieve this record, and adjusting the E2E tests to ensure the correct data is being returned, emphasizing the importance of our role in ensuring system accuracy.
+
+**Acceptance Criteria:**
+
+```
+Given that the MongoDB database is running
+When the endpoint "/protected" is called
+Then it should return a JSON response with a single record: {"message": "Hello from Mongo - Latest DB Migration ${migration}"}
+```
+
+###### Tasks:
+
+1. **Setup MongoDB:**
+   - Ensure MongoDB is running in local, CI, and production environments using Docker.
+2. **Create Database Connection:**
+   - Establish a connection to MongoDB in the FastAPI application.
+3. **Modify Backend Endpoint:**
+   - Update the `/protected` endpoint to retrieve a record from MongoDB.
+4. **Insert Test Record in MongoDB:**
+   - Create a new collection and insert a record with the message "Hello from Mongo".
+5. **Update E2E Tests:**
+   - Modify E2E tests to validate that the endpoint returns the correct message.
+
+## Title: Finish Virtual Product Owner with Continuous Alignment Tests
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- openai-assistants
+- AI
+
+### Done Date: 2024-08-19 17:50:00+00:00
+
+### Description
+
+**Business Value**: Delivering a fully functional Virtual Product Owner enhances productivity by automating product management tasks and ensuring continuous alignment with project requirements. Integration with GitHub Actions enables automated validation and testing, increasing reliability and reducing manual effort.
+
+**Problem**: We need a complete and tested Virtual Product Owner that can dynamically integrate with updated project data and continuously validate alignment through automated end-to-end tests.
+
+**Description**: As a product team, we want to finish the Virtual Product Owner by implementing continuous alignment tests triggered from GitHub Actions, so that we can ensure the Virtual Product Owner dynamically integrates with the latest project data and maintains alignment with project requirements and AI reliability.
+
+The tasks involved include:
+
+1. Implementing continuous alignment tests that verify the Virtual Product Owner's functionality.
+2. Ensuring these tests can be run in an end-to-end fashion, validating the integration of the Virtual Product Owner with up-to-date versions of the codebase and latest Trello board.
+3. Configuring GitHub Actions to trigger these tests automatically.
+
+**Acceptance Criteria**:
+_Given_ the integration with GitHub Actions
+_When_ a manual action is triggered for continuous alignment testing
+_Then_ the continuous alignment tests should be triggered
+
+_Given_ the integration with GitHub Actions
+_When_ a manual action is triggered to update the Assistify Virtual Product Owner
+_Then_ the Virtual Product Owner should fetch the latest codebase, latest Trello board data, and perform an assistant update
+
+## Title: Implement CI/CD Walking Skeleton
+
+### List Name: Done
+
+### Labels
+
+- automation-testing
+- assistify-api
+- assistify-ui
+- google-authentication
+
+### Done Date: 2024-08-19 17:50:00+00:00
+
+### Description
+
+**Business Value**: Establishing a comprehensive CI/CD pipeline with unit and end-to-end tests ensures reliable and consistent deployments. It enhances the development process by catching errors early and validating all critical functionalities, leading to higher-quality software and streamlined workflow.
+
+**Problem**: The completion of the current CI/CD process is of utmost importance. It needs to validate all critical functionalities, especially those involving complex flows like Google authentication and protected endpoints. This urgency should be felt by the entire development team.
+
+**Description**: As a development team, our goal is clear-we want to implement a CI/CD walking skeleton. This skeleton will run all unit tests for the frontend and backend, deploy to CI instances, and run end-to-end tests, including Google authentication and protected endpoint validation. With this clarity, we can ensure robust and reliable deployments.
+
+The tasks involved include:
+
+1. Setting up the CI/CD pipeline to run all unit tests for the front end (assistify-ui) and back end (assistify-api).
+2. Deploying the applications to their respective CI instances (Vercel and fly-io ).
+3. Implementing end-to-end tests that include:
+   - Testing Google authentication.
+   - Validating the protected endpoint response.
+4. Managing browser state by:
+   - Saving the browser state from a logged-in experience.
+   - Encoding the state as a base64 GitHub Actions environment secret.
+   - Decoding the state into a file during the GitHub Action runtime to use in the end-to-end tests.
+
+**Acceptance Criteria**:
+_Given_ the CI/CD pipeline setup
+_When_ a new commit is pushed to the repository main branch
+_Then_ the pipeline should run all unit tests for the frontend and backend
+_And_ deploy to CI instances
+And execute end-to-end tests that include Google authentication
+And validation of the protected endpoint response
+
+## Title: Standardize on MUI Components and Update UI Layout
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Standardizing the UI with MUI components and themes ensures a consistent and professional appearance across the application. Creating a new landing experience with a structured layout improves usability and provides a cohesive look and feel, enhancing user experience.
+
+**Problem**: The current UI lacks consistency and requires a cohesive layout and theme to improve usability and visual appeal.
+
+**Description**: As a development and design team, we want to standardize our UI components with MUI and implement a new landing experience with a structured layout, so that our application has a consistent look and feel, and users can easily navigate and interact with it.
+
+The tasks involved include:
+
+1. Standardizing all UI components and themes using MUI to ensure consistency across the application.
+2. Creating a collapsible menu on the left side of the screen.
+3. Implementing a standard header that spans the entire top of the screen, with branding on the left and user information (including an image) on the right.
+4. Designing the main content area to be in the center, where the primary component work will be done.
+5. Ensuring that the layout serves as the shell for the entire system.
+
+**Acceptance Criteria**:
+_Given_ the use of MUI components and themes
+_When_ a user accesses the application
+_Then_ they should see a consistent UI with a collapsible left menu
+_And_ a standard header with branding on the left and user information on the right
+_And_ a main content area in the center
+
+- - -
+
+![image.png](https://trello.com/1/cards/66bca16ea028b1c6a0bf9fd5/attachments/66c1288d49253f31af87dc7e/download/image.png)
+
+![image.png](https://trello.com/1/cards/66bca16ea028b1c6a0bf9fd5/attachments/66c128756bdb59c10cbdeaa9/download/image.png)
+
+## Title: Display Protected Hello World Message on Authenticated Dashboard
+
+### List Name: Done
+
+### Labels
+
+- assistify-api
+- assistify-ui
+- google-authentication
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Providing a personalized greeting message enhances user experience by welcoming authenticated users and displaying tailored information, showcasing a secure integration that respects user privacy and data.
+
+**Problem**: Users need to see personalized information securely presented in the dashboard after authentication.
+
+**Description**: As an authenticated user, I want to see a personalized "Hello World" message on my dashboard, so that I can confirm that I am logged in and interacting with a secure, personalized part of the application.
+
+The tasks involved include:
+
+1. Creating a protected backend endpoint that accepts the Google bearer token.
+2. Returning a standard greeting message along with the user's name and email from the backend.
+3. Displaying the personalized greeting message on the frontend dashboard, visible only to authenticated users.
+
+**Acceptance Criteria**:
+
+_Given_ the user has successfully logged in with Google authentication
+And possesses a valid bearer token
+_When_ they access the dashboard
+_Then_ they should see a personalized "Hello World" message that includes their name and email address
+
+## Title: Integrate Google Authentication for Frontend Login
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+- google-authentication
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Implementing Google authentication provides users a seamless and secure login experience. It enhances security by leveraging Google's robust authentication mechanisms and simplifies the login process by reducing the need for users to create and manage new credentials.
+
+**Problem**: Users need a secure and convenient way to log in to the frontend application without managing additional credentials.
+
+**Description**: The user's goal is to log in to the frontend application using Google authentication, ensuring secure access without the hassle of creating and managing a new account.
+
+The tasks involved include:
+
+1. Setting up a Google Auth client and obtaining the necessary credentials.
+2. Whitelisting the required domains for Google authentication.
+3. Adding a simple "Log in with Google" button for users who are not authenticated.
+4. Adding a "Log out" button for authenticated users.
+
+**Acceptance Criteria**:
+
+_Given_ the Google Auth client setup and credentials
+_And_ a user visits the application and is not authenticated
+_And_ they should see a "Log in with Google" button,
+_When_ the login is successful
+_Then_ the user should see a "Log out" button.
+
+## Title: Create a Hello World Next.js Application - assistify-ui
+
+### List Name: Done
+
+### Labels
+
+- assistify-ui
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Establishing a foundational frontend service with a Next.js application enables agile and efficient user interface development, testing, and deployment. Implementing a CI/CD pipeline ensures continuous integration and seamless deployment, enhancing reliability and productivity.
+
+**Problem**: Our need for a frontend service that automatically deploys with every update is a challenge we can confidently overcome. This will maintain a streamlined development workflow and ensure our UI is always up-to-date.
+
+**Description**: As a development team, we want to create a "Hello World" Next.js application for our frontend (assistify-ui) hosted on Vercel so that we can establish a robust and automated deployment process.
+
+The tasks involved include:
+
+1. Setting up a basic Next.js application that displays "Hello World".
+2. Configuring Vercel to host the application.
+3. Establishing a CI/CD pipeline to deploy the application on code changes automatically.
+
+**Acceptance Criteria**:
+
+_Given_ the Next.js application and Vercel configuration
+_When_ the code is pushed to the repository
+T_hen_ the CI/CD pipeline should automatically build and deploy the updated application to Vercel
+
+## Title: Create a Hello World Fast API Application - assistify-api
+
+### List Name: Done
+
+### Labels
+
+- assistify-api
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: Establishing a foundational backend service with Fast API enables rapid and efficient development, testing, and deployment of future features. Implementing a CI/CD pipeline ensures continuous integration and seamless deployment, increasing reliability and productivity.
+
+**Problem**: We need a backend service to host our API and ensure it automatically deploys with every update to maintain a streamlined development workflow.
+
+**Description**: As a development team, we want to create a "Hello World" Fast API application for our backend (assistify-api) hosted on Fly-io, so that we can establish a robust and automated deployment process.
+
+The tasks involved include:
+
+1. Setting up a basic Fast API application that returns "Hello World".
+2. Creating a Fly-io  configuration for hosting the application.
+3. Establishing a CI/CD pipeline to deploy the application on code changes automatically.
+
+**Acceptance Criteria**:
+
+_Given_ the Fast API application and Fly-io  configuration
+_When_ the code is pushed to the repository
+_Then_ the CI/CD pipeline should automatically build and deploy the updated application to Fly-io
+
+## Title: Build a Virtual Product Owner
+
+### List Name: Done
+
+### Labels
+
+- assistify-product-owner
+
+### Done Date: 2024-08-17 16:00:00+00:00
+
+### Description
+
+**Business Value**: This feature will allow the team to streamline product management tasks by leveraging AI capabilities, enhancing productivity, and handling product management activities more efficiently.
+
+**Problem**: The current product management tasks are time-consuming and require significant manual effort. Integrating AI can automate many tasks, making the process more efficient.
+
+**Description**: As a product team, we aim to harness the power of AI to create a Virtual Product Owner. This AI-driven system will not only automate but also enhance our product management tasks, significantly boosting our efficiency. The work involves:
+
+1. Gathering necessary data, including the product statement, code file summaries, Trello extract, and the project README.
+2. Integrating existing AI Dev3loper libraries.
+3. Rigorously testing and verifying that the prompt and integration function as intended, ensuring that the Virtual Product Owner can understand the context and provide appropriate responses/tasks autonomously.
+
+**Acceptance Criteria**:
+
+_Given_ the gathered data and integrated AI libraries
+_When_ the system processes a product management request
+_Then_ the Virtual Product Owner should understand the context and autonomously provide appropriate responses/tasks.
+
+#### Comments
+
+Assistant Name: “Assistify - Product Owner”

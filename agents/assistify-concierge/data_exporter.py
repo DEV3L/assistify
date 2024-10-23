@@ -4,19 +4,32 @@ from ai_assistant_manager.exporters.files.files_exporter import FilesExporter
 
 PROMPT_PATH = "prompts/prompt.md"
 
+files = [
+    # Assistify Files
+    "Assistify Product Definition.txt",
+    "Assistify Concierge README.txt",
+    # Assistify Release Information
+    "Assistify Release.txt",
+    "Assistify Release - Detailed.txt",
+    "Assistify Release - Trello Status v0-0-1.txt",
+]
+
+code_files = [
+    "ai-assistant-manager.txt",
+    "assistify-api.txt",
+    "assistify-concierge.txt",
+    "assistify-github-workflows.txt",
+    "assistify-product-owner.txt",
+    "assistify-ui.txt",
+]
+
 
 def export_data():
     # Assistify Status Trello Board
     DirectoryExporter("Assistify Status Trello Board").export()
-    # Assistify Files
-    FilesExporter("Assistify Product Definition.txt").export()
-    FilesExporter("Assistify Concierge README.txt").export()
-    # code
-    FilesExporter("ai-assistant-manager.txt", directory="files/code").export()
-    FilesExporter("assistify-api.txt", directory="files/code").export()
-    FilesExporter("assistify-concierge.txt", directory="files/code").export()
-    FilesExporter("assistify-github-workflows.txt", directory="files/code").export()
-    FilesExporter("assistify-ui.txt", directory="files/code").export()
+
+    [FilesExporter(file).export() for file in files]
+    [FilesExporter(file, directory="files/code").export() for file in code_files]
 
 
 def print_response(response: ChatResponse, name: str):

@@ -1,0 +1,41 @@
+10-23-2024
+
+# DOING
+This is a list of cards, work items, user stories, and tasks that are in the doing category.
+
+## Title: Implement Basic Authorization for Displaying Assistants
+
+### List Name: Doing
+
+### Labels
+
+- persistence-nosql
+- assistify-api
+- assistify-ui
+
+### Description
+
+**Business Value**: Ensuring only authorized users see their assigned assistants enhances security and personalizes the user experience.
+
+**Problem**: Users should only see assistants they are authorized to use, preventing unauthorized access.
+
+**Description**: As a user, I want to see only the authorized assistants to make my experience personalized and secure. This is crucial for me as it ensures that I only interact with the assistants I'm supposed to, enhancing both security and user experience.
+
+The tasks involved are crucial for the successful implementation of the system and include:
+
+1. **Enhancing the backend endpoint to check user authorization before returning assistant information**:
+   - Modify the existing `/api/assistants` endpoint to check user authorization.
+   - Fetch the user's email from the authentication token and ensure that only assistants assigned to that email are returned.
+2. **Storing user-assistant authorization details in MongoDB**:
+   - Update the database schema to include authorization details for each user.
+   - Store information on which assistants are assigned to which users.
+   - Allow manual assignment of assistants to users for initial setup.
+3. **Updating the frontend to handle different responses based on authorization**:
+   - Adjust the frontend logic to appropriately handle cases where no assistants are authorized for the user.
+   - Display a friendly message if the user has no authorized assistants.
+
+**Acceptance Criteria**:
+
+_Given_ the authorization details in MongoDB
+_When_ the user logs in and accesses the dashboard
+_Then_ they should see only the assistants they are authorized to use
