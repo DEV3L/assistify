@@ -2,6 +2,8 @@
 
 > A web platform for engaging with specialized OpenAI Assistants across various fields.
 
+![Assistify Logo](./assistify.png)
+
 Welcome to **Assistify**! Our mission is to revolutionize professional workflows through the power of AI. Assistify connects you with specialized OpenAI Assistants to enhance productivity in programming, product management, content creation, and more. By integrating secure and user-friendly tools, we aim to democratize AI access, making it an indispensable asset for professionals across various fields.
 
 View the full product definition [here](./PRODUCT_DEFINITION.md).

@@ -2,6 +2,8 @@
 
 > A web platform for engaging with specialized OpenAI Assistants across various fields.
 
+![Assistify Logo](./assistify.png)
+
 ### PROD
 
 - [Assistify UI](https://assistify-ui.vercel.app)
