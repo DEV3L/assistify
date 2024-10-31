@@ -1,107 +1,177 @@
-# Assistify - Virtual Concierge
+# Assistify - Concierge
 
-Welcome to the Assistify Virtual Concierge, your AI-powered guide for seamless interaction with our platform.
+Welcome to the **Assistify Concierge**, your AI-powered guide for seamless interaction with our platform. This agent is designed to provide friendly and knowledgeable assistance, helping users navigate and utilize Assistify effectively.
 
-This service excels in user guidance, customer engagement, and feature navigation.
+## Table of Contents
 
-Gain detailed insights, explore features with ease, and receive expert help for your inquiries.
+- [Assistify - Concierge](#assistify---concierge)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Features](#features)
+  - [Setup](#setup)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Environment Variables](#environment-variables)
+      - [Required](#required)
+      - [Project](#project)
+      - [Trello](#trello)
+  - [Usage](#usage)
+    - [Running the Assistant](#running-the-assistant)
+  - [Testing](#testing)
+    - [End-to-End Test](#end-to-end-test)
+    - [Unit Tests](#unit-tests)
+    - [Coverage Gutters](#coverage-gutters)
+  - [Additional Information](#additional-information)
+  - [License](#license)
+  - [Contact](#contact)
 
-Access the Assistify Virtual Concierge for personalized support and detailed information about the platform.
+## Introduction
 
-[Assistants API Beta](https://platform.openai.com/docs/assistants/overview)
+The Assistify Concierge excels in user guidance, customer engagement, and feature navigation. It provides detailed insights, explores features with ease, and offers expert help for your inquiries. Access the Assistify Concierge for personalized support and detailed information about the platform.
+
+## Features
+
+- **User Guidance**: Assists users in navigating the Assistify platform.
+- **Feature Exploration**: Provides information about various features and how to use them.
+- **Expert Assistance**: Answers questions and resolves user queries effectively.
+- **Personalized Support**: Tailors responses based on user interactions.
 
 ## Setup
 
-### 1: Register for Trello API Access
+### Prerequisites
 
-1. **Sign Up for a Trello Account**:
-   - If you don't have a Trello account, sign up at [Trello](https://trello.com/).
-2. **Get API Key and Token**:
-   - Go to the [Trello Developer Portal](https://trello.com/app-key).
-   - Copy your API Key.
-   - Click on the "Token" link to generate a token. This token will be used for authentication in your API requests.
+- **Python** (v3.10 or higher)
+- **OpenAI API Key**
+- **Trello API Key and Token** (for data integration)
+- **Hatch** package manager (`pip install hatch`)
 
-### 2. Clone the repository:
+### Installation
 
-```bash
-git clone https://github.com/DEV3L/assistify
-cd ./assistify/agents/assistify-concierge
-```
+1. **Clone the repository**:
 
-Copy the env.local file to a new file named .env and replace the placeholder environment variables:
+   ```bash
+   git clone https://github.com/DEV3L/assistify.git
+   cd assistify/agents/assistify-concierge
+   ```
 
-```bash
-cp env.default .env
-```
+2. **Copy the environment variables template**:
 
-#### Environment Variables
+   ```bash
+   cp env.default .env
+   ```
 
-The following environment variables can be configured in the `.env` file:
+3. **Install dependencies and activate the virtual environment**:
 
-##### Required
+   ```bash
+   hatch env create
+   hatch shell
+   ```
 
-- `OPENAI_API_KEY`: The OpenAI API key
-- `TRELLO_API_KEY`: The Trello API key
-- `TRELLO_API_TOKEN`: The Trello API token
+### Environment Variables
 
-##### OpenAI
+Configure the following variables in your `.env` file:
 
-- `OPENAI_API_KEY`: The OpenAI API key
+#### Required
 
-##### Project
+- `OPENAI_API_KEY`: Your OpenAI API key.
+- `TRELLO_API_KEY`: Your Trello API key.
+- `TRELLO_API_TOKEN`: Your Trello API token.
 
-- `ASSISTANT_DESCRIPTION`: Concierge AI for Assistify
+#### Project
+
 - `ASSISTANT_NAME`: Assistify - Concierge
+- `ASSISTANT_DESCRIPTION`: Your friendly assistant to help navigate Assistify
 - `DATA_FILE_PREFIX`: Assistify - Concierge
 
-##### Trello
+#### Trello
 
-- `TRELLO_API_KEY`: The Trello API key
-- `TRELLO_API_TOKEN`: The Trello API token
-- `TRELLO_BOARD_NAME`: Assistify
+- `TRELLO_BOARD_NAME`: The name of your Trello board (e.g., Assistify)
 
-### 3. Setup a virtual environment with dependencies and activate it:
+## Usage
 
-```bash
-brew install hatch
-hatch env create
-hatch shell
-```
+The Assistify Concierge uses the [ai-assistant-manager](https://github.com/DEV3L/ai-assistant-manager) for managing interactions.
 
-#### Usage
+### Running the Assistant
 
-The `run_chat.py` script will:
+1. **Extract Trello Data** (if applicable):
 
-> hatch run chat
+   ```bash
+   hatch run trello-extract
+   ```
 
-1. Load or Create a new assistant
-2. Start a chat thread with the assistant
-3. Read input from the command line
+2. **Summarize Code (optional)**:
 
-The `run_end_to_end.py` script will:
+   If you wish to include code summaries:
 
-> hatch run e2e
+   ```bash
+   hatch run summary path/to/codebase
+   ```
 
-1. Create a new assistant
-2. Send a message to the assistant
-3. Remove the assistant
+3. **Build the Assistant**:
+
+   ```bash
+   hatch run build
+   ```
+
+4. **Start a Chat Session**:
+
+   ```bash
+   hatch run chat
+   ```
+
+   This script will:
+
+   - Load or create a new assistant.
+   - Start a chat thread with the assistant.
+   - Read input from the command line.
 
 ## Testing
 
-### End to End Test
+### End-to-End Test
+
+Run an end-to-end test to verify the assistant's functionality:
 
 ```bash
 hatch run e2e
 ```
 
+This script will:
+
+- Create a new assistant.
+- Send a message to the assistant.
+- Remove the assistant.
+
 ### Unit Tests
+
+Execute unit tests:
 
 ```bash
 hatch run test
 ```
 
-### Coverage Gutters:
+### Coverage Gutters
+
+To visualize code coverage in your editor:
 
 ```bash
 Command + Shift + P => Coverage Gutters: Watch
 ```
+
+## Additional Information
+
+- **Data Sources**: The assistant uses data extracted from Trello boards and code summaries to provide context-aware assistance.
+- **Open Source Libraries**: Utilizes [ai-assistant-manager](https://github.com/DEV3L/ai-assistant-manager), [ai-code-summary](https://github.com/DEV3L/ai-code-summary), and [ai-trello-extract](https://github.com/DEV3L/ai-trello-extract).
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](../../LICENSE) file for details.
+
+## Contact
+
+Assistify is developed by Justin Beall of **Dev3loper.ai**.
+
+- **Website**: [dev3loper.ai](https://www.dev3loper.ai)
+
+---
+
+Happy assisting with Assistify Concierge!

@@ -1,215 +1,112 @@
 # Warm Intro AI
 
-> Automated AI Outreach for Busy Professionals.
+> **Automated AI Outreach for Busy Professionals**
 
-**Warm Intro AI** automates the creation of personalized outreach messages for busy professionals like consultants and entrepreneurs. Leveraging AI to analyze various personal and professional data, it helps craft messages that resonate, fostering valuable connections and potential collaborations through a client-centered approach.
+Welcome to **Warm Intro AI**, an AI assistant that automates the creation of personalized outreach messages for busy professionals like consultants and entrepreneurs. Leveraging AI to analyze various personal and professional data, it helps craft messages that resonate, fostering valuable connections and potential collaborations through a client-centered approach.
 
-[OpenAI Assistants API Beta](https://platform.openai.com/docs/assistants/overview)
+The full product definition is available [here](./data/files/Warm Intro AI Product Definition.md).
 
----
+## Table of Contents
+
+- [Warm Intro AI](#warm-intro-ai)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Features](#features)
+  - [Setup](#setup)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Environment Variables](#environment-variables)
+      - [Required](#required)
+      - [Project](#project)
+  - [Usage](#usage)
+    - [Running the Assistant](#running-the-assistant)
+  - [Testing](#testing)
+    - [End-to-End Test](#end-to-end-test)
+    - [Unit Tests](#unit-tests)
+    - [Coverage Gutters](#coverage-gutters)
+  - [Additional Information](#additional-information)
+  - [License](#license)
+  - [Contact](#contact)
 
 ## Introduction
 
-### About OpenAI Assistants
+Warm Intro AI is an innovative AI-driven assistant aimed at revolutionizing professional connections for busy professionals. By automating the personalization of outreach messages, it enables users to engage effectively with potential clients through context-rich communications drawn from sources like LinkedIn profiles, conference bios, and CRM data.
 
-OpenAI Assistants are AI models tailored to perform specific tasks or functions, enhancing user experiences across various domains. They utilize advanced language understanding and generation capabilities to assist with tasks such as content creation, customer engagement, personalized communication, and more.
+## Features
 
-By leveraging the power of OpenAI's language models, Assistants can understand context, engage in meaningful conversations, and perform tasks that traditionally require human intelligence.
-
-### About Warm Intro AI
-
-**Warm Intro AI** is an innovative AI-driven assistant aimed at revolutionizing professional connections for busy professionals. By automating the personalization of outreach messages, it enables users to engage effectively with potential clients through context-rich communications drawn from sources like LinkedIn profiles, conference bios, and CRM data.
-
-**Key Features:**
-
-- **AI-driven Personalized Outreach Messages:** Automate the creation of tailored messages that resonate with potential clients.
-- **Integration with CRM Platforms:** Seamlessly integrate with your existing CRM to manage contacts and track interactions.
-- **Context Analysis:** Analyze personal and professional data such as LinkedIn profiles, conference bios, and past interactions.
-- **User-friendly Interface:** Designed for busy professionals to save time and enhance business development capabilities.
-- **Client-centered Communication Strategies:** Emphasize genuine engagement with decision-makers through authenticity and effectiveness.
-- **Future Capabilities:** Potential for voice message integration using platforms like OpenAI’s streaming voice.
-
-**Purpose:**
-
-Warm Intro AI assists users in developing outreach communications that align with consultative selling approaches, enhancing the likelihood of building meaningful professional relationships and successfully engaging potential clients.
-
----
-
-## Assistant Description
-
-### Warm Intro AI
-
-**Warm Intro AI** is dedicated to assisting busy professionals in automating the creation of personalized outreach messages, enabling them to connect effectively with potential clients and build meaningful professional relationships.
-
-#### Persona
-
-Warm Intro AI is a cutting-edge AI assistant that empowers professionals like consultants, entrepreneurs, business development representatives, and customer relationship managers. With advanced AI capabilities, it analyzes various data sources to craft messages that are authentic, relevant, and effective.
-
-**Characteristics:**
-
-- **Efficient and Reliable:** Provides quick and accurate message suggestions to save users time.
-- **Insightful and Context-Aware:** Leverages data analysis to deeply understand the client's background.
-- **Client-Centered:** Focuses on the client's needs and how the user can provide value.
-- **Professional and Approachable:** Maintains a tone that is both professional and engaging.
-
-#### Tone and Voice
-
-- **Warm and Professional:** Communicates in a manner that is friendly yet respectful of professional boundaries.
-- **Empathetic Empowerment:** Encourages and supports the user in building effective connections.
-- **Clear and Concise:** Provides messages that are easy to understand and get straight to the point.
-- **Authentic and Personalized:** Ensures that each message feels tailor-made for the recipient, avoiding generic language.
-- **Positive and Engaging:** Uses an optimistic tone that invites further conversation.
-
----
-
-## Key Features
-
-- **AI-driven Personalized Outreach Messages**
-- **Integration with CRM Platforms**
-- **Context Analysis from LinkedIn, Conference Bios, and More**
-- **User-friendly Interface for Busy Professionals**
-- **Emphasizes Client-centered Communication Strategies**
-- **Potential Future Voice Message Capabilities**
-
----
-
-## Technology
-
-Warm Intro AI leverages advanced Natural Language Processing (NLP) and Machine Learning (ML) technologies to personalize professional outreach. The assistant integrates with CRM tools to automate workflows and data management, utilizing robust ML frameworks such as TensorFlow or PyTorch, supported by reliable cloud services like AWS or Azure for scalability and performance.
-
----
-
-## Users
-
-**Warm Intro AI** is designed for:
-
-- **Business Development Representatives**
-
-  Responsible for identifying new business opportunities and nurturing leads. Warm Intro AI helps them by automating personalized messages to potential clients, allowing them to focus on strategic engagement.
-
-- **Customer Relationship Managers**
-
-  Maintain and enhance client relationships within organizations. Warm Intro AI aids them by automating personalized outreach, integrating seamlessly with existing workflows, and enhancing client interaction quality.
-
-- **Entrepreneurs**
-
-  Dynamic individuals who drive business growth and innovation. Warm Intro AI provides the capability to automate personalized outreach, helping entrepreneurs save time and focus on scaling their ventures.
-
-- **Professional Consultants**
-
-  Expert advisors who provide strategic solutions across various industries. Warm Intro AI empowers them by automating personalized outreach, optimizing client acquisition, and integrating seamlessly into their workflows.
-
----
-
-## Additional Information
-
-### Principles from "How Clients Buy"
-
-Warm Intro AI aligns with the principles from _"How Clients Buy"_, focusing on:
-
-- **Building Trust Before Selling:** Establishing genuine connections without pushing a sales agenda.
-- **Understanding Client Needs:** Emphasizing the importance of understanding the client's world before offering solutions.
-- **Providing Value Upfront:** Offering assistance and insights without expecting immediate business.
-- **Avoiding Aggressive Selling Tactics:** Focusing on being a helpful resource rather than pushing for a sale.
-- **Fostering Authentic Connections:** Building relationships based on authenticity and mutual respect.
-
----
+- **AI-driven Personalized Outreach Messages**: Automate the creation of tailored messages.
+- **Integration with CRM Platforms**: Seamlessly integrate with your existing CRM.
+- **Context Analysis**: Analyze personal and professional data.
+- **User-friendly Interface**: Designed for busy professionals.
+- **Client-centered Communication Strategies**: Emphasize genuine engagement.
 
 ## Setup
 
-### 1. Clone the Repository
+### Prerequisites
 
-```bash
-git clone https://github.com/DEV3L/assistify
-cd ./assistify/agents/warm-intro-ai
-```
+- **Python** (v3.10 or higher)
+- **OpenAI API Key**
+- **Hatch** package manager (`pip install hatch`)
 
-### 2. Configure Environment Variables
+### Installation
 
-Copy the `env.default` file to a new file named `.env` and replace the placeholder environment variables:
+1. **Clone the repository**:
 
-```bash
-cp env.default .env
-```
+   ```bash
+   git clone https://github.com/DEV3L/assistify.git
+   cd assistify/agents/warm-intro-ai
+   ```
 
-#### Environment Variables
+2. **Copy the environment variables template**:
+
+   ```bash
+   cp env.default .env
+   ```
+
+3. **Install dependencies and activate the virtual environment**:
+
+   ```bash
+   hatch env create
+   hatch shell
+   ```
+
+### Environment Variables
 
 Configure the following variables in your `.env` file:
 
-##### Required
+#### Required
 
 - `OPENAI_API_KEY`: Your OpenAI API key.
 
-##### OpenAI
+#### Project
 
-- `OPENAI_API_KEY`: Your OpenAI API key.
-
-##### Project
-
-- `ASSISTANT_DESCRIPTION`: Warm Intro AI - Automated AI Outreach for Busy Professionals.
-- `ASSISTANT_NAME`: Warm Intro AI.
-- `DATA_FILE_PREFIX`: warm-intro-ai.
-
-### 3. Setup a Virtual Environment
-
-Install `hatch` if you haven't already:
-
-```bash
-brew install hatch
-```
-
-Create and activate the virtual environment:
-
-```bash
-hatch env create
-hatch shell
-```
-
-Install the required dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
----
+- `ASSISTANT_NAME`: Warm Intro AI
+- `ASSISTANT_DESCRIPTION`: Automated AI Outreach for Busy Professionals
+- `DATA_FILE_PREFIX`: warm-intro-ai
 
 ## Usage
 
-### Start a Chat with Warm Intro AI
+The Warm Intro AI uses the [ai-assistant-manager](https://github.com/DEV3L/ai-assistant-manager) for managing interactions.
 
-Use the `run_chat.py` script to interact with Warm Intro AI:
+### Running the Assistant
 
-```bash
-hatch run chat
-```
+1. **Build the Assistant**:
 
-This script will:
+   ```bash
+   hatch run build
+   ```
 
-1. Load or create a new assistant.
-2. Start a chat thread with the assistant.
-3. Read input from the command line.
+2. **Start a Chat Session**:
 
-### End-to-End Interaction
-
-Use the `run_end_to_end.py` script for an end-to-end test:
-
-```bash
-hatch run e2e
-```
-
-This script will:
-
-1. Create a new assistant.
-2. Send a message to the assistant.
-3. Remove the assistant.
-
----
+   ```bash
+   hatch run chat
+   ```
 
 ## Testing
 
 ### End-to-End Test
 
-Run the following command to perform an end-to-end test of Warm Intro AI:
+Run an end-to-end test:
 
 ```bash
 hatch run e2e
@@ -217,7 +114,7 @@ hatch run e2e
 
 ### Unit Tests
 
-Execute unit tests to ensure everything is working correctly:
+Execute unit tests:
 
 ```bash
 hatch run test
@@ -231,6 +128,20 @@ To visualize code coverage in your editor:
 Command + Shift + P => Coverage Gutters: Watch
 ```
 
+## Additional Information
+
+- **Assistant Description**: Warm Intro AI assists users in developing outreach communications that align with consultative selling approaches.
+- **Users**: Designed for business development representatives, customer relationship managers, entrepreneurs, and professional consultants.
+- **Alignment with "How Clients Buy"**: Emphasizes building trust, understanding client needs, and fostering authentic connections.
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](../../LICENSE) file for details.
+
+## Contact
+
+- **Website**: [dev3loper.ai](https://www.dev3loper.ai)
+
 ---
 
-Happy connecting with WarmIntroAI!
+Happy connecting with Warm Intro AI!

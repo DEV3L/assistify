@@ -2,158 +2,233 @@
 
 > A web platform for engaging with specialized OpenAI Assistants across various fields.
 
+Welcome to **Assistify**! Our mission is to revolutionize professional workflows through the power of AI. Assistify connects you with specialized OpenAI Assistants to enhance productivity in programming, product management, content creation, and more. By integrating secure and user-friendly tools, we aim to democratize AI access, making it an indispensable asset for professionals across various fields.
+
+View the full product definition [here](./PRODUCT_DEFINITION.md).
+
 ### PROD
 
 - [Assistify UI](https://assistify-ui.vercel.app)
 - [Assistify API](https://assistify-api.fly.dev/docs)
 
-### CI
+## Table of Contents
 
-- [Assistify UI CI](https://assistify-ui-ci.vercel.app)
-- [Assistify API CI](https://assistify-api-ci.fly.dev/docs)
+- [Assistify](#assistify)
+  - [PROD](#prod)
+  - [Table of Contents](#table-of-contents)
+  - [Key Features](#key-features)
+  - [Architecture Overview](#architecture-overview)
+  - [Technology Stack](#technology-stack)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Continuous Integration and Deployment](#continuous-integration-and-deployment)
+    - [GitHub Actions Workflows](#github-actions-workflows)
+  - [Testing Instructions](#testing-instructions)
+    - [Backend Tests](#backend-tests)
+    - [Frontend Tests](#frontend-tests)
+    - [End-to-End Tests](#end-to-end-tests)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Contact](#contact)
+
+## Key Features
+
+- **AI-Powered Assistants**: Harness the power of OpenAI to provide expert support in real-time, transforming how you approach complex tasks.
+- **Integrated Google Authentication**: Experience secure, hassle-free access with our integrated Google authentication.
+- **User-Friendly Interface**: Navigate with ease through our streamlined and intuitive user interface designed for optimal user experience.
+- **Admin Dashboard**: Control and customize your experience with our robust admin dashboard.
+- **Third-Party Integrations**: Expand your capabilities with seamless integrations with tools you already use.
+- **Continuous Improvement**: Your feedback drives our evolution, ensuring Assistify stays ahead with the features you need.
+
+## Architecture Overview
+
+Assistify is structured into several key components:
+
+- **Backend (`assistify-api/`)**: Built with **Python FastAPI**, utilizing Pydantic for data validation and MongoDB for data storage. It provides APIs for authentication, messaging, assistants, threads, and users.
+- **Frontend (`assistify-ui/`)**: Developed using **Next.js**, **React**, **Material-UI (MUI)**, and **TypeScript**, offering a user-friendly interface for interacting with AI assistants.
+- **Agents (`agents/`)**: Contains configurations and code for specialized AI assistants, leveraging OpenAI's capabilities to deliver tailored support.
+- **Testing Suites**: Comprehensive unit and integration tests ensure reliability and robustness across all components.
+
+Each submodule (`assistify-api`, `assistify-ui`, `agents`) has its own README with detailed information and instructions.
+
+## Technology Stack
+
+- **Frontend**: Next.js for dynamic, server-side rendered user experiences.
+- **Backend**: Python FastAPI for high-performance backend services.
+- **Database Management**: MongoDB for flexible, document-based storage.
+- **Authentication**: Google OAuth for secure user authentication.
+- **Cloud Computing and Hosting**: Fly.io and Vercel for global availability and low-latency performance.
+- **Integration**: Trello for enhanced project management capabilities.
+
+## Getting Started
+
+To get started with Assistify, follow the installation instructions provided in each submodule's README:
+
+- [assistify-api README](./assistify-api/README.md)
+- [assistify-ui README](./assistify-ui/README.md)
+- [agents README](./agents/README.md)
+
+### Prerequisites
+
+- **Docker** and **Docker Compose** installed on your machine.
+- An **OpenAI API key**.
+- **Google OAuth** credentials (Client ID and Client Secret).
+- **Trello API** credentials (if using Trello integration).
+
+### Installation
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/dev3l/assistify.git
+   cd assistify
+   ```
+
+2. **Set up environment variables**:
+
+   Create a `.env` file in the root directory and add the required environment variables as specified in the submodules' READMEs. Example variables include:
+
+   ```env
+   # General
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   OPENAI_API_KEY=your_openai_api_key
+
+   # MongoDB
+   MONGODB_URI=mongodb://your_mongo_user:your_mongo_password@mongo:27017/
+   MONGODB_DB=assistify_db
+
+   # Trello (Optional)
+   TRELLO_API_KEY=your_trello_api_key
+   TRELLO_API_TOKEN=your_trello_api_token
+   ```
+
+3. **Start the application using Docker Compose**:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+   This command builds and starts the backend, frontend, and MongoDB services defined in the `docker-compose.yml` file.
+
+4. **Access the application**:
+
+   - **Frontend**: Open your browser and navigate to `http://localhost:3000`.
+   - **Backend API**: Access the API documentation at `http://localhost:8000/docs`.
+
+## Continuous Integration and Deployment
+
+We use GitHub Actions for Continuous Integration (CI) and Continuous Deployment (CD) to automate testing, building, and deployment processes.
+
+### GitHub Actions Workflows
+
+- **Continuous Integration (`.github/workflows/continuous-integration.yml`)**:
+  - **Purpose**: Runs unit tests, integration tests, and code quality checks on every push and pull request.
+  - **Key Features**:
+    - Executes tests for both the backend (`assistify-api`) and frontend (`assistify-ui`).
+    - Checks code formatting and linting.
+    - Ensures that code changes do not break existing functionality.
+- **End-to-End Integration Tests (`.github/workflows/end-to-end-integration.yml`)**:
+  - **Purpose**: Runs end-to-end tests to validate the entire application workflow.
+  - **Key Features**:
+    - Simulates user interactions with the application.
+    - Validates integration between frontend and backend.
+    - Ensures that the application functions correctly from the user's perspective.
+- **Fly Deploy (`.github/workflows/fly-deploy.yml`)**:
+  - **Purpose**: Automates the deployment of the backend (`assistify-api`) to Fly.io.
+  - **Key Features**:
+    - Triggers on pushes to the `main` branch or when a new release is published.
+    - Builds the Docker image and deploys it to Fly.io.
+    - Manages environment variables and secrets securely.
+- **Vercel Deploy (`.github/workflows/vercel-deploy.yml`)**:
+  - **Purpose**: Automates the deployment of the frontend (`assistify-ui`) to Vercel.
+  - **Key Features**:
+    - Triggers on pushes to the `main` branch or when a new release is published.
+    - Builds the Next.js application and deploys it to Vercel.
+    - Handles environment variables and ensures smooth deployment.
+- **Agent - Build - Assistify Concierge (`.github/workflows/agent-assistify-concierge-build.yml`)**:
+  - **Purpose**: Automates the building and deployment of the Assistify Concierge agent.
+  - **Key Features**:
+    - Manually triggered workflow requiring an OpenAI API key.
+    - Sets up the environment and installs dependencies.
+    - Runs code extraction and builds the AI assistant.
+    - Integrates with Trello for data extraction.
+- **Agent - Build - Assistify Product Owner (`.github/workflows/agent-assistify-product-owner-build.yml`)**:
+  - **Purpose**: Automates the building and deployment of the Assistify Product Owner agent.
+  - **Key Features**:
+    - Similar to the Concierge build workflow.
+    - Manually triggered and requires an OpenAI API key.
+    - Extracts code summaries and builds the AI assistant tailored for product owner insights.
+- **Agent - Continuous Alignment Testing (CAT) (`.github/workflows/agent-assistify-product-owner-repeat-integration-tests.yml`)**:
+  - **Purpose**: Performs Continuous Alignment Testing (CAT) to evaluate the consistency and reliability of non-deterministic AI responses.
+  - **Key Features**:
+    - Runs integration tests multiple times to determine the pass rate of non-deterministic AI outputs.
+    - Soft assertions are used to calculate the percentage of successful responses.
+    - Helps in monitoring the alignment of AI assistant behavior with expected outcomes over time.
+    - Provides insights into the AI model's performance and guides improvements.
+  - **Continuous Alignment Testing** is crucial for AI systems where responses may vary due to the inherent non-deterministic nature of AI models. This workflow ensures that the AI assistant maintains a high level of alignment with the desired behavior and outputs.
+
+## Testing Instructions
+
+### Backend Tests
+
+Navigate to the `assistify-api` directory:
+
+```bash
+cd assistify-api
+hatch env create
+hatch run test
+```
+
+### Frontend Tests
+
+Navigate to the `assistify-ui` directory:
+
+```bash
+cd assistify-ui
+yarn install
+yarn test
+```
+
+### End-to-End Tests
+
+From the root directory:
+
+```bash
+cd assistify-ui
+yarn install
+yarn test:e2e
+```
+
+Ensure all tests pass before deploying or making significant changes.
+
+## Contributing
+
+We welcome contributions from the community! To contribute:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Commit your changes with clear commit messages.
+4. Open a pull request detailing your changes.
+
+Please see the [Contributing Guidelines](./CONTRIBUTING.md) for more information.
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
+
+## Contact
+
+Assistify is developed by Justin Beall of **Dev3loper.ai**, a team dedicated to making AI accessible and practical for everyday professional tasks.
+
+- **Website**: [dev3loper.ai](https://www.dev3loper.ai)
+- **Contact**: Visit our [contact page](https://www.dev3loper.ai/contact) for inquiries.
 
 ---
 
-Assistify is a web-based application that connects users with specialized OpenAI Assistants, streamlining interactions in areas like programming, product management, and content creation. By providing a common platform for accessing diverse AI assistants, it offers personalized support across various professional domains. Integrating Google authentication for security and using a provider-supplied OpenAI API key simplifies access, enabling a broader user base to benefit from AI-enhanced productivity tools. With future plans for a subscription-based model, Assistify aims to evolve into a marketplace for AI assistants, fostering innovation and collaboration among its users.
-
-## Product Definition
-
-Assistify is pioneering a unified platform that facilitates seamless interaction between users and specialized OpenAI Assistants. Catering to a wide array of professional needs, from software development and product management to content creation, it simplifies the integration of AI into daily workflows. Users can access a curated selection of assistants for guidance, creativity, and decision-making support, enabling enhanced productivity and innovation.
-
-The platform’s key distinction lies in its user-friendly interface, which requires no technical setup from the user’s side. By leveraging a single provider-supplied OpenAI API key, Assistify removes barriers to entry, making cutting-edge AI accessible to a wider audience without the need for individual API management. This approach not only democratizes access to AI but also ensures a secure and personalized experience through Google authentication.
-
-As Assistify evolves, it aims to introduce a subscription model and develop into a marketplace for AI assistants. This will allow users to subscribe to advanced features or access specialized assistants tailored to their unique needs. The platform’s growth will be supported by a robust technology stack, including Next.js, Python FastAPI, PostgreSQL, and comprehensive authentication and cloud hosting solutions. This ensures scalability, performance, and a seamless user experience.
-
-Through its innovative offerings, Assistify is set to transform the way professionals engage with AI, making it an indispensable tool in the rapidly evolving digital landscape. The platform’s focus on accessibility, security, and customization positions it as a leader in the AI-assisted productivity and collaboration tools sector.
-
-### Problem
-
-Navigating the complexities of integrating AI into professional workflows remains a significant challenge for many users. The requirement for individuals to manage their own OpenAI API keys presents a technical and accessibility barrier, limiting the use of AI-enhanced productivity tools. Assistify seeks to address this issue by eliminating the need for users to supply API keys, providing a more accessible and user-friendly platform for engaging with AI assistants across various professional domains.
-
-### North Star
-
-The North Star for Assistify revolves around democratizing access to AI for professional enhancement, with a focus on simplifying the user experience and fostering widespread adoption. Success will be measured by the platform’s ability to attract and retain a diverse user base, the volume of AI interactions facilitated, and the growth of the marketplace for AI assistants. Key metrics include the number of active users, satisfaction rates, and the engagement levels with AI assistants. Achieving these goals will indicate that Assistify has successfully bridged the gap between complex AI technologies and everyday professional use, making it a central hub for AI-enhanced productivity.
-
-### Product Vision
-
-Assistify aims to redefine the integration of AI into professional workflows, becoming the premier platform for accessible, seamless interaction with AI assistants. By providing a provider-supplied API key and transitioning towards a subscription-based marketplace, Assistify will empower users to effortlessly engage with AI without technical complexities. The vision extends to creating a community where professionals can discover, use, and offer AI-enhanced services, fostering a collaborative ecosystem of innovation. As the platform evolves, it will continue to break down barriers to AI adoption, ensuring that advanced AI tools are within reach of every professional, irrespective of their technical expertise.
-
-### Business Case
-
-Assistify’s revised business model, which eliminates the need for individual OpenAI API keys and moves towards a provider-supplied key with a future subscription-based marketplace, significantly broadens its user base. This approach not only simplifies access to AI-assisted tools but also enhances the platform’s value proposition by offering specialized assistant services on-demand. Key revenue streams will include subscriptions for premium features and a marketplace where users can access or offer specialized AI assistants. This model positions Assistify as a pivotal player in the AI productivity tools market, catering to a diverse range of professional needs while paving the way for innovative AI applications and collaborations.
-
-### Key Features
-
-#### Summary
-
-- Web-based chat interface for seamless interaction with specialized OpenAI Assistants.
-- Provider-supplied OpenAI API key, removing the need for individual users to manage API keys.
-- Google authentication for secure, personalized access to the platform.
-- Future subscription-based model and marketplace for accessing or offering specialized AI assistants.
-- Admin dashboard for managing assistant assignments and access for users.
-- Comprehensive thread history viewing capabilities to track previous interactions and enhance continuity.
-- Integration with third-party services like Trello, enabling users to pull in data for a richer, more contextual AI interaction.
-- Feedback mechanism for users to influence the platform’s development and assistant offerings.
-- Planned support for multimedia interactions within the chat interface to accommodate a wide range of assistant applications.
-
-#### Epics
-
-- **Chat Interface:**  
-  Implementing a web-based chat interface that emulates similar functionalities as ChatGPT, tailored for user interactions with specialized OpenAI Assistants across various contexts such as programming, product management, content creation, and entrepreneurial POC development.
-
-- **Authentication and Security:**
-  Secure user authentication and OpenAI API key management system enabling personalized and secure access to Assistify, supporting diverse user roles including engineers, product owners, content creators, and entrepreneurs.
-
-- **Admin Dashboard:**
-  Admin dashboard for dynamic assistant management, allowing administrators to assign or modify assistant access for users, and manage specialized assistants like Knowledge Bot, Amazon Treasure Chat, and the virtual product owner for tailored user interactions.
-
-- **Feedback Loop:**
-  A feature enabling users to provide continuous feedback on their experience with the AI assistants, empowering developers to iteratively improve the application based on user insights and interactions.
-
-### Technology
-
-- **Frontend Development:** Next.js for a dynamic, server-side rendered user experience, complemented by React for rich interactive UI components.
-- **Backend Services:** Python FastAPI for high-performance backend services, offering fast, asynchronous request handling.
-- **AI and Machine Learning:** OpenAI’s API for conversational AI integration, enabling diverse assistant functionalities.
-- **Database Management:** PostgreSQL for robust, scalable data storage solutions, ensuring data integrity and performance.
-- **Authentication:** Google OAuth for secure user authentication and management, providing a seamless login experience.
-- **Cloud Computing and Hosting:** Fly.io for application deployment, ensuring global availability and low-latency performance.
-- **Third-Party Integrations:** Trello for project management capabilities, with potential for future integration with other services to enhance the platform’s utility.
-- **Development Tools:** GitHub for version control, Docker for containerization, and CI/CD pipelines for automated testing and deployment, ensuring code quality and operational efficiency.
-
-### Users
-
-- **Content Creators:**
-  Individuals seeking assistance with technical content creation, leveraging a personal knowledge bot.
-
-- **Engineers:**
-  Engineers on a team looking to work with a knowledgeable AI pair programming partner with access to the entire codebase.
-
-- **Entrepreneurs:**
-  Entrepreneurs and individuals exploring AI development work, interacting with custom agents for proofs of concept on their product ideas.
-
-- **Product Owners:**
-  Product owners seeking detailed knowledge about their product, including documentation, integration with tools like Trello, and the codebase.
+Ready to transform your workflow? Sign up today for a free trial or contact our sales team to learn more.
 
 ---
 
-## Setup
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/DEV3L/assistify
-cd assistify
-```
-
-### API / Backend
-
-Navigate to the API directory and follow the [Assistify API README.md](assistify-api/README.md) instructions.
-
-### UI / Front-End
-
-Navigate to the UI directory and follow the [Assistify UI README.md](assistify-ui/README.md) instructions.
-
-### Docker
-
-#### Environment Variables
-
-The following environment variables are required:
-
-- `GOOGLE_CLIENT_ID`: Your Google OAuth client ID
-- `GOOGLE_CLIENT_SECRET`: Your Google OAuth client secret
-- `NEXTAUTH_SECRET`: A secret used to encrypt session tokens
-- `OPENAI_API_KEY`: The OpenAI API key
-
-Copy the `.env.default` file to `.env` and set the variables.
-
-#### Run the Stack
-
-```bash
-source .env
-docker-compose up
-```
-
-- Frontend: http://localhost:3000
-- Backend: http://localhost:8000
-- MongoDB: localhost:27017
-
-## Continuous Integration
-
-This project uses GitHub Actions for continuous integration. The configuration can be found in the `.github/workflows` directory.
-
-The CI pipeline includes steps for:
-
-- Checking out the code
-- Setting up Python
-- Installing dependencies
-- Running unit tests
-- Running end to end tests
-- Deploying the API to Fly.io
-- Deploying the UI to Vercel
-
-For more details, refer to the:
-
-- [continuous-integration.yml](.github/workflows/continuous-integration.yml)
-- [fly-deploy.yml](.github/workflows/fly-deploy.yml)
-- [vercel-deploy.yml](.github/workflows/vercel-deploy.yml)
+**Note**: The Continuous Alignment Testing (CAT) workflow is essential for maintaining the quality and reliability of AI assistants. By incorporating CAT, we ensure that our AI models remain aligned with user expectations and deliver consistent, valuable insights.
