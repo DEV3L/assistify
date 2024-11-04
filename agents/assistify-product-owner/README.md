@@ -2,6 +2,8 @@
 
 Meet the **Assistify Product Owner**, your AI-powered head of product management. This agent excels in product management, agile methodologies, and AI technologies, providing strategic insights, managing product backlogs, and refining user stories seamlessly.
 
+Read the full product definition [here](./AI-XP Product Owner Product Definition.md).
+
 ## Table of Contents
 
 - [Assistify - Product Owner](#assistify---product-owner)
