@@ -6,13 +6,14 @@ PROMPT_PATH = "prompts/prompt.md"
 
 files = [
     # Assistify Files
+    "AI-XP Product Owner Product Definition.txt",
     "Assistify Product Definition.txt",
     "Assistify Product Owner README.txt",
+    "Assistify Trello Board Labels.txt",
     # Assistify Release Information
-    "Assistify Release.txt",
     "Assistify Release - Detailed.txt",
     "Assistify Release - Trello Status v0-0-1.txt",
-    "AI-XP Product Owner Product Definition.txt",
+    "Assistify Release.txt",
 ]
 
 code_files = [

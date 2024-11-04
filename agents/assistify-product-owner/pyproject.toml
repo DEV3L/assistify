@@ -13,7 +13,7 @@ requires-python = ">=3.12"
 dependencies = [
     "ai-assistant-manager==2.0.0",
     "ai-code-summary==0.1.0",
-    "ai-trello-extract==0.0.7",
+    "ai-trello-extract==0.0.8",
     "loguru",
     "openai",
     "python-dateutil",
@@ -41,6 +41,7 @@ build = "python run_end_to_end.py"
 e2e = "python run_end_to_end.py --delete-assistant true"
 summary = "python run_code_summary.py {args}"
 trello-extract = "python run_trello_extract.py"
+trello-view-labels = "python run_trello_view_labels.py"
 test = "pytest --cache-clear --cov --cov-report lcov --cov-report term -m 'not integration'"
 test-integration = "pytest --cache-clear --cov --cov-report lcov --cov-report term"
 test-repeat = "pytest -m integration -s"

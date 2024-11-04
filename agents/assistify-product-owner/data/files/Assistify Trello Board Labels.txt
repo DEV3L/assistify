@@ -1,0 +1,41 @@
+# Assistify Trello Board Labels
+
+## **assistify-ui**
+
+Handles all frontend development tasks, focusing on creating a consistent, responsive, and user-friendly interface. Includes implementing UI components, optimizing for mobile, enhancing user interactions, and standardizing the layout using Material-UI (MUI).
+
+## **assistify-api**
+
+Manages backend API services, ensuring seamless communication between frontend and backend. Involves developing and maintaining API endpoints, handling data processing, integrating authentication, and setting up CI/CD pipelines for reliable deployments.
+
+## **persistence-nosql**
+
+Focuses on NoSQL database management using MongoDB. Covers data storage, retrieval, and maintenance tasks to ensure data consistency and performance across different environments, supporting user interactions and application scalability.
+
+## **AI**
+
+Encompasses all Artificial Intelligence-related functionalities within Assistify. Includes developing AI-powered features, integrating AI models for dynamic responses, and enhancing user interactions through intelligent automation and responsive AI components.
+
+## **openai-assistants**
+
+Dedicated to managing and integrating OpenAI-based assistants. Involves handling chat threads, tracking token usage, listing available AI assistants, and leveraging OpenAI's capabilities to enhance user support and interaction through AI-driven tools.
+
+## **google-authentication**
+
+Responsible for implementing and maintaining Google authentication. Includes setting up Google Auth clients, managing token refresh mechanisms, integrating login/logout functionalities, and ensuring secure and seamless user authentication processes.
+
+## **assistants**
+
+General management of AI assistants within Assistify. Covers tasks like managing chat interactions, displaying subscribed assistants, enhancing assistant listings, and developing support tools like the Assistify Concierge Assistant to provide efficient AI interactions.
+
+## **Chat**
+
+Focuses on the chat functionality of Assistify. Involves implementing features such as markdown formatting, user-inputted messages, managing chat threads, repositioning chat elements, and enhancing the overall chat interface for better communication and user engagement.
+
+## **assistify-product-owner**
+
+Centers on the development of the Virtual Product Owner. Includes building AI-driven product management tools, implementing continuous alignment tests, integrating with project data and CI/CD pipelines, and automating product management tasks to boost team productivity.
+
+## **automation-testing**
+
+Dedicated to automation and testing processes. Covers setting up CI/CD pipelines, running unit and end-to-end tests, deploying applications automatically, and ensuring robust testing to maintain high-quality standards and reliable application performance.
