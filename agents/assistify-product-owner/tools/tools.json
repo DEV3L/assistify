@@ -1,0 +1,42 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "add_user_story",
+      "description": "Adds a new user story to the project backlog.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the user story."
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "assistify-ui",
+                "assistify-api",
+                "persistence-nosql",
+                "AI",
+                "openai-assistants",
+                "google-authentication",
+                "assistants",
+                "Chat",
+                "assistify-product-owner",
+                "automation-testing"
+              ]
+            },
+            "description": "Relevant labels/categories based on existing labels."
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the user story."
+          }
+        },
+        "required": ["title", "description"]
+      }
+    }
+  }
+]

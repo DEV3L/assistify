@@ -3,6 +3,7 @@ from ai_assistant_manager.exporters.directory.directory_exporter import Director
 from ai_assistant_manager.exporters.files.files_exporter import FilesExporter
 
 PROMPT_PATH = "prompts/prompt.md"
+TOOLS_PATH = "tools/tools.json"
 
 files = [
     # Assistify Files
