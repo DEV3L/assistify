@@ -13,7 +13,7 @@ requires-python = ">=3.12"
 dependencies = [
     "ai-assistant-manager==2.2.0",
     "ai-code-summary==0.1.0",
-    "ai-trello-extract==0.0.8",
+    "ai-trello-extract==0.0.9",
     "loguru",
     "openai",
     "python-dateutil",

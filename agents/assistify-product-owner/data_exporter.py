@@ -9,6 +9,7 @@ files = [
     # Assistify Files
     "AI-XP Product Owner Product Definition.txt",
     "Assistify Product Definition.txt",
+    "Assistify Product Development Priorities.txt",
     "Assistify Product Owner README.txt",
     "Assistify Trello Board Labels.txt",
     # Assistify Release Information

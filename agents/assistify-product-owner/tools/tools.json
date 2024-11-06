@@ -28,11 +28,11 @@
                 "automation-testing"
               ]
             },
-            "description": "Relevant labels/categories based on existing labels."
+            "description": "Several relevant labels/categories based on existing labels."
           },
           "description": {
             "type": "string",
-            "description": "Detailed description of the user story."
+            "description": "Detailed description of the user story following the User Story Guidelines."
           }
         },
         "required": ["title", "description"]

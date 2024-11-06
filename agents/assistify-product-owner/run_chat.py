@@ -7,6 +7,11 @@ from ai_assistant_manager.clients.openai_api import OpenAIClient, build_openai_c
 from ai_assistant_manager.env_variables import ENV_VARIABLES, set_env_variables
 from ai_assistant_manager.prompts.prompt import get_prompt
 from ai_assistant_manager.tools.tools import get_tools
+from ai_trello_extract.clients.trello_client import get_trello_client
+from ai_trello_extract.env_variables import ENV_VARIABLES as TRELLO_ENV_VARIABLES
+from ai_trello_extract.env_variables import set_env_variables as set_trello_env_variables
+from ai_trello_extract.orchestrators.orchestration_service import OrchestrationService
+from ai_trello_extract.services.trello_service import TrelloService
 from loguru import logger
 
 from data_exporter import PROMPT_PATH, TOOLS_PATH, export_data, print_response
@@ -15,9 +20,12 @@ SHOULD_DELETE_ASSISTANT = False
 
 START_MESSAGE = """"""
 
-
 def main():
     logger.info(f"Starting {ENV_VARIABLES.assistant_name}")
+
+    orchestration_service = OrchestrationService(
+        TrelloService(get_trello_client(TRELLO_ENV_VARIABLES.trello_api_key, TRELLO_ENV_VARIABLES.trello_api_token))
+    )
 
     export_data()
 
@@ -59,6 +67,12 @@ def main():
             chat_response = chat.send_user_message(user_message)
         except RequiresActionException as e:
             logger.info(f"\n{service.assistant_name}:\nTOOL_CALL: {e.data}")
+            orchestration_service.add_card_to_board(
+                TRELLO_ENV_VARIABLES.trello_board_name,
+                e.data.arguments["title"],
+                e.data.arguments["description"],
+                e.data.arguments["labels"],
+            )
             chat_response = chat.submit_tool_outputs(
                 e.data.run_id, e.data.tool_call_id, "It was added to the backlog with id 123"
             )
@@ -69,6 +83,7 @@ def main():
 if __name__ == "__main__":
     try:
         set_env_variables()
+        set_trello_env_variables()
         main()
     except Exception as e:
         logger.info(f"Error: {e}")

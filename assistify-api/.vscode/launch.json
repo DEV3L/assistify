@@ -6,7 +6,7 @@
   "configurations": [
     {
       "name": "Python Test Debugger",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "console": "integratedTerminal",
       "justMyCode": false,
